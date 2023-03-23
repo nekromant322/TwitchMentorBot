@@ -1,0 +1,25 @@
+twitch:
+  channelName: overridetech
+  botClientId: ${BOT_CLIENT_ID}
+  botSecret: ${BOT_SECRET}
+
+telegram:
+  mentorUsername: Marandyuk_Anatolii
+
+spring:
+  datasource:
+    password: postgres
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/twitch_bot
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL81Dialect
+        show_sql: false
+        format_sql: true
+        use_sql_comments: true
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
