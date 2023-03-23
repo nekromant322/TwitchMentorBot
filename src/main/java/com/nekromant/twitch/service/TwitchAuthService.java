@@ -1,13 +1,12 @@
 package com.nekromant.twitch.service;
 
-import com.nekromant.twitch.model.TwitchToken;
 import com.nekromant.twitch.feign.TwitchAuthFeign;
+import com.nekromant.twitch.model.TwitchToken;
 import com.nekromant.twitch.repository.TwitchTokenRepository;
 import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,22 +23,10 @@ public class TwitchAuthService {
     @Autowired
     private TwitchTokenRepository twitchTokenRepository;
 
-    @Scheduled(initialDelayString = "PT01H" , fixedDelayString = "PT01H")
-    public String getAuthToken() {
+    public TwitchToken getAuthToken() {
         TwitchToken token = twitchTokenRepository.findFirstById(1L);
-
-        if (token != null) {
-            if (validateToken(token)) {
-                return token.getAccessToken();
-            } else {
-                String refreshToken = token.getRefreshToken();
-                return getNewAuthTokenByRefreshToken(refreshToken);
-            }
-        }
-
-        return null;
+        return token;
     }
-
 
     public boolean validateToken(TwitchToken token) {
         String accessToken = token.getAccessToken();
@@ -56,14 +43,13 @@ public class TwitchAuthService {
         return false;
     }
 
-    public String getNewAuthTokenByRefreshToken(String refreshToken) {
+    public TwitchToken getAndSaveNewAuthTokenByRefreshToken(String refreshToken) {
         try {
             ResponseEntity<TwitchToken> responseByRefreshToken = twitchAuthFeign.getNewTokenByRefreshToken(refreshToken, botClientId, botSecret);
             if (responseByRefreshToken.getStatusCodeValue() == 200) {
                 TwitchToken newTwitchToken = responseByRefreshToken.getBody();
-                String newToken = newTwitchToken.getAccessToken();
                 saveNewToken(newTwitchToken);
-                return newToken;
+                return newTwitchToken;
             }
         } catch (FeignException e) {
             System.out.println(e.getMessage());

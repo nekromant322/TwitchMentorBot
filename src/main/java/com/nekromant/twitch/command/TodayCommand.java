@@ -28,15 +28,20 @@ public class TodayCommand extends BotCommand {
         String channelName = event.getChannel().getName();
 
         List<BookedReviewDTO> reviewsToday = mentoringReviewBotFeign.getIncomingReview(mentorTelegramUsername);
-        String messageWithReviewsToday = "Расписание ревью на сегодня\n | \n" +
-                reviewsToday.stream()
-                .sorted(Comparator.comparing(BookedReviewDTO::getBookedDateTime))
-                .map(review ->
-//                        "Студент " + review.getStudentUserName() + "\n" +
-                                review.getBookedDateTime().substring(11) + "\n" +
-                                review.getTitle() + "\n")
-                .collect(Collectors.joining(" | "));
 
-        event.getMessageEvent().getTwitchChat().sendMessage(channelName, messageWithReviewsToday);
+        if (reviewsToday == null || reviewsToday.isEmpty()) {
+            event.getMessageEvent().getTwitchChat().sendMessage(channelName, "На данный момент нет назначенных ревью");
+        } else {
+            String messageWithReviewsToday = "Расписание ревью на сегодня\n | \n" +
+                    reviewsToday.stream()
+                            .sorted(Comparator.comparing(BookedReviewDTO::getBookedDateTime))
+                            .map(review ->
+                                    //                        "Студент " + review.getStudentUserName() + "\n" +
+                                    review.getBookedDateTime().substring(11) + "\n" +
+                                            review.getTitle() + "\n")
+                            .collect(Collectors.joining(" | "));
+
+            event.getMessageEvent().getTwitchChat().sendMessage(channelName, messageWithReviewsToday);
+        }
     }
 }
