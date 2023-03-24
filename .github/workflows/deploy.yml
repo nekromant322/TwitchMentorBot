@@ -6,22 +6,22 @@ on:
       - deploy
 
 jobs:
-#   build:
-#     name: Build project with Maven
-#     runs-on: ubuntu-latest
-#     steps:
-#     - uses: actions/checkout@v3
-#     - name: Set up JDK
-#       uses: actions/setup-java@v1
-#       with:
-#         java-version: 1.11
-#     - name: Build with Maven
-#       run: mvn clean package
+  build:
+    name: Build project with Maven
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.11
+    - name: Build with Maven
+      run: mvn clean package
   
   build_and_push_image:
     name: Push image to DockerHub
     runs-on: ubuntu-latest
-#     needs: [build]
+    needs: [build]
     steps:
       - uses: actions/checkout@v3
       - name: Login to DockerHub
