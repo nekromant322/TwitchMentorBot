@@ -19,8 +19,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_HOST: twitch-bot-db
-      BOT_CLIENT_ID: ..
-      BOT_SECRET: ..
+      BOT_CLIENT_ID: ${{ secrets.BOT_CLIENT_ID }}
+      BOT_SECRET: ${{ secrets.BOT_SECRET }}
       CHANNEL_NAME: overridetech
     ports:
       - "8080:8080"
