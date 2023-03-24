@@ -17,21 +17,22 @@ jobs:
         java-version: 1.11
     - name: Build with Maven
       run: mvn clean package
-#    - run: mkdir staging && cp target/*.jar staging
-#    - uses: actions/upload-artifact@v3
-#      with:
-#        name: Package
-#        path: staging
+    - run: mkdir staging && cp target/*.jar staging
+    - uses: actions/upload-artifact@v3
+      with:
+        name: Package
+        path: staging
   
   build_and_push_image:
     name: Push image to DockerHub
     runs-on: ubuntu-latest
     needs: [build]
     steps:
-#      - name: Dowloand jar artifact
-#        uses: actions/download-artifact@v3
-#        with:
-#          name: Package
+      - name: Dowloand jar artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: package
+          path: ~/target/
 #      - uses: actions/checkout@v3
       - name: Login to DockerHub
         uses: docker/login-action@v2
