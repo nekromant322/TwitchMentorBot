@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  twitch-bot-db:
+    image: postgres:14.1-alpine
+    container_name: twitch-bot-db
+    restart: always
+    environment:
+      POSTGRES_DB: twitch_bot
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+  twitch-bot-app:
+    build: ./
+    image: mabalda/twitch-chat-bot-twitch-bot-app:latest
+    container_name: twitch-bot-app
+    environment:
+      POSTGRES_DB: twitch_bot
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: twitch-bot-db
+      BOT_CLIENT_ID: ..
+      BOT_SECRET: ..
+      CHANNEL_NAME: overridetech
+    ports:
+      - "8080:8080"

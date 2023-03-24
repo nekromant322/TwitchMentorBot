@@ -1,5 +1,5 @@
 twitch:
-  channelName: overridetech
+  channelName: ${CHANNEL_NAME:ma_balda}
   botClientId: ${BOT_CLIENT_ID}
   botSecret: ${BOT_SECRET}
 
@@ -8,9 +8,9 @@ telegram:
 
 spring:
   datasource:
-    password: postgres
-    username: postgres
-    url: jdbc:postgresql://localhost:5432/twitch_bot
+    password: ${POSTGRES_PASSWORD:postgres}
+    username: ${POSTGRES_USER:postgres}
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/${POSTGRES_DB:twitch_bot}
     driver-class-name: org.postgresql.Driver
 
   jpa:
