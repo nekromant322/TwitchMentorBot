@@ -34,6 +34,7 @@ jobs:
 
       - name: Docker Build and Push to DockerHub
         uses: docker/build-push-action@v4
+        working-directory:  ${{ github.workspace }}
         with:
           context: .
           push: true
