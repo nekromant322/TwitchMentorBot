@@ -47,7 +47,8 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
           push: true
-          tags: mabalda/twitch-chat-bot-twitch-bot-app:latest
+          repository: mabalda/twitch-chat-bot-twitch-bot-app
+          tags: latest
   
   deploy:
     name: Deploy
