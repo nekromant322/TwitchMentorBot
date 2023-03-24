@@ -42,7 +42,7 @@ jobs:
       - name: Docker Build and Push to DockerHub
         uses: docker/build-push-action@v3
         with:
-          context: .
+#          context: .
           push: true
           tags: mabalda/twitch-chat-bot-twitch-bot-app:latest
   
