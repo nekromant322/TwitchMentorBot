@@ -1,0 +1,56 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches:
+      - deploy
+
+jobs:
+#   build:
+#     name: Build project with Maven
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v3
+#     - name: Set up JDK
+#       uses: actions/setup-java@v1
+#       with:
+#         java-version: 1.11
+#     - name: Build with Maven
+#       run: mvn clean package
+  
+  build_and_push_image:
+    name: Push image to DockerHub
+    runs-on: ubuntu-latest
+#     needs: [build]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Docker Build and Push to DockerHub
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: mabalda/twitch-chat-bot-twitch-bot-app:latest
+  
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: [build_and_push_image]
+    steps:
+      - name: Connect with SSH and Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            sudo docker stop twitch-bot-app
+            sudo docker compose pull twitch-bot-app
+            sudo docker compose up -d twitch-bot-app
+            docker ps -a
+    
