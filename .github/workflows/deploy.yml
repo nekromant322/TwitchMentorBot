@@ -17,7 +17,7 @@ jobs:
         java-version: 1.11
     - name: Build with Maven
       run: mvn clean package
-    - run: mkdir staging && cp target/*.jar staging
+    - run: mkdir target && cp target/*.jar target
     - uses: actions/upload-artifact@v3
       with:
         name: Package
@@ -42,7 +42,7 @@ jobs:
       - name: Docker Build and Push to DockerHub
         uses: docker/build-push-action@v3
         with:
-          context: Package
+          context: .
           push: true
           tags: mabalda/twitch-chat-bot-twitch-bot-app:latest
   
