@@ -48,12 +48,12 @@ jobs:
       - name: Connect with SSH and Deploy
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SSH_HOST }}
+          host: 94.103.87.77
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
             sudo docker stop twitch-bot-app
             sudo docker compose pull twitch-bot-app
             sudo docker compose up -d twitch-bot-app
-            docker ps -a
+            docker ps -a  
     
