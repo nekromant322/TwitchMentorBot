@@ -16,7 +16,7 @@ jobs:
       with:
         java-version: 1.11
     - name: Build with Maven
-      run: mvn clean package
+      run: mvn -B package --file pom.xml
   
   build_and_push_image:
     name: Push image to DockerHub
