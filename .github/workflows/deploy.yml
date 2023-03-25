@@ -46,9 +46,9 @@ jobs:
     needs: [build_and_push_image]
     steps:
       - name: Connect with SSH and Deploy
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v0.1.8
         with:
-          host: 94.103.87.77
+          host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
