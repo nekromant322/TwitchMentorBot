@@ -3,7 +3,7 @@ name: Build & Deploy
 on:
   push:
     branches:
-      - deploy
+      - main
 
 jobs:
   build_and_push_image:
