@@ -54,7 +54,6 @@ public class TodayCommand extends BotCommand {
                         reviewsToday.stream()
                                 .sorted(Comparator.comparing(BookedReviewDTO::getBookedDateTime))
                                 .map(review ->
-                                        //                        "Студент " + review.getStudentUserName() + "\n" +
                                         review.getBookedDateTime().substring(11) + "\n" +
                                                 review.getTitle() + "\n")
                                 .collect(Collectors.joining(" | "));
