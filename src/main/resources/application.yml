@@ -1,15 +1,17 @@
 twitch:
-  channelName: ${CHANNEL_NAME:ma_balda}
+  channelName: overridetech
   botClientId: ${BOT_CLIENT_ID}
   botSecret: ${BOT_SECRET}
+  moderationSecret: ${MODERATION_SECRET}
+  moderationClientId: ${MODERATION_CLIENT_ID}
 
 telegram:
   mentorUsername: Marandyuk_Anatolii
 
 spring:
   datasource:
-    password: ${POSTGRES_PASSWORD:postgres}
-    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD}
+    username: ${POSTGRES_USER}
     url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/${POSTGRES_DB:twitch_bot}
     driver-class-name: org.postgresql.Driver
 
@@ -17,7 +19,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQL81Dialect
-        show_sql: false
+        show_sql: true
         format_sql: true
         use_sql_comments: true
     hibernate:

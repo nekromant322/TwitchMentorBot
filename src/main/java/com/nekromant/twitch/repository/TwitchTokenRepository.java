@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TwitchTokenRepository extends CrudRepository<TwitchToken, Long> {
-    TwitchToken findFirstById(Long id);
+    TwitchToken findByType(String type);
 }

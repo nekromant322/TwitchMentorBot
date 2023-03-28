@@ -17,6 +17,10 @@ public class TwitchAuthService {
     private String botClientId;
     @Value("${twitch.botSecret}")
     private String botSecret;
+    @Value("${twitch.moderationClientId}")
+    private String moderationClientId;
+    @Value("${twitch.moderationSecret}")
+    private String moderationSecret;
 
     @Autowired
     private TwitchAuthFeign twitchAuthFeign;
@@ -24,8 +28,30 @@ public class TwitchAuthService {
     private TwitchTokenRepository twitchTokenRepository;
 
     public TwitchToken getAuthToken() {
-        TwitchToken token = twitchTokenRepository.findFirstById(1L);
-        return token;
+        return twitchTokenRepository.findByType("auth");
+    }
+
+    public TwitchToken getModerationToken() {
+        return twitchTokenRepository.findByType("moderation");
+    }
+
+    public TwitchToken getAndSaveNewModerationToken() {
+        TwitchToken token = getModerationToken();
+        String refreshToken = token.getRefreshToken();
+        try {
+            ResponseEntity<TwitchToken> responseByRefreshToken = twitchAuthFeign.getNewTokenByRefreshToken(refreshToken, moderationClientId, moderationSecret);
+            if (responseByRefreshToken.getStatusCodeValue() == 200) {
+                TwitchToken newTwitchToken = responseByRefreshToken.getBody();
+                token.setAccessToken(newTwitchToken.getAccessToken());
+                token.setExpiresIn(newTwitchToken.getExpiresIn());
+                token.setRefreshToken(newTwitchToken.getRefreshToken());
+                twitchTokenRepository.save(token);
+                return token;
+            }
+        } catch (FeignException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 
     public boolean validateToken(TwitchToken token) {
@@ -48,7 +74,11 @@ public class TwitchAuthService {
             ResponseEntity<TwitchToken> responseByRefreshToken = twitchAuthFeign.getNewTokenByRefreshToken(refreshToken, botClientId, botSecret);
             if (responseByRefreshToken.getStatusCodeValue() == 200) {
                 TwitchToken newTwitchToken = responseByRefreshToken.getBody();
-                saveNewToken(newTwitchToken);
+                TwitchToken token = getAuthToken();
+                token.setAccessToken(newTwitchToken.getAccessToken());
+                token.setExpiresIn(newTwitchToken.getExpiresIn());
+                token.setRefreshToken(newTwitchToken.getRefreshToken());
+                twitchTokenRepository.save(token);
                 return newTwitchToken;
             }
         } catch (FeignException e) {
@@ -60,10 +90,5 @@ public class TwitchAuthService {
 
     private String getAuthHeader(String accessToken) {
         return "OAuth " + accessToken;
-    }
-
-    private void saveNewToken(TwitchToken twitchToken) {
-        twitchToken.setId(1L);
-        twitchTokenRepository.save(twitchToken);
     }
 }

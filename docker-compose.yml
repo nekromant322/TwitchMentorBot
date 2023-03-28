@@ -7,8 +7,10 @@ services:
     restart: always
     environment:
       POSTGRES_DB: twitch_bot
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: ${{ secrets.DB_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
+    ports:
+      - "5432:5432"
 
   twitch-bot-app:
     build: ./
@@ -16,11 +18,13 @@ services:
     container_name: twitch-bot-app
     environment:
       POSTGRES_DB: twitch_bot
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: ${{ secrets.DB_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
       POSTGRES_HOST: twitch-bot-db
       BOT_CLIENT_ID: ${{ secrets.BOT_CLIENT_ID }}
       BOT_SECRET: ${{ secrets.BOT_SECRET }}
       CHANNEL_NAME: overridetech
+      MODERATION_SECRET: ${{ secrets.MODERATION_SECRET }}
+      MODERATION_CLIENT_ID: ${{ secrets.MODERATION_CLIENT_ID }}
     ports:
       - "8080:8080"
