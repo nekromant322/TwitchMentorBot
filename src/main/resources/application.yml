@@ -2,6 +2,8 @@ twitch:
   channelName: overridetech
   botClientId: ${BOT_CLIENT_ID}
   botSecret: ${BOT_SECRET}
+  moderationSecret: ${MODERATION_SECRET}
+  moderationClientId: ${MODERATION_CLIENT_ID}
 
 telegram:
   mentorUsername: Marandyuk_Anatolii
@@ -17,7 +19,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQL81Dialect
-        show_sql: false
+        show_sql: true
         format_sql: true
         use_sql_comments: true
     hibernate:

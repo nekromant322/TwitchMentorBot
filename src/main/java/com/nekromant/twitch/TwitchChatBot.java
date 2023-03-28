@@ -24,11 +24,13 @@ public class TwitchChatBot {
     private TwitchClient twitchClient;
     private String channelName;
     private TwitchAuthService twitchAuthService;
+    private ModerationTwitchHelix moderationTwitchHelix;
 
     @Autowired
-    public TwitchChatBot(TwitchAuthService twitchAuthService, List<BotCommand> allCommands, @Value("${twitch.channelName}") String channelName) {
+    public TwitchChatBot(TwitchAuthService twitchAuthService, List<BotCommand> allCommands, @Value("${twitch.channelName}") String channelName, ModerationTwitchHelix moderationTwitchHelix) {
         this.twitchAuthService = twitchAuthService;
         this.channelName = channelName;
+        this.moderationTwitchHelix = moderationTwitchHelix;
         start();
         botCommands = new HashMap<>();
         allCommands.forEach(command -> botCommands.put(command.getCommandIdentifier(), command));
@@ -66,6 +68,10 @@ public class TwitchChatBot {
 
         twitchClient.getChat().joinChannel(channelName);
         twitchClient.getEventManager().onEvent(ChannelMessageEvent.class, event -> onChatMessageEvent(event));
+
+        TwitchToken moderationToken = twitchAuthService.getAndSaveNewModerationToken();
+        moderationTwitchHelix.setHelix(twitchClient.getHelix());
+        moderationTwitchHelix.setModerationToken(moderationToken.getAccessToken());
     }
 
     public void restart() {
