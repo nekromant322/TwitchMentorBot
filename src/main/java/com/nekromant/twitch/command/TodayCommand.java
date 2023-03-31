@@ -1,5 +1,6 @@
 package com.nekromant.twitch.command;
 
+import com.nekromant.twitch.contant.Message;
 import com.nekromant.twitch.dto.BookedReviewDTO;
 import com.nekromant.twitch.feign.MentoringReviewBotFeign;
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
@@ -33,24 +34,26 @@ public class TodayCommand extends BotCommand {
     @Override
     public void processMessage(ChannelMessageEvent event) {
         String channelName = event.getChannel().getName();
-        String replyMessage;
+        String senderUsername = event.getMessageEvent().getUser().getName();
+        String replyMessageText;
+        Message replyMessage = new Message(senderUsername, "");
 
         ReviewSchedule updatedReviewSchedule = reviewScheduleService.findTodayUpdatedSchedule();
 
         if (updatedReviewSchedule != null) {
             String reviews = updatedReviewSchedule.getReviews();
             if (reviews.equals("")) {
-                replyMessage = NO_REVIEWS;
+                replyMessageText = NO_REVIEWS;
             } else {
-                replyMessage = TODAY_REVIEW_HEADER + reviews;
+                replyMessageText = TODAY_REVIEW_HEADER + reviews;
             }
         } else {
             List<BookedReviewDTO> reviewsToday = mentoringReviewBotFeign.getIncomingReview(mentorTelegramUsername);
 
             if (reviewsToday == null || reviewsToday.isEmpty()) {
-                replyMessage = NO_REVIEWS;
+                replyMessageText = NO_REVIEWS;
             } else {
-                replyMessage = TODAY_REVIEW_HEADER +
+                replyMessageText = TODAY_REVIEW_HEADER +
                         reviewsToday.stream()
                                 .sorted(Comparator.comparing(BookedReviewDTO::getBookedDateTime))
                                 .map(review ->
@@ -60,6 +63,7 @@ public class TodayCommand extends BotCommand {
             }
         }
 
-        event.getMessageEvent().getTwitchChat().sendMessage(channelName, replyMessage);
+        replyMessage.setMessageText(replyMessageText);
+        event.getMessageEvent().getTwitchChat().sendMessage(channelName, replyMessage.getMessage());
     }
 }

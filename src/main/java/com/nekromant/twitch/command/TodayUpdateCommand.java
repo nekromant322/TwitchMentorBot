@@ -2,6 +2,8 @@ package com.nekromant.twitch.command;
 
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 import com.nekromant.twitch.ModerationTwitchHelix;
+import com.nekromant.twitch.contant.Message;
+import com.nekromant.twitch.exception.PermissionException;
 import com.nekromant.twitch.service.ReviewScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +12,9 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.nekromant.twitch.contant.MessageContent.NO_PERMISSION;
+import static com.nekromant.twitch.contant.MessageContent.TODAY_UPDATE_CONFIRM;
 
 @Component
 public class TodayUpdateCommand extends BotCommand {
@@ -29,20 +34,21 @@ public class TodayUpdateCommand extends BotCommand {
     @Override
     public void processMessage(ChannelMessageEvent event) {
         String channelName = event.getChannel().getName();
-        String senderUsername = event.getMessageEvent().getUser().getName().toLowerCase();
-        String broadcasterId = event.getChannel().getId();
-        List<String> moderators = getModeratorList(broadcasterId);
+        String senderUsername = event.getMessageEvent().getUser().getName();
+        Message replyMessage = new Message(senderUsername, "");
 
-        if (senderUsername.equals(channelOwner) || moderators.contains(senderUsername)) {
+        try {
+            checkPermission(senderUsername, event);
             String message = event.getMessage();
             String newReviewSchedule = Arrays.stream(message.split(" ")).skip(1).collect(Collectors.joining(" "));
 
             reviewScheduleService.saveSchedule(newReviewSchedule);
-
-            event.getTwitchChat().sendMessage(channelName, "Расписание обновлено");
-        } else {
-            event.getTwitchChat().sendMessage(channelName, "Ты не можешь менять расписание");
+            replyMessage.setMessageText(TODAY_UPDATE_CONFIRM);
+        } catch (Exception e) {
+            replyMessage.setMessageText(NO_PERMISSION);
         }
+
+        event.getTwitchChat().sendMessage(channelName, replyMessage.getMessage());
     }
 
     public List<String> getModeratorList(String broadcasterId) {
@@ -50,9 +56,18 @@ public class TodayUpdateCommand extends BotCommand {
                 .getModerators(moderationTwitchHelix.getModerationToken(), broadcasterId, null, null, 100)
                 .execute()
                 .getModerators().stream()
-                .map(moderator -> moderator.getUserName())
+                .map(moderator -> moderator.getUserLogin())
                 .collect(Collectors.toList());
 
         return moderators;
+    }
+
+    public void checkPermission(String senderUsername, ChannelMessageEvent event) {
+        String broadcasterId = event.getChannel().getId();
+        List<String> moderators = getModeratorList(broadcasterId);
+
+        if (!senderUsername.equals(channelOwner) || !moderators.contains(senderUsername)) {
+            throw new PermissionException();
+        }
     }
 }
