@@ -28,7 +28,6 @@ function updateTable() {
         let isPreviousReview = (now - dateTime) > oneHourInMilliseconds;
         $("#tableBody").append("" +
             "<tr" + (isCurrentReview ? " class=\"bg-success p-2 bg-opacity-50\"" : isPreviousReview ? " style=\"opacity: 0.6\"" : "") + ">\n" +
-            "      <td><a class=\"text-reset\" style=\"text-decoration: none\" href=\"" + review.studentTgLink + "\"" + ">" + review.studentUserName + "</a></td>\n" +
             "      <td>" + review.title + "</td>\n" +
             "      <td>" + review.bookedDateTime.substring(11) + "</td>\n" +
             "    </tr>")
