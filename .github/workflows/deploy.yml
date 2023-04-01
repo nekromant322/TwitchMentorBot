@@ -39,8 +39,15 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
+            echo DB_USER = ${{ secrets.DB_USER }} > twitch-env.txt
+            echo DB_PASSWORD = ${{ secrets.DB_PASSWORD }} >> twitch-env.txt
+            echo BOT_CLIENT_ID = ${{ secrets.BOT_CLIENT_ID }} >> twitch-env.txt
+            echo BOT_SECRET = ${{ secrets.BOT_SECRET }} >> twitch-env.txt
+            echo MODERATION_SECRET = ${{ secrets.MODERATION_SECRET }} >> twitch-env.txt
+            echo MODERATION_CLIENT_ID = ${{ secrets.MODERATION_CLIENT_ID }} >> twitch-env.txt
             echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker stop twitch-bot-app
             echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker compose pull twitch-bot-app
-            echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker compose up -d twitch-bot-app
+            echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker compose --env-file twitch-env.txt up -d twitch-bot-app
             echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker ps -a  
+            rm twitch-env.txt
     
