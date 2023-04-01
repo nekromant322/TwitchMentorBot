@@ -66,7 +66,7 @@ public class TodayUpdateCommand extends BotCommand {
         String broadcasterId = event.getChannel().getId();
         List<String> moderators = getModeratorList(broadcasterId);
 
-        if (!senderUsername.equals(channelOwner) || !moderators.contains(senderUsername)) {
+        if (!senderUsername.equals(channelOwner) && !moderators.contains(senderUsername)) {
             throw new PermissionException();
         }
     }
