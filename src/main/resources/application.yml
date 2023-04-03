@@ -25,3 +25,13 @@ spring:
     hibernate:
       ddl-auto: update
     generate-ddl: true
+
+feign:
+  client:
+    config:
+      default:
+        loggerLevel: full
+
+logging:
+  level:
+    com.nekromant.twitch.feign.TwitchAuthFeign: debug
