@@ -46,6 +46,7 @@ jobs:
             echo MODERATION_SECRET = ${{ secrets.MODERATION_SECRET }} >> twitch-env.txt
             echo MODERATION_CLIENT_ID = ${{ secrets.MODERATION_CLIENT_ID }} >> twitch-env.txt
             
+            echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker stop twitch-bot-app
             echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker rm twitch-bot-app
             echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker rmi mabalda/twitch-chat-bot-twitch-bot-app:latest
             echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker compose --env-file twitch-env.txt up -d twitch-bot-app
