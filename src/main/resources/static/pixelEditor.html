@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OverrideTech pixel panel</title>
+    <style>
+        body {
+            margin: 0px;
+            width: 100%
+        }
+
+        #color-palette {
+            display: flex;
+            flex-direction: row;
+            gap: 1px;
+            width: 200px;
+            height: 100px;
+            margin-left: 50px;
+        }
+
+        .color {
+            width: 40px;
+            height: 40px;
+            margin: auto;
+            border: 1px solid black;
+        }
+
+        .selected {
+            border: 6px solid black;
+        }
+
+        #pixel-board {
+            margin-top: 0px;
+            margin-left: 40px;
+        }
+
+        table {
+            border-spacing: 0;
+        }
+
+        .pixel {
+            background-color: white;
+            border: 1px solid black;
+            padding: 0px;
+            width: 8px;
+            height: 8px;
+        }
+
+    </style>
+
+</head>
+<body>
+<h1 id="title">Доступно пикселей : ?</h1>
+
+<div id="color-palette">
+    <a class="color" id="black" style="background-color:black;"></a>
+    <a class="color" id="red" style="background-color:red;"></a>
+    <a class="color" id="blue" style="background-color:blue;"></a>
+    <a class="color" id="green" style="background-color:green;"></a>
+    <a class="color" id="yellow" style="background-color:yellow;"></a>
+    <a class="color" id="orange" style="background-color:orange;"></a>
+    <a class="color" id="purple" style="background-color:purple;"></a>
+    <a class="color" id="white" style="background-color:white;"></a>
+    <a class="color" id="chocolate" style="background-color:chocolate;"></a>
+    <a class="color" id="grey" style="background-color:grey;"></a>
+</div>
+
+<div id="clear-board"></div>
+
+<div id="pixel-board">
+    <table id="table-of-pixel">
+    </table>
+</div>
+<img src="" alt="">
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+    const WIDTH = 160;
+    const HEIGHT = 95;
+    displayPixelsAvailable()
+    document.querySelector('#black').className = "color selected"
+
+    let colorChosen = "black";
+    // const colorPalette = document.getElementById('color-palette')
+    // colorPalette.addEventListener('click', selectColor)
+
+    let colorsFromPalette = document.getElementById('color-palette').children
+    for(let i = 0; i < colorsFromPalette.length; i++) {
+        colorsFromPalette[i].addEventListener('click', selectColor)
+    }
+
+
+    function selectColor(e) {
+        const color = e.target.style.backgroundColor;
+        let colorSelected = document.getElementById(e.target.id)
+        let colorsList = document.getElementsByClassName("color");
+        for(let i = 0; i < colorsList.length; i++) {
+            colorsList[i].className = "color";
+        }
+        colorSelected.className = "color selected"
+
+    }
+
+    const pixelToPaint = document.querySelector('#pixel-board')
+    pixelToPaint.addEventListener('click', colorPixel)
+
+    function colorPixel(e) {
+        let colorSelected = document.querySelector('#color-palette .selected')
+        let colorToSet = colorSelected.style.backgroundColor
+
+        let row = e.target.id.split(":")[0];
+        let col = e.target.id.split(":")[1];
+        if(row === undefined || col === undefined || isNaN(row) || isNaN(col)) {
+            return;
+        }
+        console.log(row, col, colorToSet)
+        //TODO
+        if(sendPixel(row, col, colorToSet, "TOKEN_VALUE")) {
+            let pixel = e.target
+            pixel.style.backgroundColor = colorToSet
+            displayPixelsAvailable()
+        }
+
+
+    }
+
+    const buttonToClear = document.getElementById('clear-board')
+    buttonToClear.addEventListener('click', clearPixels)
+
+    function clearPixels() {
+        let lengthOFTable = document.getElementsByClassName('pixel').length
+
+        for (let index = 0; index < lengthOFTable; index += 1) {
+            document.getElementsByClassName('pixel')[index].style.background = "white"
+        }
+    }
+
+    let newRow = document.createElement('TR')
+
+    let newColumn = document.createElement('TD')
+    for (let index = 0; index < HEIGHT; index += 1) {
+        newRow = document.createElement('TR')
+        document.querySelector('#table-of-pixel').appendChild(newRow)
+        createLineOfTable(WIDTH, index)
+    }
+
+    function createLineOfTable(size, rowIndex) {
+        let ops = document.querySelector('#table-of-pixel').lastChild
+        for (let index = 0; index < size; index += 1) {
+            newColumn = document.createElement('TD')
+            newColumn.id = rowIndex +":"+index;
+            ops.appendChild(newColumn).className = 'pixel'
+        }
+    }
+
+
+    //TODO
+
+
+    function displayPixelsAvailable() {
+        let countPixels = fetchUserPixelAvailable("TOKEN_VALUE");
+        document.getElementById('title').innerText = "Доступно пикселей : " + countPixels;
+    }
+
+    function sendPixel(row, col, color, token) {
+        //TODO
+
+        return true;
+    }
+
+    function fetchUserPixelAvailable() {
+        //TODO get from back
+        return 5;
+    }
+
+
+</script>
+
+</body>
+</html>
