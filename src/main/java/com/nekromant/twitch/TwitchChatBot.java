@@ -5,8 +5,10 @@ import com.github.philippheuer.events4j.simple.SimpleEventHandler;
 import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.TwitchClientBuilder;
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
+import com.github.twitch4j.pubsub.events.RewardRedeemedEvent;
 import com.nekromant.twitch.command.BotCommand;
 import com.nekromant.twitch.model.TwitchToken;
+import com.nekromant.twitch.service.ChannelPointsRedemptionService;
 import com.nekromant.twitch.service.TwitchAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,12 +27,18 @@ public class TwitchChatBot {
     private String channelName;
     private TwitchAuthService twitchAuthService;
     private ModerationTwitchHelix moderationTwitchHelix;
+    private ChannelPointsRedemptionService channelPointsRedemptionService;
 
     @Autowired
-    public TwitchChatBot(TwitchAuthService twitchAuthService, List<BotCommand> allCommands, @Value("${twitch.channelName}") String channelName, ModerationTwitchHelix moderationTwitchHelix) {
+    public TwitchChatBot(TwitchAuthService twitchAuthService,
+                         List<BotCommand> allCommands,
+                         @Value("${twitch.channelName}") String channelName,
+                         ModerationTwitchHelix moderationTwitchHelix,
+                         ChannelPointsRedemptionService channelPointsRedemptionService) {
         this.twitchAuthService = twitchAuthService;
         this.channelName = channelName;
         this.moderationTwitchHelix = moderationTwitchHelix;
+        this.channelPointsRedemptionService = channelPointsRedemptionService;
         start();
         botCommands = new HashMap<>();
         allCommands.forEach(command -> botCommands.put(command.getCommandIdentifier(), command));
@@ -62,6 +70,7 @@ public class TwitchChatBot {
         twitchClient = TwitchClientBuilder.builder()
                 .withEnableHelix(true)
                 .withEnableChat(true)
+                .withEnablePubSub(true)
                 .withChatAccount(credential)
                 .withDefaultEventHandler(SimpleEventHandler.class)
                 .build();
@@ -72,6 +81,11 @@ public class TwitchChatBot {
         TwitchToken moderationToken = twitchAuthService.getAndSaveNewModerationToken();
         moderationTwitchHelix.setHelix(twitchClient.getHelix());
         moderationTwitchHelix.setModerationToken(moderationToken.getAccessToken());
+
+        OAuth2Credential credentialForChannelPoints = new OAuth2Credential("twitch", moderationToken.getAccessToken());
+        String channelId = twitchClient.getChat().getChannelNameToChannelId().get(channelName);
+        twitchClient.getPubSub().listenForChannelPointsRedemptionEvents(credentialForChannelPoints, channelId);
+        twitchClient.getEventManager().onEvent(RewardRedeemedEvent.class, event -> channelPointsRedemptionService.onEvent(event, twitchClient.getChat()));
     }
 
     public void restart() {

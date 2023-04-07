@@ -4,6 +4,9 @@ twitch:
   botSecret: ${BOT_SECRET}
   moderationSecret: ${MODERATION_SECRET}
   moderationClientId: ${MODERATION_CLIENT_ID}
+  pixelWarsClientId: ${PIXEL_WARS_CLIENT_ID}
+  pixelWarsSecret: ${PIXEL_WARS_SECRET}
+  pixelWarsRedirectUrl: ${PIXEL_WARS_REDIRECT_URL:http://localhost:8080/pixel/editor}
 
 telegram:
   mentorUsername: Marandyuk_Anatolii
@@ -32,6 +35,6 @@ feign:
       default:
         loggerLevel: full
 
-logging:
-  level:
-    com.nekromant.twitch.feign.TwitchAuthFeign: debug
+pixelWars:
+  width: 100
+  height: 47

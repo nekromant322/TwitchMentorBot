@@ -108,22 +108,26 @@
     }
 
 
-
     function fetchMatrix() {
-        // let data;
-        // $.ajax({
-        //     url: "/pixel/matrix",
-        //     dataType: 'json',
-        //     type: 'GET',
-        //     contentType: "application/json",
-        //     async: false,
-        //     success: function (response) {
-        //         data = response;
-        //     }
-        //     // console.log(response)
-        // })
-        //TODO replace with actual data
-        return generateRandomMatrix(WIDTH, HEIGHT);
+        let data;
+        $.ajax({
+            url: "/pixel/matrix",
+            dataType: 'json',
+            type: 'GET',
+            contentType: "application/json",
+            async: false,
+            success: function (response) {
+                data = response;
+            }
+        })
+        let matrix = Array(HEIGHT).fill("white").map(() => Array(WIDTH).fill("white"))
+        for (let position in data) {
+            let row = position.split(":")[0];
+            let col = position.split(":")[1];
+
+            matrix[row][col] = data[position]
+        }
+        return matrix;
     }
 
 
