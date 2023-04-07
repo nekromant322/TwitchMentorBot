@@ -1,5 +1,6 @@
 package com.nekromant.twitch.feign;
 
+import com.nekromant.twitch.dto.ValidationTokenDTO;
 import com.nekromant.twitch.model.TwitchToken;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface TwitchAuthFeign {
 
     @GetMapping(value = "/validate")
-    ResponseEntity<?> validateToken(@RequestHeader(value = "Authorization") String authorizationHeader);
+    ResponseEntity<ValidationTokenDTO> validateToken(@RequestHeader(value = "Authorization") String authorizationHeader);
 
     @PostMapping(value = "/token?grant_type=refresh_token")
     ResponseEntity<TwitchToken> getNewTokenByRefreshToken(@RequestParam(value = "refresh_token") String refreshToken,

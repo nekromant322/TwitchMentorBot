@@ -1,5 +1,6 @@
 package com.nekromant.twitch.service;
 
+import com.nekromant.twitch.dto.ValidationTokenDTO;
 import com.nekromant.twitch.feign.TwitchAuthFeign;
 import com.nekromant.twitch.model.TwitchToken;
 import com.nekromant.twitch.repository.TwitchTokenRepository;
@@ -58,7 +59,7 @@ public class TwitchAuthService {
         String accessToken = token.getAccessToken();
 
         try {
-            ResponseEntity<?> response = twitchAuthFeign.validateToken(getAuthHeader(accessToken));
+            ResponseEntity<ValidationTokenDTO> response = twitchAuthFeign.validateToken(getAuthHeader(accessToken));
             if (response.getStatusCodeValue() == 200) {
                 System.out.println("Токен валидный - " + LocalDateTime.now().toLocalTime().toString());
                 return true;
