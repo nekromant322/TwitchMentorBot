@@ -118,8 +118,8 @@
         }
         console.log(row, col, colorToSet)
         if(sendPixel(row, col, colorToSet, accessToken)) {
-            // let pixel = e.target
-            // pixel.style.backgroundColor = colorToSet
+            let pixel = e.target
+            pixel.style.backgroundColor = colorToSet
             displayPixelsAvailable()
             fetchMatrix()
         }
@@ -211,7 +211,11 @@
             }
         })
         for (let pixel in data) {
-            document.getElementById(pixel).style.background = data[pixel]
+            let row = pixel.split(":")[0]
+            let col = pixel.split(":")[1]
+            if (row < HEIGHT && col < WIDTH) {
+                document.getElementById(pixel).style.background = data[pixel]
+            }
         }
     }
 
