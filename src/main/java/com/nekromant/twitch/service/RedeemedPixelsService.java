@@ -23,15 +23,15 @@ public class RedeemedPixelsService {
         return getByTwitchUsername(username);
     }
 
-    public RedeemedPixels save(String username) {
+    public RedeemedPixels save(String username, int count) {
         RedeemedPixels redeemedPixels = redeemedPixelsRepository.findByTwitchUsername(username);
         if (redeemedPixels == null) {
             redeemedPixels = new RedeemedPixels();
             redeemedPixels.setTwitchUsername(username);
-            redeemedPixels.setCountPixels(1);
+            redeemedPixels.setCountPixels(count);
         } else {
             int oldCount = redeemedPixels.getCountPixels();
-            redeemedPixels.setCountPixels(oldCount + 1);
+            redeemedPixels.setCountPixels(oldCount + count);
         }
         return redeemedPixelsRepository.save(redeemedPixels);
     }
