@@ -125,7 +125,9 @@
             let row = position.split(":")[0];
             let col = position.split(":")[1];
 
-            matrix[row][col] = data[position]
+            if (row < HEIGHT && col < WIDTH) {
+                matrix[row][col] = data[position]
+            }
         }
         return matrix;
     }
