@@ -3,13 +3,15 @@ package com.nekromant.twitch.command;
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 import com.nekromant.twitch.contant.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import static com.nekromant.twitch.contant.MessageContent.PIXEL_WARS;
 
 @Component
 public class PixelWarsCommand extends BotCommand {
-    public static final String LINK = "v1570779.hosted-by-vdsina.ru:8080/pixel";
+    @Value("${twitch.pixelWarsLink}")
+    private String LINK;
 
     @Autowired
     public PixelWarsCommand() {
