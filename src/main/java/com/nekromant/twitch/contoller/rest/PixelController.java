@@ -21,7 +21,7 @@ public class PixelController {
 
     @PostMapping("/pixel/editor")
     public void savePixel(@RequestBody PixelDTO pixelDTO, @RequestParam(value = "token") String accessToken) {
-        pixelStateService.savePixel(pixelDTO);
+        pixelStateService.savePixel(pixelDTO, accessToken);
         redeemedPixelsService.takeRedeemedPixel(accessToken);
     }
 

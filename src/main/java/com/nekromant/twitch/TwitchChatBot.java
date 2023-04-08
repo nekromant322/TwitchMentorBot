@@ -85,7 +85,7 @@ public class TwitchChatBot {
         OAuth2Credential credentialForChannelPoints = new OAuth2Credential("twitch", moderationToken.getAccessToken());
         String channelId = twitchClient.getChat().getChannelNameToChannelId().get(channelName);
         twitchClient.getPubSub().listenForChannelPointsRedemptionEvents(credentialForChannelPoints, channelId);
-        twitchClient.getEventManager().onEvent(RewardRedeemedEvent.class, event -> channelPointsRedemptionService.onEvent(event, twitchClient.getChat()));
+        twitchClient.getEventManager().onEvent(RewardRedeemedEvent.class, event -> channelPointsRedemptionService.onEvent(event));
     }
 
     public void restart() {

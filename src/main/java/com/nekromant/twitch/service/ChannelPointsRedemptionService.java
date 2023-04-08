@@ -1,20 +1,21 @@
 package com.nekromant.twitch.service;
 
-import com.github.twitch4j.chat.TwitchChat;
 import com.github.twitch4j.pubsub.domain.ChannelPointsRedemption;
 import com.github.twitch4j.pubsub.domain.ChannelPointsReward;
 import com.github.twitch4j.pubsub.events.RewardRedeemedEvent;
-import com.nekromant.twitch.contant.Message;
 import com.nekromant.twitch.model.RedeemedPixels;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import static com.nekromant.twitch.contant.MessageContent.PIXEL_WARS;
-
 @Service
 public class ChannelPointsRedemptionService {
-    private final static String PIXEL_REWARD_TITLE = "pixel(не работает)";
+    @Value("${twitch.rewardTitle.onePixelReward}")
+    private String ONE_PIXEL_REWARD_TITLE;
+    @Value("${twitch.rewardTitle.fivePixelReward}")
+    private String FIVE_PIXELS_REWARD_TITLE;
+    @Value("${twitch.rewardTitle.twentyFivePixelReward}")
+    private String TWENTY_FIVE_PIXELS_REWARD_TITLE;
     @Value("${pixelWars.width}")
     private int width;
     @Value("${pixelWars.height}")
@@ -22,27 +23,28 @@ public class ChannelPointsRedemptionService {
     @Value("${twitch.channelName}")
     private String channelName;
 
-    private static final String LINK = "v1570779.hosted-by-vdsina.ru:8080/pixel";
     @Autowired
     private RedeemedPixelsService redeemedPixelsService;
 
-    public void onEvent(RewardRedeemedEvent event, TwitchChat chat) {
+    public void onEvent(RewardRedeemedEvent event) {
         ChannelPointsRedemption redemption = event.getRedemption();
         ChannelPointsReward reward = redemption.getReward();
+        String username = redemption.getUser().getLogin();
+        String rewardTitle = reward.getTitle();
+        int pixelCount = 0;
 
-        if (reward.getTitle().equals(PIXEL_REWARD_TITLE)) {
-            String username = redemption.getUser().getLogin();
-            savePixel(username);
-            sendLinkToSelectionPixelsPage(username, chat);
+        if (rewardTitle.equals(ONE_PIXEL_REWARD_TITLE)) {
+            pixelCount = 1;
+        } else if (rewardTitle.equals(FIVE_PIXELS_REWARD_TITLE)) {
+            pixelCount = 5;
+        } else if (rewardTitle.equals(TWENTY_FIVE_PIXELS_REWARD_TITLE)) {
+            pixelCount = 25;
         }
+
+        savePixel(username, pixelCount);
     }
 
-    public RedeemedPixels savePixel(String username) {
-        return redeemedPixelsService.save(username);
-    }
-
-    public void sendLinkToSelectionPixelsPage(String senderUsername, TwitchChat chat) {
-        Message replyMessage = new Message(senderUsername, PIXEL_WARS + LINK);
-        chat.sendMessage(channelName, replyMessage.getMessage());
+    public RedeemedPixels savePixel(String username, int count) {
+        return redeemedPixelsService.save(username, count);
     }
 }

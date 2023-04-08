@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 public class PixelStateService {
     @Autowired
     private PixelStateRepository pixelStateRepository;
+    @Autowired
+    private RedeemedPixelsService redeemedPixelsService;
 
     public PixelState getPixelState() {
         PixelState pixelState = pixelStateRepository.findById(1L).orElse(null);
@@ -24,25 +26,30 @@ public class PixelStateService {
         return  (pixelState != null) ? pixelState.getMatrix() : null;
     }
 
-    public PixelState savePixel(PixelDTO pixel) {
-        PixelState pixelState = getPixelState();
-        ObjectMapper jsonMapper = new ObjectMapper();
-        ObjectNode json = jsonMapper.createObjectNode();
+    public PixelState savePixel(PixelDTO pixel, String token) {
+        int redeemedPixelCounts = redeemedPixelsService.getRedeemedPixelsCountByToken(token);
 
-        if (pixelState == null) {
-            pixelState = new PixelState();
-            pixelState.setId(1L);
-        } else {
-            String oldMatrix = pixelState.getMatrix();
-            try {
-                json = jsonMapper.readTree(oldMatrix).deepCopy();
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
+        if (redeemedPixelCounts > 0) {
+            PixelState pixelState = getPixelState();
+            ObjectMapper jsonMapper = new ObjectMapper();
+            ObjectNode json = jsonMapper.createObjectNode();
+
+            if (pixelState == null) {
+                pixelState = new PixelState();
+                pixelState.setId(1L);
+            } else {
+                String oldMatrix = pixelState.getMatrix();
+                try {
+                    json = jsonMapper.readTree(oldMatrix).deepCopy();
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
             }
-        }
 
-        json.put(pixel.getRow() + ":" + pixel.getCol(), pixel.getColor());
-        pixelState.setMatrix(json.toString());
-        return pixelStateRepository.save(pixelState);
+            json.put(pixel.getRow() + ":" + pixel.getCol(), pixel.getColor());
+            pixelState.setMatrix(json.toString());
+            return pixelStateRepository.save(pixelState);
+        }
+        return null;
     }
 }
