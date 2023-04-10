@@ -28,4 +28,4 @@ services:
       PIXEL_WARS_SECRET: ${PIXEL_WARS_SECRET}
       PIXEL_WARS_REDIRECT_URL: ${PIXEL_WARS_REDIRECT_URL}
     ports:
-      - "8080:8080"
+      - "9000:8080"

@@ -7,7 +7,7 @@ twitch:
   pixelWarsClientId: ${PIXEL_WARS_CLIENT_ID}
   pixelWarsSecret: ${PIXEL_WARS_SECRET}
   pixelWarsRedirectUrl: ${PIXEL_WARS_REDIRECT_URL:http://localhost:8080/pixel/editor}
-  pixelWarsLink: v1570779.hosted-by-vdsina.ru:8080/pixel
+  pixelWarsLink: overridetech.ru:9000/pixel
   rewardTitle:
     onePixelReward: pixel(не работает)
     fivePixelReward: 5 пикселей(не работает)
@@ -20,7 +20,7 @@ spring:
   datasource:
     password: ${POSTGRES_PASSWORD}
     username: ${POSTGRES_USER}
-    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/${POSTGRES_DB:twitch_bot}
+    url: jdbc:postgresql://twitch-bot-db:5432/${POSTGRES_DB:twitch_bot}
     driver-class-name: org.postgresql.Driver
 
   jpa:
