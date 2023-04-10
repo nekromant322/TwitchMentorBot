@@ -11,7 +11,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
 
   twitch-bot-app:
-    build: ./
+#     build: ./
     image: mabalda/twitch-chat-bot-twitch-bot-app:latest
     container_name: twitch-bot-app
     environment:
