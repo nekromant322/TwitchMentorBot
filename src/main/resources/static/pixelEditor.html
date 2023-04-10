@@ -167,7 +167,7 @@
     function setTableSize() {
         $.ajax({
             method: "GET",
-            url: "./size",
+            url: "/twitch-bot/size",
             async: false,
             success: function (data) {
                 WIDTH = data.width
@@ -200,7 +200,7 @@
         let count = 0
         $.ajax({
             method: "GET",
-            url: "./redeemed-pixels",
+            url: "/twitch-bot/redeemed-pixels",
             data: {"token": token},
             contentType: 'application/json',
             async: false,
@@ -214,7 +214,7 @@
     function fetchMatrix() {
         let data;
         $.ajax({
-            url: "/pixel/matrix",
+            url: "/twitch-bot/pixel/matrix",
             dataType: 'json',
             type: 'GET',
             contentType: "application/json",
