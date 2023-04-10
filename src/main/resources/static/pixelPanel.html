@@ -63,9 +63,10 @@
 <img src="" alt="">
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script>
-    const WIDTH = 160;
-    const HEIGHT = 95;
+    let WIDTH = 160;
+    let HEIGHT = 95;
     const UPDATE_INTERVAL_SECONDS = 5;
+    setTableSize()
     tick();
     window.setInterval(tick, UPDATE_INTERVAL_SECONDS * 1000);
 
@@ -132,7 +133,17 @@
         return matrix;
     }
 
-
+    function setTableSize() {
+        $.ajax({
+            method: "GET",
+            url: "./size",
+            async: false,
+            success: function (data) {
+                WIDTH = data.width
+                HEIGHT = data.height
+            }
+        })
+    }
 
 
 </script>

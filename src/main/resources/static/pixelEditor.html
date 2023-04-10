@@ -78,9 +78,10 @@
     let accessToken = document.location.hash.split("&")[0].split("=")[1]
     let countPixels = 0
 
-    const WIDTH = 160;
-    const HEIGHT = 95;
+    let WIDTH = 160;
+    let HEIGHT = 95;
     displayPixelsAvailable()
+    setTableSize()
     document.querySelector('#black').className = "color selected"
 
     let colorChosen = "black";
@@ -161,6 +162,18 @@
     function displayPixelsAvailable() {
         countPixels = fetchUserPixelAvailable(accessToken);
         document.getElementById('title').innerText = "Доступно пикселей : " + countPixels;
+    }
+
+    function setTableSize() {
+        $.ajax({
+            method: "GET",
+            url: "./size",
+            async: false,
+            success: function (data) {
+                WIDTH = data.width
+                HEIGHT = data.height
+            }
+        })
     }
 
     function sendPixel(row, col, color, token) {
