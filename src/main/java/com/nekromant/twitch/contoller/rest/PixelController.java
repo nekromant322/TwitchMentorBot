@@ -1,6 +1,7 @@
 package com.nekromant.twitch.contoller.rest;
 
 import com.nekromant.twitch.dto.PixelDTO;
+import com.nekromant.twitch.dto.TableSizeDTO;
 import com.nekromant.twitch.service.PixelStateService;
 import com.nekromant.twitch.service.RedeemedPixelsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,16 @@ public class PixelController {
         return redeemedPixelsCount;
     }
 
+    @GetMapping("/pixel/size")
+    public TableSizeDTO getTableSize() {
+        return pixelStateService.getTableSize();
+    }
+
     @PostMapping("/pixel/editor")
     public void savePixel(@RequestBody PixelDTO pixelDTO, @RequestParam(value = "token") String accessToken) {
-        pixelStateService.savePixel(pixelDTO, accessToken);
-        redeemedPixelsService.takeRedeemedPixel(accessToken);
+        if (pixelStateService.savePixel(pixelDTO, accessToken) != null) {
+            redeemedPixelsService.takeRedeemedPixel(accessToken);
+        }
     }
 
     @GetMapping("/pixel/matrix")
