@@ -167,7 +167,7 @@
     function setTableSize() {
         $.ajax({
             method: "GET",
-            url: "/twitch-bot/size",
+            url: "/twitch-bot/pixel/size",
             async: false,
             success: function (data) {
                 WIDTH = data.width
@@ -200,7 +200,7 @@
         let count = 0
         $.ajax({
             method: "GET",
-            url: "/twitch-bot/redeemed-pixels",
+            url: "/twitch-bot/pixel/redeemed-pixels",
             data: {"token": token},
             contentType: 'application/json',
             async: false,
