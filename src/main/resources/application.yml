@@ -21,7 +21,7 @@ spring:
   datasource:
     password: ${POSTGRES_PASSWORD}
     username: ${POSTGRES_USER}
-    url: jdbc:postgresql://twitch-bot-db:5432/${POSTGRES_DB:twitch_bot}
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/${POSTGRES_DB:twitch_bot}
     driver-class-name: org.postgresql.Driver
 
   jpa:
