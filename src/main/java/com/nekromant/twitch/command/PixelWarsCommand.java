@@ -1,12 +1,12 @@
 package com.nekromant.twitch.command;
 
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
-import com.nekromant.twitch.contant.Message;
+import com.nekromant.twitch.content.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import static com.nekromant.twitch.contant.MessageContent.PIXEL_WARS;
+import static com.nekromant.twitch.content.MessageContent.PIXEL_WARS;
 
 @Component
 public class PixelWarsCommand extends BotCommand {

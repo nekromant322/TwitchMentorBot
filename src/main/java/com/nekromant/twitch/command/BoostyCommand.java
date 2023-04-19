@@ -1,12 +1,12 @@
 package com.nekromant.twitch.command;
 
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
-import com.nekromant.twitch.contant.Message;
+import com.nekromant.twitch.content.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import static com.nekromant.twitch.contant.MessageContent.BOOSTY;
+import static com.nekromant.twitch.content.MessageContent.BOOSTY;
 
 @Component
 public class BoostyCommand extends BotCommand {

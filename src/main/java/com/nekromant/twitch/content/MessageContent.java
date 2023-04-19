@@ -1,4 +1,4 @@
-package com.nekromant.twitch.contant;
+package com.nekromant.twitch.content;
 
 public class MessageContent {
 
@@ -8,6 +8,6 @@ public class MessageContent {
     public static final String NO_PERMISSION = "Тебе недоступна эта команда";
     public static final String PIXEL_WARS = "Нарисуй свой пиксель тут -> ";
     public static final String BOOSTY = "Если хочешь поддержать - можно подписаться на бусти, " +
-            "там пока есть совсем немного плюшек";
+            "там пока есть совсем немного плюшек ";
 
 }

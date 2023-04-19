@@ -2,7 +2,7 @@ package com.nekromant.twitch.command;
 
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 import com.nekromant.twitch.ModerationTwitchHelix;
-import com.nekromant.twitch.contant.Message;
+import com.nekromant.twitch.content.Message;
 import com.nekromant.twitch.exception.PermissionException;
 import com.nekromant.twitch.service.ReviewScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.nekromant.twitch.contant.MessageContent.NO_PERMISSION;
-import static com.nekromant.twitch.contant.MessageContent.TODAY_UPDATE_CONFIRM;
+import static com.nekromant.twitch.content.MessageContent.NO_PERMISSION;
+import static com.nekromant.twitch.content.MessageContent.TODAY_UPDATE_CONFIRM;
 
 @Component
 public class TodayUpdateCommand extends BotCommand {
