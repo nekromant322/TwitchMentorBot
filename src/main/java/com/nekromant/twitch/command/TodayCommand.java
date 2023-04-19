@@ -1,6 +1,6 @@
 package com.nekromant.twitch.command;
 
-import com.nekromant.twitch.contant.Message;
+import com.nekromant.twitch.content.Message;
 import com.nekromant.twitch.dto.BookedReviewDTO;
 import com.nekromant.twitch.feign.MentoringReviewBotFeign;
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
@@ -14,8 +14,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.nekromant.twitch.contant.MessageContent.NO_REVIEWS;
-import static com.nekromant.twitch.contant.MessageContent.TODAY_REVIEW_HEADER;
+import static com.nekromant.twitch.content.MessageContent.NO_REVIEWS;
+import static com.nekromant.twitch.content.MessageContent.TODAY_REVIEW_HEADER;
 
 @Component
 public class TodayCommand extends BotCommand {

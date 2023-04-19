@@ -6,23 +6,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import static com.nekromant.twitch.content.MessageContent.PIXEL_WARS;
+import static com.nekromant.twitch.content.MessageContent.BOOSTY;
 
 @Component
-public class PixelWarsCommand extends BotCommand {
-    @Value("${twitch.pixelWarsLink}")
+public class BoostyCommand extends BotCommand {
+    @Value("${twitch.boostyLink}")
     private String LINK;
 
     @Autowired
-    public PixelWarsCommand() {
-        super("pixelwars", "Отправляет в чат ссылку на PixelWars");
+    public BoostyCommand() {
+        super("boosty", "Отправляет в чат ссылку на boosty");
     }
 
     @Override
     public void processMessage(ChannelMessageEvent event) {
         String channelName = event.getChannel().getName();
         String senderUsername = event.getMessageEvent().getUser().getName();
-        Message replyMessage = new Message(senderUsername, PIXEL_WARS + LINK);
+        Message replyMessage = new Message(senderUsername, BOOSTY + LINK);
         event.getMessageEvent().getTwitchChat().sendMessage(channelName, replyMessage.getMessage());
     }
 }

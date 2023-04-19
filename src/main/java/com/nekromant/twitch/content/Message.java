@@ -1,4 +1,4 @@
-package com.nekromant.twitch.contant;
+package com.nekromant.twitch.content;
 
 public class Message {
     private String tagUser;
