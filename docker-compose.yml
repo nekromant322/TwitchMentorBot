@@ -9,6 +9,8 @@ services:
       POSTGRES_DB: twitch_bot
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
 
   twitch-bot-app:
 #     build: ./
