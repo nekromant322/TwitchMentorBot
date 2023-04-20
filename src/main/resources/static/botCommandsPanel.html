@@ -12,7 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 
-
+    <script src="js/panelScripts.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <title>Панель команд</title>
@@ -26,8 +26,8 @@
                aria-selected="true" id="users-table-shower" onclick="refreshTable()">Commands Table</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#commands-add-show" role="tab" aria-controls="profile"
-               aria-selected="false" id="create-user-shower">Create Command</a>
+            <a class="nav-link" data-toggle="tab" href="#add-command-show" role="tab" aria-controls="profile"
+               aria-selected="false" id="add-command-shower">Create Command</a>
         </li>
     </ul>
 
@@ -44,18 +44,18 @@
                     <th>Delete</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody id="commands-table-body">
 
                 </tbody>
             </table>
         </div>
 
-        <div class="tab-pane fade" id="commands-add-show" role="tabpanel" aria-labelledby="commands-add-show">
+        <div class="tab-pane fade" id="add-command-show" role="tabpanel" aria-labelledby="add-command-show">
             <form method="post" id="add-command">
                 <div class="form-group">
                     <label>Command:</label>
                     <input type="text" class="form-control" placeholder="Command" aria-label="Command"
-                           aria-describedby="basic-addon1" id="adding-command">
+                           aria-describedby="basic-addon1" id="adding-command-name">
                 </div>
 
 
