@@ -10,6 +10,7 @@ import com.nekromant.twitch.command.BotCommand;
 import com.nekromant.twitch.model.TwitchToken;
 import com.nekromant.twitch.service.ChannelPointsRedemptionService;
 import com.nekromant.twitch.service.TwitchAuthService;
+import com.nekromant.twitch.service.TwitchCommandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -28,6 +29,9 @@ public class TwitchChatBot {
     private TwitchAuthService twitchAuthService;
     private ModerationTwitchHelix moderationTwitchHelix;
     private ChannelPointsRedemptionService channelPointsRedemptionService;
+
+    @Autowired
+    private TwitchCommandService twitchCommandService;
 
     @Autowired
     public TwitchChatBot(TwitchAuthService twitchAuthService,

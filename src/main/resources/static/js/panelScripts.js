@@ -4,7 +4,7 @@ window.onload = function () {
 
 function addCommand() {
     let command = {
-        name: "!" + $("#adding-command-name").val(),
+        name: $("#adding-command-name").val(),
         response: $("#adding-response").val(),
     }
     let commandjson = JSON.stringify(command);
@@ -54,7 +54,7 @@ function addRow(data) {
     let table = document.getElementById("commands-table").getElementsByTagName("tbody")[0];
     let tr = table.insertRow(table.rows.length);
 
-    insertTd(data.name, tr);
+    insertTd("!" + data.name, tr);
     insertTd(data.response, tr);
     insertEnableFlag(data, tr);
     insertEditBtn(data, tr);
