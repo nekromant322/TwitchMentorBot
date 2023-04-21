@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TwitchCommandRepository extends CrudRepository<TwitchCommand, Long> {
+    TwitchCommand findByName(String name);
 }

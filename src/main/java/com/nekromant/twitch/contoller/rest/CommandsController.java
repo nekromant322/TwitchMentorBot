@@ -30,8 +30,8 @@ public class CommandsController {
     }
 
     @PostMapping("/edit/{id}")
-    public void saveEdit(@RequestBody TwitchCommand twitchCommand) {
-        twitchCommandService.saveCommand(twitchCommand);
+    public void saveEdit(@RequestBody TwitchCommand updatedCommand) {
+        twitchCommandService.editCommand(updatedCommand);
     }
 
     @GetMapping("/delete/{id}")

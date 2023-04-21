@@ -17,10 +17,10 @@ public class TwitchCommand {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "command_name")
+    @Column
     private String name;
 
-    @Column(name = "command_response")
+    @Column
     private String response;
 
     @Column
