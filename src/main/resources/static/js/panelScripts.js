@@ -4,7 +4,7 @@ window.onload = function () {
 
 function addCommand() {
     let command = {
-        name: $("#adding-command-name").val(),
+        name: "!" + $("#adding-command-name").val(),
         response: $("#adding-response").val(),
     }
     let commandjson = JSON.stringify(command);
@@ -56,8 +56,7 @@ function addRow(data) {
 
     insertTd(data.name, tr);
     insertTd(data.response, tr);
-    insertTd(data.id, tr);
-    // insertEnableFlag(data, tr);
+    insertEnableFlag(data, tr);
     insertEditBtn(data, tr);
     insertDelBtn(data, tr);
 }
@@ -73,13 +72,37 @@ function insertEnableFlag(data, parent) {
     let td = document.createElement("td");
     td.scope = "row";
     let element = document.createElement("input");
-    element.className = "checkbox";
-    element.innerHTML = "<span class=\"slider round\"></span>";
+    element.type = "checkbox";
+    element.checked = data.enabled;
+
     element.addEventListener('change', () => {
-        alert('changed');
-    })
+        switchToggle(data);
+    });
+
     td.appendChild(element);
-    parent.insertAdjacentElement("beforeend", element);
+    parent.insertAdjacentElement("beforeend", td);
+}
+
+function switchToggle(data) {
+    let command = {
+        id: data.id,
+        name: data.name,
+        response: data.response,
+        enabled: data.enabled = data.enabled !== true
+    }
+    let commandjson = JSON.stringify(command)
+    $.ajax({
+        method: 'POST',
+        url: "/twitch-bot/edit/" + data.id.toString(),
+        data: commandjson,
+        contentType: "application/json; charset=utf8",
+        success: function () {
+            refreshTable();
+        },
+        error: function () {
+            alert('sth went wrong');
+        }
+    });
 }
 
 function insertDelBtn(data, parent) {
@@ -88,7 +111,7 @@ function insertDelBtn(data, parent) {
     let element = document.createElement("button");
     element.innerText = "Delete";
     element.type = "submit";
-    element.className = "btn btn-danger"
+    element.className = "btn btn-danger";
     element.addEventListener('click', () => {
         drawDeleteModal(data);
         $('#delete-command-modal').modal('show');
@@ -124,8 +147,9 @@ function drawEditModal(data) {
             document.getElementById('edit-button').onclick = (function () {
                 let command = {
                     id: data.id,
-                    name: $("#edit-command").val(), // $('#edit-command').val(),
-                    response: $("#edit-response").val() // $('#edit-response').val()
+                    name: $("#edit-command").val(),
+                    response: $("#edit-response").val(),
+                    enabled: data.enabled
                 }
                 let commandjson = JSON.stringify(command)
                 $.ajax({
@@ -152,7 +176,7 @@ function drawDeleteModal(data) {
             method: 'GET',
             url: "twitch-bot/delete/" + data.id.toString(),
             success: function () {
-                document.getElementById('close-delete').click();
+                $('#close-delete').trigger('click');
                 refreshTable();
             }
         })

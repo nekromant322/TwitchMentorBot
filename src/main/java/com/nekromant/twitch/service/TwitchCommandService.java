@@ -36,6 +36,7 @@ public class TwitchCommandService {
         TwitchCommand commandToUpdate = getCommand(updatedCommand.getId());
         commandToUpdate.setName(updatedCommand.getName());
         commandToUpdate.setResponse(updatedCommand.getResponse());
+        commandToUpdate.setEnabled(updatedCommand.isEnabled());
         twitchCommandRepository.save(commandToUpdate);
     }
 
