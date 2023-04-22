@@ -94,7 +94,7 @@ public class TwitchChatBot {
                 .build();
 
         twitchClient.getChat().joinChannel(channelName);
-        twitchClient.getEventManager().onEvent(ChannelMessageEvent.class, event -> onChatMessageEvent(event));
+        twitchClient.getEventManager().onEvent(ChannelMessageEvent.class, this::onChatMessageEvent);
 
         TwitchToken moderationToken = twitchAuthService.getAndSaveNewModerationToken();
         moderationTwitchHelix.setHelix(twitchClient.getHelix());
