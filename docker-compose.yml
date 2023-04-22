@@ -20,6 +20,8 @@ services:
       POSTGRES_DB: twitch_bot
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+      ADMIN: ${PANEL_USER}
+      ADMIN_PASSWORD: ${PANEL_PASSWORD}
       POSTGRES_HOST: twitch-bot-db
       BOT_CLIENT_ID: ${BOT_CLIENT_ID}
       BOT_SECRET: ${BOT_SECRET}

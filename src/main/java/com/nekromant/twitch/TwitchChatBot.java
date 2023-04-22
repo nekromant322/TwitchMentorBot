@@ -45,7 +45,7 @@ public class TwitchChatBot {
         this.channelName = channelName;
         this.moderationTwitchHelix = moderationTwitchHelix;
         this.channelPointsRedemptionService = channelPointsRedemptionService;
-//        start();
+        start();
         this.twitchCommandService = twitchCommandService;
         botCommandsClass = new HashMap<>();
         allCommandsClass.forEach(command -> botCommandsClass.put(command.getCommandIdentifier(), command));
