@@ -7,9 +7,12 @@ import com.github.twitch4j.TwitchClientBuilder;
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 import com.github.twitch4j.pubsub.events.RewardRedeemedEvent;
 import com.nekromant.twitch.command.BotCommand;
+import com.nekromant.twitch.content.Message;
 import com.nekromant.twitch.model.TwitchToken;
 import com.nekromant.twitch.service.ChannelPointsRedemptionService;
+import com.nekromant.twitch.service.ResponseService;
 import com.nekromant.twitch.service.TwitchAuthService;
+import com.nekromant.twitch.service.TwitchCommandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -21,27 +24,25 @@ import java.util.List;
 @Component
 public class TwitchChatBot {
     private final static String PREFIX = "!";
-
-    private HashMap<String, BotCommand> botCommands;
     private TwitchClient twitchClient;
     private String channelName;
     private TwitchAuthService twitchAuthService;
     private ModerationTwitchHelix moderationTwitchHelix;
     private ChannelPointsRedemptionService channelPointsRedemptionService;
+    private ResponseService responseService;
 
     @Autowired
     public TwitchChatBot(TwitchAuthService twitchAuthService,
-                         List<BotCommand> allCommands,
                          @Value("${twitch.channelName}") String channelName,
                          ModerationTwitchHelix moderationTwitchHelix,
-                         ChannelPointsRedemptionService channelPointsRedemptionService) {
+                         ChannelPointsRedemptionService channelPointsRedemptionService,
+                         ResponseService responseService) {
         this.twitchAuthService = twitchAuthService;
         this.channelName = channelName;
         this.moderationTwitchHelix = moderationTwitchHelix;
         this.channelPointsRedemptionService = channelPointsRedemptionService;
+        this.responseService = responseService;
         start();
-        botCommands = new HashMap<>();
-        allCommands.forEach(command -> botCommands.put(command.getCommandIdentifier(), command));
     }
 
     public void onChatMessageEvent(ChannelMessageEvent event) {
@@ -50,9 +51,7 @@ public class TwitchChatBot {
         if (isCommand(message)) {
             String command = message.split(" ")[0].substring(1);
 
-            if (botCommands.containsKey(command)) {
-                botCommands.get(command).processMessage(event);
-            }
+            responseService.response(event, command);
         }
     }
 
@@ -76,7 +75,7 @@ public class TwitchChatBot {
                 .build();
 
         twitchClient.getChat().joinChannel(channelName);
-        twitchClient.getEventManager().onEvent(ChannelMessageEvent.class, event -> onChatMessageEvent(event));
+        twitchClient.getEventManager().onEvent(ChannelMessageEvent.class, this::onChatMessageEvent);
 
         TwitchToken moderationToken = twitchAuthService.getAndSaveNewModerationToken();
         moderationTwitchHelix.setHelix(twitchClient.getHelix());

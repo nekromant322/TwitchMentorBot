@@ -4,11 +4,13 @@ twitch:
   botSecret: ${BOT_SECRET}
   moderationSecret: ${MODERATION_SECRET}
   moderationClientId: ${MODERATION_CLIENT_ID}
-  boostyLink: boosty.to/overridetech
   pixelWarsClientId: ${PIXEL_WARS_CLIENT_ID}
   pixelWarsSecret: ${PIXEL_WARS_SECRET}
   pixelWarsRedirectUrl: ${PIXEL_WARS_REDIRECT_URL:http://localhost:8080/pixel/editor}
-  pixelWarsLink: overridetech.ru/twitch-bot/pixel
+  adminName: ${ADMIN}
+  adminPassword: ${ADMIN_PASSWORD}
+
+
   rewardTitle:
     onePixelReward: pixel(не работает)
     fivePixelReward: 5 пикселей(не работает)
