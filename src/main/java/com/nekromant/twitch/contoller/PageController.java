@@ -39,4 +39,9 @@ public class PageController {
     public String getTwitchBotPanel() {
         return "/botCommandsPanel.html";
     }
+
+    @GetMapping("/login")
+    public String getLoginPage() {
+        return "/login.html";
+    }
 }
