@@ -35,7 +35,7 @@ public class PageController {
         return "/pixelPanel.html";
     }
 
-    @GetMapping("/twitch-bot")
+    @GetMapping("/commands")
     public String getTwitchBotPanel() {
         return "/botCommandsPanel.html";
     }

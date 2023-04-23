@@ -36,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/twitch-bot/**").hasRole("ADMIN")
+                .antMatchers("/commands/**").hasRole("ADMIN")
                 .anyRequest().permitAll()
                 .and().formLogin();
     }
