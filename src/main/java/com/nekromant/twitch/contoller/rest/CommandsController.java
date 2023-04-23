@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/twitch-bot")
+@RequestMapping("/commands")
 public class CommandsController {
     @Autowired
     private TwitchCommandService twitchCommandService;
 
-    @GetMapping("/commands")
+    @GetMapping("/list")
     public List<TwitchCommand> listCommands() {
         return twitchCommandService.getCommands();
     }
