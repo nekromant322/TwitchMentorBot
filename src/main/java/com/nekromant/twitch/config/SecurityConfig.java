@@ -39,6 +39,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/commands/**").hasRole("ADMIN")
                 .anyRequest().permitAll()
                 .and().formLogin()
-                .loginPage("/login").permitAll();
+                .loginPage("/login").defaultSuccessUrl("/commands", true).permitAll();
     }
 }
