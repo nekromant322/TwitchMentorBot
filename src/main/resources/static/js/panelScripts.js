@@ -10,7 +10,7 @@ function addCommand() {
     let commandjson = JSON.stringify(command);
     $.ajax({
         method: "POST",
-        url: "/commands/add",
+        url: "./commands/add",
         data: commandjson,
         contentType: "application/json; charset=utf8",
         success: function () {
@@ -32,7 +32,7 @@ function refreshTable() {
     $("#commands-table td").remove();
     $.ajax({
         method: 'GET',
-        url: '/commands/list',
+        url: './commands/list',
         contentType: 'application/json',
         success: function (response) {
             drawTable(response);
@@ -93,7 +93,7 @@ function switchToggle(data) {
     let commandjson = JSON.stringify(command)
     $.ajax({
         method: 'POST',
-        url: "/commands/edit/" + data.id.toString(),
+        url: "./commands/edit/" + data.id.toString(),
         data: commandjson,
         contentType: "application/json; charset=utf8",
         success: function () {
@@ -138,7 +138,7 @@ function insertEditBtn(data, parent) {
 function drawEditModal(data) {
     $.ajax({
         method: 'GET',
-        url: '/commands/edit/' + data.id.toString(),
+        url: './commands/edit/' + data.id.toString(),
         contentType: 'application/json',
         success: function () {
             $("#edit-command").val(data.name);
@@ -154,7 +154,7 @@ function drawEditModal(data) {
                 let commandjson = JSON.stringify(command)
                 $.ajax({
                     method: 'POST',
-                    url: "/commands/edit/" + data.id.toString(),
+                    url: "./commands/edit/" + data.id.toString(),
                     data: commandjson,
                     contentType: "application/json; charset=utf8",
                     success: function () {
@@ -174,7 +174,7 @@ function drawDeleteModal(data) {
     document.getElementById('delete-button').onclick = (function () {
         $.ajax({
             method: 'GET',
-            url: "/commands/delete/" + data.id.toString(),
+            url: "./commands/delete/" + data.id.toString(),
             success: function () {
                 $('#close-delete').trigger('click');
                 refreshTable();
