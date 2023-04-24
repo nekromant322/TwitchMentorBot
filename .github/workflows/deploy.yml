@@ -64,7 +64,6 @@ jobs:
             echo PIXEL_WARS_CLIENT_ID = ${{ secrets.PIXEL_WARS_CLIENT_ID }} >> twitch-env.txt
             echo PIXEL_WARS_SECRET = ${{ secrets.PIXEL_WARS_SECRET }} >> twitch-env.txt
             echo PIXEL_WARS_REDIRECT_URL = ${{ secrets.PIXEL_WARS_REDIRECT_URL }} >> twitch-env.txt
-            
             echo PANEL_USER = ${{ secrets.PANEL_USER }} >> twitch-env.txt
             echo PANEL_PASSWORD = ${{ secrets.PANEL_PASSWORD }} >> twitch-env.txt
             
