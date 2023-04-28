@@ -43,7 +43,7 @@ public class RedeemedPixelsService {
 
     public Integer getRedeemedPixelsCountByToken(String token) {
         RedeemedPixels pixels = getByToken(token);
-        return (pixels != null) ? pixels.getCountPixels() + 20 : null;
+        return (pixels != null) ? pixels.getCountPixels() : null;
     }
 
     public RedeemedPixels takeRedeemedPixel(String token) {
