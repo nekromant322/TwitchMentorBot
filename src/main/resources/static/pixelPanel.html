@@ -4,39 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OverrideTech pixel panel</title>
-    <style>
-        body {
-            margin: 0px;
-            width: 100%
-        }
-
-        #color-palette {
-            display: none;
-            flex-direction: row;
-            gap: 1px;
-            width: 200px;
-            height: 100px;
-            margin-left: 50px;
-        }
-
-        #pixel-board {
-            margin-top: 0px;
-            margin-left: 0px;
-        }
-
-        table {
-            border-spacing: 0;
-        }
-
-        .pixel {
-            background-color: white;
-            border: 0px solid black;
-            padding: 0px;
-            width: 8px;
-            height: 8px;
-        }
-
-    </style>
+    <link rel="stylesheet" href="/css/pixelPanel.css">
 
 </head>
 <body>
@@ -62,91 +30,7 @@
 </div>
 <img src="" alt="">
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script>
-    let WIDTH = 160;
-    let HEIGHT = 95;
-    const UPDATE_INTERVAL_SECONDS = 5;
-    setTableSize()
-    tick();
-    window.setInterval(tick, UPDATE_INTERVAL_SECONDS * 1000);
-
-    function tick() {
-        let colorMatrix = fetchMatrix();
-        redraw(colorMatrix)
-    }
-
-    function redraw(colorMatrix) {
-        let newRow = document.createElement('TR')
-        let newColumn = document.createElement('TD')
-        $("#table-of-pixel").empty()
-        for (let index = 0; index < HEIGHT; index += 1) {
-            newRow = document.createElement('TR')
-            document.querySelector('#table-of-pixel').appendChild(newRow)
-            createLineOfTable(WIDTH, index, colorMatrix)
-        }
-    }
-    function createLineOfTable(size, rowIndex, colorMatrix) {
-        let ops = document.querySelector('#table-of-pixel').lastChild
-        for (let index = 0; index < size; index += 1) {
-            newColumn = document.createElement('TD')
-            newColumn.id = rowIndex + ":" + index;
-            newColumn.style.backgroundColor = colorMatrix[rowIndex][index];
-
-            ops.appendChild(newColumn).className = 'pixel'
-
-
-        }
-    }
-
-    function generateRandomMatrix(width, height) {
-        return Array(height).fill(random_rgba()).map(() => Array(width).fill(random_rgba()))
-    }
-
-
-    function random_rgba() {
-        var o = Math.round, r = Math.random, s = 255;
-        return 'rgba(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ',' + r().toFixed(1) + ')';
-    }
-
-
-    function fetchMatrix() {
-        let data;
-        $.ajax({
-            url: "/twitch-bot/pixel/matrix",
-            dataType: 'json',
-            type: 'GET',
-            contentType: "application/json",
-            async: false,
-            success: function (response) {
-                data = response;
-            }
-        })
-        let matrix = Array(HEIGHT).fill("white").map(() => Array(WIDTH).fill("white"))
-        for (let position in data) {
-            let row = position.split(":")[0];
-            let col = position.split(":")[1];
-
-            if (row < HEIGHT && col < WIDTH) {
-                matrix[row][col] = data[position]
-            }
-        }
-        return matrix;
-    }
-
-    function setTableSize() {
-        $.ajax({
-            method: "GET",
-            url: "/twitch-bot/size",
-            async: false,
-            success: function (data) {
-                WIDTH = data.width
-                HEIGHT = data.height
-            }
-        })
-    }
-
-
-</script>
+<script src="/js/pixelPanel.js"></script>
 
 </body>
 </html>

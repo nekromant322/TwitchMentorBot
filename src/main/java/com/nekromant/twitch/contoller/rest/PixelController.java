@@ -2,38 +2,34 @@ package com.nekromant.twitch.contoller.rest;
 
 import com.nekromant.twitch.dto.PixelDTO;
 import com.nekromant.twitch.dto.TableSizeDTO;
+import com.nekromant.twitch.model.PixelState;
 import com.nekromant.twitch.service.PixelStateService;
 import com.nekromant.twitch.service.RedeemedPixelsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/pixel")
 public class PixelController {
     @Autowired
     private RedeemedPixelsService redeemedPixelsService;
     @Autowired
     private PixelStateService pixelStateService;
 
-    @GetMapping("/pixel/redeemed-pixels")
+    @GetMapping("/redeemed-pixels")
     public Integer getRedeemedPixelsCountByToken(@RequestParam(value = "token") String accessToken) {
-        Integer redeemedPixelsCount = redeemedPixelsService.getRedeemedPixelsCountByToken(accessToken);
-        return redeemedPixelsCount;
+        return redeemedPixelsService.getRedeemedPixelsCountByToken(accessToken);
     }
 
-    @GetMapping("/pixel/size")
+    @GetMapping("/size")
     public TableSizeDTO getTableSize() {
         return pixelStateService.getTableSize();
     }
 
-    @PostMapping("/pixel/editor")
+    @PostMapping("/editor")
     public void savePixel(@RequestBody PixelDTO pixelDTO, @RequestParam(value = "token") String accessToken) {
         if (pixelStateService.savePixel(pixelDTO, accessToken) != null) {
             redeemedPixelsService.takeRedeemedPixel(accessToken);
         }
-    }
-
-    @GetMapping("/pixel/matrix")
-    public String getPixelMatrix() {
-        return pixelStateService.getPixelMatrix();
     }
 }
