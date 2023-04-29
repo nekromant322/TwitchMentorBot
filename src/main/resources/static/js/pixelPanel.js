@@ -1,12 +1,18 @@
+let stompClient = null;
+
 let socket = new SockJS('/ws');
 stompClient = Stomp.over(socket);
 stompClient.connect({}, function (frame) {
     console.log(frame);
-    stompClient.subscribe('/pixel/editor', function () {
-        redraw(fetchMatrix())
+    stompClient.subscribe('/pixel/edit', function (result) {
+        let data = JSON.parse(result.body)
+        document.getElementById(data.row + ":" + data.col).style.background = data.color
     });
 });
 
+window.onload = function () {
+    redraw(fetchMatrix())
+}
 
 let WIDTH = 160;
 let HEIGHT = 95;

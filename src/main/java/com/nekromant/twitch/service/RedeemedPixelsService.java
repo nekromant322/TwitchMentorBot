@@ -46,9 +46,9 @@ public class RedeemedPixelsService {
         return (pixels != null) ? pixels.getCountPixels() : null;
     }
 
-    public RedeemedPixels takeRedeemedPixel(String token) {
+    public void takeRedeemedPixel(String token) {
         RedeemedPixels pixels = getByToken(token);
         pixels.setCountPixels(pixels.getCountPixels() - 1);
-        return redeemedPixelsRepository.save(pixels);
+        redeemedPixelsRepository.save(pixels);
     }
 }

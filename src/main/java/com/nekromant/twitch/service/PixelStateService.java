@@ -27,8 +27,7 @@ public class PixelStateService {
     }
 
     public PixelState getPixelState() {
-        PixelState pixelState = pixelStateRepository.findById(1L).orElse(null);
-        return pixelState;
+        return pixelStateRepository.findById(1L).orElse(null);
     }
 
     public String getPixelMatrix() {

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PixelDTO {
-    private int col;
-    private int row;
+    private Integer col;
+    private Integer row;
     private String color;
 }

@@ -7,12 +7,20 @@ displayPixelsAvailable()
 setTableSize()
 document.querySelector('#black').className = "color selected"
 
+window.onload = function () {
+    fetchMatrix()
+}
+
 let stompClient = null;
 
 let socket = new SockJS('/ws');
 stompClient = Stomp.over(socket);
 stompClient.connect({}, function (frame) {
     console.log(frame);
+    stompClient.subscribe('/pixel/edit', function (result) {
+        let data = JSON.parse(result.body)
+        document.getElementById(data.row + ":" + data.col).style.background = data.color
+    });
 });
 
 
@@ -46,12 +54,35 @@ function colorPixel(e) {
         return;
     }
     console.log(row, col, colorToSet)
-    if (sendPixel(row, col, colorToSet, accessToken)) {
-        let pixel = e.target
-        pixel.style.backgroundColor = colorToSet
-        stompClient.send('/pixel/editor', {}, row, col, colorToSet)
-        displayPixelsAvailable()
-        fetchMatrix()
+    sendPixel(e, row, col, colorToSet, accessToken)
+}
+
+function sendPixel(e, row, col, color, token) {
+    if (countPixels > 0) {
+        let urlForSendPixel = "./editor?token=" + token;
+        let data = {
+            "col": col,
+            "row": row,
+            "color": color
+        }
+        let dataJSON = JSON.stringify(data)
+        $.ajax({
+            method: "POST",
+            url: urlForSendPixel,
+            data: dataJSON,
+            contentType: 'application/json',
+            async: false,
+            success: function () {
+                let pixel = e.target
+                pixel.style.backgroundColor = color
+                stompClient.send('/pixel/edit', {}, dataJSON)
+                displayPixelsAvailable()
+                // fetchUserPixelAvailable(token)
+            },
+            error: function () {
+                alert('govnokod')
+            }
+        })
     }
 }
 
@@ -99,26 +130,6 @@ function setTableSize() {
             HEIGHT = data.height
         }
     })
-}
-
-function sendPixel(row, col, color, token) {
-    if (countPixels > 0) {
-        let urlForSendPixel = "./editor?token=" + token;
-        let data = {
-            "col": col,
-            "row": row,
-            "color": color
-        }
-        $.ajax({
-            method: "POST",
-            url: urlForSendPixel,
-            data: JSON.stringify(data),
-            contentType: 'application/json',
-            async: false
-        })
-        return true;
-    }
-    return false;
 }
 
 function fetchUserPixelAvailable(token) {

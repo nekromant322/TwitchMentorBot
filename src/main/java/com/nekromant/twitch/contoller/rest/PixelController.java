@@ -32,4 +32,9 @@ public class PixelController {
             redeemedPixelsService.takeRedeemedPixel(accessToken);
         }
     }
+
+    @GetMapping("/matrix")
+    public String getPixelMatrix()  {
+        return pixelStateService.getPixelMatrix();
+    }
 }
