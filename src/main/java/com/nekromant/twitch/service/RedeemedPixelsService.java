@@ -1,5 +1,6 @@
 package com.nekromant.twitch.service;
 
+import com.nekromant.twitch.cache.TokenUser;
 import com.nekromant.twitch.dto.ValidationTokenDTO;
 import com.nekromant.twitch.feign.TwitchAuthFeign;
 import com.nekromant.twitch.model.RedeemedPixels;
@@ -13,33 +14,9 @@ public class RedeemedPixelsService {
     private RedeemedPixelsRepository redeemedPixelsRepository;
     @Autowired
     private TwitchAuthFeign twitchAuthFeign;
+    @Autowired
+    private TokenUser tokenUser;
 
-    public RedeemedPixels getByTwitchUsername(String username) {
-        return redeemedPixelsRepository.findByTwitchUsername(username);
-    }
-
-    public RedeemedPixels getByToken(String token) {
-        String username = getUsernameByToken(token);
-        return getByTwitchUsername(username);
-    }
-
-    public RedeemedPixels save(String username, int count) {
-        RedeemedPixels redeemedPixels = redeemedPixelsRepository.findByTwitchUsername(username);
-        if (redeemedPixels == null) {
-            redeemedPixels = new RedeemedPixels();
-            redeemedPixels.setTwitchUsername(username);
-            redeemedPixels.setCountPixels(count);
-        } else {
-            int oldCount = redeemedPixels.getCountPixels();
-            redeemedPixels.setCountPixels(oldCount + count);
-        }
-        return redeemedPixelsRepository.save(redeemedPixels);
-    }
-
-    public String getUsernameByToken(String token) {
-        ValidationTokenDTO dto = twitchAuthFeign.validateToken("OAuth " + token).getBody();
-        return (dto != null) ? dto.getLogin() : null;
-    }
 
     public Integer getRedeemedPixelsCountByToken(String token) {
         RedeemedPixels pixels = getByToken(token);
@@ -50,5 +27,40 @@ public class RedeemedPixelsService {
         RedeemedPixels pixels = getByToken(token);
         pixels.setCountPixels(pixels.getCountPixels() - 1);
         redeemedPixelsRepository.save(pixels);
+    }
+
+    public RedeemedPixels getByToken(String token) {
+        String username = getUsernameByToken(token);
+        return getByTwitchUsername(username);
+    }
+
+    public String getUsernameByToken(String token) {
+        if (tokenUser.getUser(token) != null) {
+            return tokenUser.getUser(token);
+        }
+
+        ValidationTokenDTO dto = twitchAuthFeign.validateToken("OAuth " + token).getBody();
+        if (dto != null) {
+            tokenUser.putCache(token, dto.getLogin());
+            return dto.getLogin();
+        }
+        return null;
+    }
+
+    public RedeemedPixels getByTwitchUsername(String username) {
+        return redeemedPixelsRepository.findByTwitchUsername(username);
+    }
+
+    public void save(String username, int count) {
+          RedeemedPixels redeemedPixels = redeemedPixelsRepository.findByTwitchUsername(username);
+        if (redeemedPixels == null) {
+            redeemedPixels = new RedeemedPixels();
+            redeemedPixels.setTwitchUsername(username);
+            redeemedPixels.setCountPixels(count);
+        } else {
+            int oldCount = redeemedPixels.getCountPixels();
+            redeemedPixels.setCountPixels(oldCount + count);
+        }
+        redeemedPixelsRepository.save(redeemedPixels);
     }
 }

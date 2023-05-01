@@ -11,15 +11,9 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class WebSocketController {
-    @Autowired
-    private PixelStateService pixelStateService;
-
     @MessageMapping("/edit")
     @SendTo("/edit")
-    public PixelDTO sendPixel(PixelDTO pixel, String token) {
-        if (pixelStateService.savePixel(pixel, token) != null) {
-            pixelStateService.savePixel(pixel, token);
-        }
+    public PixelDTO sendPixel(PixelDTO pixel) {
         return pixel;
     }
 }
