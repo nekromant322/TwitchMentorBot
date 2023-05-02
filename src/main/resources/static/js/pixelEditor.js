@@ -77,7 +77,6 @@ function sendPixel(e, row, col, color, token) {
                 pixel.style.backgroundColor = color
                 stompClient.send('/pixel/edit', {}, dataJSON)
                 displayPixelsAvailable()
-                // fetchUserPixelAvailable(token)
             },
             error: function () {
                 alert('govnokod')

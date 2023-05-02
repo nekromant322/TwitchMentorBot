@@ -15,12 +15,6 @@ public class ChannelPointsRedemptionService {
     private String FIVE_PIXELS_REWARD_TITLE;
     @Value("${twitch.rewardTitle.twentyFivePixelReward}")
     private String TWENTY_FIVE_PIXELS_REWARD_TITLE;
-    @Value("${pixelWars.width}")
-    private int width;
-    @Value("${pixelWars.height}")
-    private int height;
-    @Value("${twitch.channelName}")
-    private String channelName;
 
     @Autowired
     private RedeemedPixelsService redeemedPixelsService;

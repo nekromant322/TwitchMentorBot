@@ -1,8 +1,7 @@
-package com.nekromant.twitch.contoller.rest;
+package com.nekromant.twitch.controller.rest;
 
 import com.nekromant.twitch.dto.PixelDTO;
 import com.nekromant.twitch.dto.TableSizeDTO;
-import com.nekromant.twitch.model.PixelState;
 import com.nekromant.twitch.service.PixelStateService;
 import com.nekromant.twitch.service.RedeemedPixelsService;
 import org.springframework.beans.factory.annotation.Autowired;

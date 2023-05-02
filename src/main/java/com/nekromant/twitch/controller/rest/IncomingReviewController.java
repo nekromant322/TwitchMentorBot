@@ -1,4 +1,4 @@
-package com.nekromant.twitch.contoller.rest;
+package com.nekromant.twitch.controller.rest;
 
 import com.nekromant.twitch.dto.BookedReviewDTO;
 import com.nekromant.twitch.feign.MentoringReviewBotFeign;

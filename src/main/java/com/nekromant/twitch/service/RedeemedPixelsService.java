@@ -53,7 +53,7 @@ public class RedeemedPixelsService {
     }
 
     public void save(String username, int count) {
-          RedeemedPixels redeemedPixels = redeemedPixelsRepository.findByTwitchUsername(username);
+        RedeemedPixels redeemedPixels = redeemedPixelsRepository.findByTwitchUsername(username);
         if (redeemedPixels == null) {
             redeemedPixels = new RedeemedPixels();
             redeemedPixels.setTwitchUsername(username);
