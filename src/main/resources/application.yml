@@ -1,5 +1,5 @@
 twitch:
-  channelName: etozhealexis
+  channelName: ${CHANNEL_NAME:overridetech}
   botClientId: ${BOT_CLIENT_ID}
   botSecret: ${BOT_SECRET}
   moderationSecret: ${MODERATION_SECRET}

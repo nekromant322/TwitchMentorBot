@@ -1,6 +1,6 @@
 package com.nekromant.twitch.service;
 
-import com.nekromant.twitch.cache.TokenUser;
+import com.nekromant.twitch.cache.TwitchTokenUserCache;
 import com.nekromant.twitch.dto.ValidationTokenDTO;
 import com.nekromant.twitch.feign.TwitchAuthFeign;
 import com.nekromant.twitch.model.RedeemedPixels;
@@ -15,8 +15,7 @@ public class RedeemedPixelsService {
     @Autowired
     private TwitchAuthFeign twitchAuthFeign;
     @Autowired
-    private TokenUser tokenUser;
-
+    private TwitchTokenUserCache twitchTokenUserCache;
 
     public Integer getRedeemedPixelsCountByToken(String token) {
         RedeemedPixels pixels = getByToken(token);
@@ -35,16 +34,18 @@ public class RedeemedPixelsService {
     }
 
     public String getUsernameByToken(String token) {
-        if (tokenUser.getUser(token) != null) {
-            return tokenUser.getUser(token);
+        String username = twitchTokenUserCache.getUser(token);
+        if (username != null) {
+            return username;
         }
 
-        ValidationTokenDTO dto = twitchAuthFeign.validateToken("OAuth " + token).getBody();
-        if (dto != null) {
-            tokenUser.putCache(token, dto.getLogin());
+        try {
+            ValidationTokenDTO dto = twitchAuthFeign.validateToken("OAuth " + token).getBody();
+            twitchTokenUserCache.putCache(token, dto.getLogin());
             return dto.getLogin();
+        } catch (NullPointerException e) {
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     public RedeemedPixels getByTwitchUsername(String username) {
