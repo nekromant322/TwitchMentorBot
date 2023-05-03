@@ -156,7 +156,7 @@
                 success: function () {
                     let pixel = e.target
                     pixel.style.backgroundColor = color
-                    stompClient.send('/pixel/edit', {}, dataJSON)
+                    stompClient.send('/twitch-bot/pixel/edit', {}, dataJSON)
                 },
                 error: function () {
                     alert('govnokod')
