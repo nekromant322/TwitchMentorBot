@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class TwitchTokenUserCache {
     private final int CACHE_MAX_SIZE = 250;
-    private final int CACHE_MAX_DAYS = 7;
+    private final int CACHE_MAX_DAYS = 1;
 
     private final Cache<String, String> cache;
 
