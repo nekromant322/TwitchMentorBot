@@ -4,7 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OverrideTech pixel panel</title>
-    <link rel="stylesheet" href="./css/pixelPanel.css">
+    <style>
+        body {
+            margin: 0px;
+            width: 100%
+        }
+
+        #color-palette {
+            display: none;
+            flex-direction: row;
+            gap: 1px;
+            width: 200px;
+            height: 100px;
+            margin-left: 50px;
+        }
+
+        #pixel-board {
+            margin-top: 0px;
+            margin-left: 0px;
+        }
+
+        table {
+            border-spacing: 0;
+        }
+
+        .pixel {
+            background-color: white;
+            border: 0px solid black;
+            padding: 0px;
+            width: 8px;
+            height: 8px;
+        }
+
+    </style>
 
 </head>
 <body>
@@ -30,7 +62,7 @@
 </div>
 <img src="" alt="">
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="./js/pixelPanel.js"></script>
+<script src="/js/pixelPanel.js"></script>
 
 </body>
 </html>

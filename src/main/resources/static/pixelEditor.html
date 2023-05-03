@@ -4,7 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OverrideTech pixel panel</title>
-    <link rel="stylesheet" href="./css/pixelEditor.css">
+    <style>
+        body {
+            margin: 0px;
+            width: 100%
+        }
+
+        #color-palette {
+            display: flex;
+            flex-direction: row;
+            gap: 1px;
+            width: 200px;
+            height: 100px;
+            margin-left: 50px;
+        }
+
+        .color {
+            width: 40px;
+            height: 40px;
+            margin: auto;
+            border: 1px solid black;
+        }
+
+        .selected {
+            border: 6px solid black;
+        }
+
+        #pixel-board {
+            margin-top: 0px;
+            margin-left: 40px;
+        }
+
+        table {
+            border-spacing: 0;
+        }
+
+        .pixel {
+            background-color: white;
+            border: 1px solid black;
+            padding: 0px;
+            width: 8px;
+            height: 8px;
+        }
+
+    </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
 
@@ -33,7 +76,7 @@
 </div>
 <img src="" alt="">
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="./js/pixelEditor.js"></script>
+<script src="/js/pixelEditor.js"></script>
 
 <script>
 
