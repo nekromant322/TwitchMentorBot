@@ -39,13 +39,9 @@ public class RedeemedPixelsService {
             return username;
         }
 
-        try {
-            ValidationTokenDTO dto = twitchAuthFeign.validateToken("OAuth " + token).getBody();
-            twitchTokenUserCache.putCache(token, dto.getLogin());
-            return dto.getLogin();
-        } catch (NullPointerException e) {
-            throw new RuntimeException(e);
-        }
+        ValidationTokenDTO dto = twitchAuthFeign.validateToken("OAuth " + token).getBody();
+        twitchTokenUserCache.putCache(token, dto.getLogin());
+        return dto.getLogin();
     }
 
     public RedeemedPixels getByTwitchUsername(String username) {

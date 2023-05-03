@@ -11,9 +11,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    @Value("${twitch.adminName}")
+    @Value("${twitch.security-config.adminName}")
     private String adminName;
-    @Value("${twitch.adminPassword}")
+    @Value("${twitch.security-config.adminPassword}")
     private String adminPassword;
 
     public SecurityConfig() {

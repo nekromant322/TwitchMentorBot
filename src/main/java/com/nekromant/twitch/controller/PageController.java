@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class PageController {
-    @Value("${twitch.pixelWarsClientId}")
+    @Value("${twitch.pixel-wars.pixelWarsClientId}")
     private String pixelWarsClientId;
 
-    @Value("${twitch.pixelWarsRedirectUrl}")
+    @Value("${twitch.pixel-wars.pixelWarsRedirectUrl}")
     private String pixelWarsRedirectUrl;
 
     @GetMapping("/incomingReviewWidget")
