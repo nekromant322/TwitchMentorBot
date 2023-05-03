@@ -12,13 +12,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.setApplicationDestinationPrefixes("/pixel");
-        config.enableSimpleBroker("/pixel");
+        config.setApplicationDestinationPrefixes("/twitch-bot/pixel");
+        config.enableSimpleBroker("/twitch-bot/pixel");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws");
-        registry.addEndpoint("/ws").withSockJS();
+        registry.addEndpoint("/twitch-bot/ws");
+        registry.addEndpoint("/twitch-bot/ws").withSockJS();
     }
 }

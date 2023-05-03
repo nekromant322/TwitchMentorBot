@@ -93,13 +93,14 @@
 
     let stompClient = null;
 
-    let socket = new SockJS('/ws');
+    let socket = new SockJS('/twitch-bot/ws');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         console.log(frame);
-        stompClient.subscribe('/pixel/edit', function (result) {
+        stompClient.subscribe('/twitch-bot/pixel/edit', function (result) {
             let data = JSON.parse(result.body)
             document.getElementById(data.row + ":" + data.col).style.background = data.color
+            displayPixelsAvailable()
         });
     });
 
@@ -156,7 +157,6 @@
                     let pixel = e.target
                     pixel.style.backgroundColor = color
                     stompClient.send('/pixel/edit', {}, dataJSON)
-                    displayPixelsAvailable()
                 },
                 error: function () {
                     alert('govnokod')
