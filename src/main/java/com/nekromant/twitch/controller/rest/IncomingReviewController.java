@@ -1,4 +1,4 @@
-package com.nekromant.twitch.contoller.rest;
+package com.nekromant.twitch.controller.rest;
 
 import com.nekromant.twitch.dto.BookedReviewDTO;
 import com.nekromant.twitch.feign.MentoringReviewBotFeign;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class IncomingReviewRestController {
+public class IncomingReviewController {
     @Autowired
     private MentoringReviewBotFeign mentoringReviewBotFeign;
     @Value("${telegram.mentorUsername}")

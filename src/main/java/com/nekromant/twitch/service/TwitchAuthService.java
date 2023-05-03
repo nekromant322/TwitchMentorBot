@@ -14,13 +14,13 @@ import java.time.LocalDateTime;
 
 @Service
 public class TwitchAuthService {
-    @Value("${twitch.botClientId}")
+    @Value("${twitch.auth.botClientId}")
     private String botClientId;
-    @Value("${twitch.botSecret}")
+    @Value("${twitch.auth.botSecret}")
     private String botSecret;
-    @Value("${twitch.moderationClientId}")
+    @Value("${twitch.auth.moderationClientId}")
     private String moderationClientId;
-    @Value("${twitch.moderationSecret}")
+    @Value("${twitch.auth.moderationSecret}")
     private String moderationSecret;
 
     @Autowired

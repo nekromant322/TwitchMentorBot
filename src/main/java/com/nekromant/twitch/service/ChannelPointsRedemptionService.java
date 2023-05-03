@@ -3,7 +3,6 @@ package com.nekromant.twitch.service;
 import com.github.twitch4j.pubsub.domain.ChannelPointsRedemption;
 import com.github.twitch4j.pubsub.domain.ChannelPointsReward;
 import com.github.twitch4j.pubsub.events.RewardRedeemedEvent;
-import com.nekromant.twitch.model.RedeemedPixels;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,12 +15,6 @@ public class ChannelPointsRedemptionService {
     private String FIVE_PIXELS_REWARD_TITLE;
     @Value("${twitch.rewardTitle.twentyFivePixelReward}")
     private String TWENTY_FIVE_PIXELS_REWARD_TITLE;
-    @Value("${pixelWars.width}")
-    private int width;
-    @Value("${pixelWars.height}")
-    private int height;
-    @Value("${twitch.channelName}")
-    private String channelName;
 
     @Autowired
     private RedeemedPixelsService redeemedPixelsService;
@@ -44,7 +37,7 @@ public class ChannelPointsRedemptionService {
         savePixel(username, pixelCount);
     }
 
-    public RedeemedPixels savePixel(String username, int count) {
-        return redeemedPixelsService.save(username, count);
+    public void savePixel(String username, int count) {
+        redeemedPixelsService.save(username, count);
     }
 }
