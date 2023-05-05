@@ -37,6 +37,8 @@
         }
 
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
 
 </head>
 <body>
@@ -63,6 +65,15 @@
 <img src="" alt="">
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script>
+
+    let WIDTH = 160;
+    let HEIGHT = 95;
+    setTableSize()
+
+    window.onload = function () {
+        redraw(fetchMatrix())
+    }
+
     let stompClient = null;
 
     let socket = new SockJS('/twitch-bot/ws');
@@ -74,14 +85,6 @@
             document.getElementById(data.row + ":" + data.col).style.background = data.color
         });
     });
-
-    window.onload = function () {
-        redraw(fetchMatrix())
-    }
-
-    let WIDTH = 160;
-    let HEIGHT = 95;
-    setTableSize()
 
     function redraw(colorMatrix) {
         let newRow = document.createElement('TR')
@@ -133,7 +136,7 @@
     function setTableSize() {
         $.ajax({
             method: "GET",
-            url: "/twitch-bot/size",
+            url: "/twitch-bot/pixel/size",
             async: false,
             success: function (data) {
                 WIDTH = data.width
