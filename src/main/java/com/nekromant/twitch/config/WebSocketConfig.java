@@ -18,7 +18,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/twitch-bot/ws").setAllowedOrigins("*");
-        registry.addEndpoint("/twitch-bot/ws").setAllowedOrigins("*").withSockJS();
+        registry.addEndpoint("/twitch-bot/ws").setAllowedOriginPatterns("*");
+        registry.addEndpoint("/twitch-bot/ws").setAllowedOriginPatterns("*").withSockJS();
     }
 }
