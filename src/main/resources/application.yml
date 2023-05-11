@@ -15,9 +15,9 @@ twitch:
 
 
   rewardTitle:
-    onePixelReward: pixel(не работает)
-    fivePixelReward: 5 пикселей(не работает)
-    twentyFivePixelReward: 25 пикселей(не работает)
+    onePixelReward: 1 пиксель !pw
+    fivePixelReward: 5 пикселей !pw
+    twentyFivePixelReward: 25 пикселей !pw
 
 telegram:
   mentorUsername: Marandyuk_Anatolii
