@@ -16,10 +16,15 @@ public class RedeemedPixelsService {
     private TwitchAuthFeign twitchAuthFeign;
     @Autowired
     private TwitchTokenUserCache twitchTokenUserCache;
+    private final Integer NEW_USER_COUNT_PIXELS = 0;
 
     public Integer getRedeemedPixelsCountByToken(String token) {
         RedeemedPixels pixels = getByToken(token);
-        return (pixels != null) ? pixels.getCountPixels() : null;
+        if (pixels != null) {
+            return pixels.getCountPixels();
+        }
+        save(getUsernameByToken(token), NEW_USER_COUNT_PIXELS);
+        return NEW_USER_COUNT_PIXELS;
     }
 
     public void takeRedeemedPixel(String token) {
