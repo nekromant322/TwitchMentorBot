@@ -21,6 +21,7 @@ twitch:
 
 telegram:
   mentorUsername: Marandyuk_Anatolii
+  reviewBotHost: https://overridetech.ru:9100
 
 spring:
   datasource:

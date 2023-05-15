@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(name = "mentoringReviewBot", url = "https://mentoring-review-bot.herokuapp.com")
+@FeignClient(name = "mentoringReviewBot", url = "${telegram.reviewBotHost}")
 public interface MentoringReviewBotFeign {
 
     @GetMapping(value = "/incoming-review-with-period")
