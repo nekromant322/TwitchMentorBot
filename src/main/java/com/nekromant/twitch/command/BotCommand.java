@@ -13,11 +13,11 @@ public abstract class BotCommand {
 
     public abstract void processMessage(ChannelMessageEvent event);
 
-    public final String getCommandIdentifier() {
+    public String getCommandIdentifier() {
         return this.commandIdentifier;
     }
 
-    public final String getDescription() {
+    public String getDescription() {
         return this.description;
     }
 }
