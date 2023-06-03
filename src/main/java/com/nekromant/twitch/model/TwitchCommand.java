@@ -24,6 +24,9 @@ public class TwitchCommand {
     private String response;
 
     @Column
+    private Long period;
+
+    @Column
     private boolean enabled;
 
     public TwitchCommand(String name, String response) {
