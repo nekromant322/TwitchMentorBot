@@ -2,16 +2,12 @@ package com.nekromant.twitch.task;
 
 import com.github.twitch4j.TwitchClient;
 import com.nekromant.twitch.model.TwitchCommand;
-import org.springframework.stereotype.Component;
 
-@Component
+
 public class TwitchCommandTimerTask implements Runnable {
-    private TwitchClient twitchClient;
-    private String channelName;
-    private TwitchCommand twitchCommand;
-
-    public TwitchCommandTimerTask() {
-    }
+    private final TwitchClient twitchClient;
+    private final String channelName;
+    private final TwitchCommand twitchCommand;
 
     public TwitchCommandTimerTask(TwitchClient twitchClient, String channelName, TwitchCommand twitchCommand) {
         this.twitchClient = twitchClient;
