@@ -6,12 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TwitchCommandService {
     @Autowired
     private TwitchCommandRepository twitchCommandRepository;
+    @Autowired
+    private TwitchCommandTimerService twitchCommandTimerService;
 
     public List<TwitchCommand> getCommands() {
         return (List<TwitchCommand>) twitchCommandRepository.findAll();
@@ -30,17 +31,21 @@ public class TwitchCommandService {
 
     public void saveCommand(TwitchCommand command) {
         twitchCommandRepository.save(command);
+        twitchCommandTimerService.createTimerTask(command);
     }
 
     public void editCommand(TwitchCommand updatedCommand) {
         TwitchCommand commandToUpdate = getCommand(updatedCommand.getId());
         commandToUpdate.setName(updatedCommand.getName());
         commandToUpdate.setResponse(updatedCommand.getResponse());
+        commandToUpdate.setPeriod(updatedCommand.getPeriod());
         commandToUpdate.setEnabled(updatedCommand.isEnabled());
+        twitchCommandTimerService.updateTimerTask(updatedCommand);
         twitchCommandRepository.save(commandToUpdate);
     }
 
     public void deleteCommand(Long id) {
+        twitchCommandTimerService.deleteTimerTask(id);
         twitchCommandRepository.deleteById(id);
     }
 }

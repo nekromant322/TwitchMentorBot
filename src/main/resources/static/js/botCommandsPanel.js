@@ -6,6 +6,7 @@ function addCommand() {
     let command = {
         name: $("#adding-command-name").val(),
         response: $("#adding-response").val(),
+        period: $("#adding-period").val(),
     }
     let commandjson = JSON.stringify(command);
     $.ajax({
@@ -26,6 +27,7 @@ function addCommand() {
 function refreshAddCommand() {
     $("#adding-command-name").val('');
     $("#adding-response").val('');
+    $("#adding-period").val('');
 }
 
 function refreshTable() {
@@ -56,6 +58,7 @@ function addRow(data) {
 
     insertTd("!" + data.name, tr);
     insertTd(data.response, tr);
+    insertTd(data.period, tr);
     insertEnableFlag(data, tr);
     insertEditBtn(data, tr);
     insertDelBtn(data, tr);
@@ -88,6 +91,7 @@ function switchToggle(data) {
         id: data.id,
         name: data.name,
         response: data.response,
+        period: data.period,
         enabled: data.enabled = data.enabled !== true
     }
     let commandjson = JSON.stringify(command)
@@ -143,12 +147,14 @@ function drawEditModal(data) {
         success: function () {
             $("#edit-command").val(data.name);
             $("#edit-response").val(data.response);
+            $("#edit-period").val(data.period);
 
             document.getElementById('edit-button').onclick = (function () {
                 let command = {
                     id: data.id,
                     name: $("#edit-command").val(),
                     response: $("#edit-response").val(),
+                    period: $("#edit-period").val(),
                     enabled: data.enabled
                 }
                 let commandjson = JSON.stringify(command)
