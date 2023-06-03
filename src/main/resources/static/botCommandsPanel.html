@@ -41,6 +41,7 @@
                 <tr>
                     <th>Command</th>
                     <th>Response</th>
+                    <th>Period</th>
                     <th>Enable</th>
                     <th>Update</th>
                     <th>Delete</th>
@@ -65,6 +66,12 @@
                     <label>Response:</label>
                     <input type="text" class="form-control" placeholder="Response" aria-label="Res[onse"
                            aria-describedby="basic-addon1" id="adding-response">
+                </div>
+
+                <div class="form-group">
+                    <label>Period:</label>
+                    <input type="text" class="form-control" placeholder="Period" aria-label="Period"
+                           aria-describedby="basic-addon1" id="adding-period">
                 </div>
 
                 <input class="btn btn-primary" type="button" onclick="addCommand()" value="Create"/>
@@ -94,6 +101,10 @@
                     <div class="form-group">
                         <label for="edit-response">Response: </label>
                         <input type="text" class="form-control" id="edit-response">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-period">Period: </label>
+                        <input type="text" class="form-control" id="edit-period">
                     </div>
 
                 </form>
