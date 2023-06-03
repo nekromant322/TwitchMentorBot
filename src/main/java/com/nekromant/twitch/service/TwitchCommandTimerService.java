@@ -13,12 +13,13 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Setter
 @Component
 public class TwitchCommandTimerService {
     @Autowired
-    TwitchCommandRepository twitchCommandRepository;
+    private TwitchCommandRepository twitchCommandRepository;
 
     private TwitchClient twitchClient;
 
@@ -30,9 +31,13 @@ public class TwitchCommandTimerService {
     }
 
     public void executedCommandsByTime() {
-        List<TwitchCommand> twitchCommands = (List<TwitchCommand>) twitchCommandRepository.findAll();
-        if (!twitchCommands.isEmpty()) {
-            for (TwitchCommand twitchCommand : twitchCommands) {
+        List<TwitchCommand> allTwitchCommands = (List<TwitchCommand>) twitchCommandRepository.findAll();
+        List<TwitchCommand> availableTwitchCommands= allTwitchCommands.stream()
+                .filter((command)->command.getPeriod()!=0)
+                .filter(TwitchCommand::isEnabled)
+                .collect(Collectors.toList());
+        if (!availableTwitchCommands.isEmpty()) {
+            for (TwitchCommand twitchCommand : availableTwitchCommands) {
                 createTimerTask(twitchCommand);
             }
         }
