@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Setter
 @Component
@@ -25,21 +24,18 @@ public class TwitchCommandTimerService {
 
     private String channelName;
 
+    private Long NOT_PERIOD_EXECUTION = 0L;
+
     private final HashMap<Long, ScheduledExecutorService> hashMap = new HashMap<>();
 
     public TwitchCommandTimerService() {
     }
 
     public void executedCommandsByTime() {
-        List<TwitchCommand> allTwitchCommands = (List<TwitchCommand>) twitchCommandRepository.findAll();
-        List<TwitchCommand> availableTwitchCommands= allTwitchCommands.stream()
-                .filter((command)->command.getPeriod()!=0)
-                .filter(TwitchCommand::isEnabled)
-                .collect(Collectors.toList());
-        if (!availableTwitchCommands.isEmpty()) {
-            for (TwitchCommand twitchCommand : availableTwitchCommands) {
-                createTimerTask(twitchCommand);
-            }
+        List<TwitchCommand> allTwitchCommands =
+                twitchCommandRepository.findAllByPeriodNotAndEnabledIsTrue(NOT_PERIOD_EXECUTION);
+        for (TwitchCommand twitchCommand : allTwitchCommands) {
+            createTimerTask(twitchCommand);
         }
     }
 
@@ -66,6 +62,6 @@ public class TwitchCommandTimerService {
     }
 
     private boolean validateCommand(TwitchCommand twitchCommand) {
-        return twitchCommand.isEnabled() && twitchCommand.getPeriod() != 0;
+        return twitchCommand.isEnabled() && !twitchCommand.getPeriod().equals(NOT_PERIOD_EXECUTION);
     }
 }
