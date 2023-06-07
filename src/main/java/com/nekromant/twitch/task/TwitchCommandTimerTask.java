@@ -26,7 +26,7 @@ public class TwitchCommandTimerTask implements Runnable {
     public void run() {
         if (isLiveStream()) {
             twitchClientHolder.getTwitchClient().getChat().sendMessage(channelName, twitchCommand.getResponse());
-            log.info("Running task for command !" + twitchCommand.getName());
+            log.info("Running task for command: !" + twitchCommand.getName());
         }
     }
 
