@@ -33,19 +33,22 @@ public class TwitchChatBot {
     private ModerationTwitchHelix moderationTwitchHelix;
     private ChannelPointsRedemptionService channelPointsRedemptionService;
     private ResponseService responseService;
+    private TwitchClientHolder twitchClientHolder;
 
     @Autowired
     public TwitchChatBot(TwitchAuthService twitchAuthService,
                          @Value("${twitch.channelName}") String channelName,
                          ModerationTwitchHelix moderationTwitchHelix,
                          ChannelPointsRedemptionService channelPointsRedemptionService,
-                         ResponseService responseService, TwitchCommandTimerService twitchCommandTimerService) {
+                         ResponseService responseService, TwitchCommandTimerService twitchCommandTimerService,
+                         TwitchClientHolder twitchClientHolder) {
         this.twitchAuthService = twitchAuthService;
         this.channelName = channelName;
         this.moderationTwitchHelix = moderationTwitchHelix;
         this.channelPointsRedemptionService = channelPointsRedemptionService;
         this.responseService = responseService;
         this.twitchCommandTimerService = twitchCommandTimerService;
+        this.twitchClientHolder = twitchClientHolder;
         start();
     }
 
@@ -89,6 +92,7 @@ public class TwitchChatBot {
         String channelId = twitchClient.getChat().getChannelNameToChannelId().get(channelName);
         twitchClient.getPubSub().listenForChannelPointsRedemptionEvents(credentialForChannelPoints, channelId);
         twitchClient.getEventManager().onEvent(RewardRedeemedEvent.class, event -> channelPointsRedemptionService.onEvent(event));
+        twitchClientHolder.setTwitchClient(twitchClient);
     }
 
     public void restart() {
@@ -108,7 +112,6 @@ public class TwitchChatBot {
     }
     @PostConstruct
     public void startingCommandsByTime() {
-        twitchCommandTimerService.setTwitchClient(twitchClient);
         twitchCommandTimerService.executedCommandsByTime();
     }
 }
