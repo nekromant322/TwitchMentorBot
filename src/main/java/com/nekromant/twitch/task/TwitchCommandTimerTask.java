@@ -3,10 +3,11 @@ package com.nekromant.twitch.task;
 import com.nekromant.twitch.TwitchClientHolder;
 import com.nekromant.twitch.model.TwitchCommand;
 import com.nekromant.twitch.service.TwitchAuthService;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
 
-
+@Slf4j
 public class TwitchCommandTimerTask implements Runnable {
     private final TwitchClientHolder twitchClientHolder;
     private final String channelName;
@@ -25,6 +26,7 @@ public class TwitchCommandTimerTask implements Runnable {
     public void run() {
         if (isLiveStream()) {
             twitchClientHolder.getTwitchClient().getChat().sendMessage(channelName, twitchCommand.getResponse());
+            log.info("Running task for command !" + twitchCommand.getName());
         }
     }
 
