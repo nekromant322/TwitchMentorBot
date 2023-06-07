@@ -5,6 +5,7 @@ import com.nekromant.twitch.model.TwitchCommand;
 import com.nekromant.twitch.repository.TwitchCommandRepository;
 import com.nekromant.twitch.task.TwitchCommandTimerTask;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Setter
 @Component
 public class TwitchCommandTimerService {
@@ -47,6 +49,7 @@ public class TwitchCommandTimerService {
                     (new TwitchCommandTimerTask(twitchClientHolder, channelName, twitchCommand, twitchAuthService),
                             0, twitchCommand.getPeriod(), TimeUnit.MINUTES);
             hashMap.put(twitchCommand.getId(), scheduler);
+            log.info("Create timerTask for command " + twitchCommand.getName());
         }
     }
 
@@ -60,6 +63,7 @@ public class TwitchCommandTimerService {
         if (schedulerCommand != null) {
             schedulerCommand.shutdown();
             hashMap.remove(id);
+            log.info("Delete timerTask for command with Id" + id);
         }
     }
 
