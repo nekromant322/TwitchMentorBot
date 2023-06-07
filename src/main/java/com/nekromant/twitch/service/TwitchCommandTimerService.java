@@ -49,7 +49,7 @@ public class TwitchCommandTimerService {
                     (new TwitchCommandTimerTask(twitchClientHolder, channelName, twitchCommand, twitchAuthService),
                             0, twitchCommand.getPeriod(), TimeUnit.MINUTES);
             hashMap.put(twitchCommand.getId(), scheduler);
-            log.info("Create timerTask for command " + twitchCommand.getName());
+            log.info("Create timerTask for command: !" + twitchCommand.getName() + " with Id: " + twitchCommand.getId());
         }
     }
 
@@ -63,7 +63,7 @@ public class TwitchCommandTimerService {
         if (schedulerCommand != null) {
             schedulerCommand.shutdown();
             hashMap.remove(id);
-            log.info("Delete timerTask for command with Id" + id);
+            log.info("Delete timerTask for command with Id: " + id);
         }
     }
 
