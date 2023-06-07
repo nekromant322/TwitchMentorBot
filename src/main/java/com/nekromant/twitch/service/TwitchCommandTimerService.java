@@ -1,6 +1,6 @@
 package com.nekromant.twitch.service;
 
-import com.github.twitch4j.TwitchClient;
+import com.nekromant.twitch.TwitchClientHolder;
 import com.nekromant.twitch.model.TwitchCommand;
 import com.nekromant.twitch.repository.TwitchCommandRepository;
 import com.nekromant.twitch.task.TwitchCommandTimerTask;
@@ -22,16 +22,16 @@ public class TwitchCommandTimerService {
     private TwitchCommandRepository twitchCommandRepository;
     @Autowired
     private TwitchAuthService twitchAuthService;
+    @Autowired
+    private TwitchClientHolder twitchClientHolder;
     @Value("${twitch.channelName}")
     private String channelName;
-    private TwitchClient twitchClient;
     private Long NOT_PERIOD_EXECUTION = 0L;
     private final HashMap<Long, ScheduledExecutorService> hashMap = new HashMap<>();
 
     public TwitchCommandTimerService() {
     }
 
-    //    @PostConstruct
     public void executedCommandsByTime() {
         List<TwitchCommand> allTwitchCommands =
                 twitchCommandRepository.findAllByPeriodNotAndEnabledIsTrue(NOT_PERIOD_EXECUTION);
@@ -43,8 +43,9 @@ public class TwitchCommandTimerService {
     public void createTimerTask(TwitchCommand twitchCommand) {
         if (validateCommand(twitchCommand)) {
             ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-            scheduler.scheduleAtFixedRate(new TwitchCommandTimerTask(twitchClient, channelName, twitchCommand, twitchAuthService),
-                    0, twitchCommand.getPeriod(), TimeUnit.MINUTES);
+            scheduler.scheduleAtFixedRate
+                    (new TwitchCommandTimerTask(twitchClientHolder, channelName, twitchCommand, twitchAuthService),
+                            0, twitchCommand.getPeriod(), TimeUnit.MINUTES);
             hashMap.put(twitchCommand.getId(), scheduler);
         }
     }
