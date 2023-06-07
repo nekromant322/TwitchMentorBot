@@ -1,11 +1,13 @@
 package com.nekromant.twitch.service;
 
-import com.github.twitch4j.TwitchClient;
+import com.nekromant.twitch.TwitchClientHolder;
 import com.nekromant.twitch.model.TwitchCommand;
 import com.nekromant.twitch.repository.TwitchCommandRepository;
 import com.nekromant.twitch.task.TwitchCommandTimerTask;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -14,18 +16,19 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Setter
 @Component
 public class TwitchCommandTimerService {
     @Autowired
     private TwitchCommandRepository twitchCommandRepository;
-
-    private TwitchClient twitchClient;
-
+    @Autowired
+    private TwitchAuthService twitchAuthService;
+    @Autowired
+    private TwitchClientHolder twitchClientHolder;
+    @Value("${twitch.channelName}")
     private String channelName;
-
     private Long NOT_PERIOD_EXECUTION = 0L;
-
     private final HashMap<Long, ScheduledExecutorService> hashMap = new HashMap<>();
 
     public TwitchCommandTimerService() {
@@ -42,9 +45,11 @@ public class TwitchCommandTimerService {
     public void createTimerTask(TwitchCommand twitchCommand) {
         if (validateCommand(twitchCommand)) {
             ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-            scheduler.scheduleAtFixedRate(new TwitchCommandTimerTask(twitchClient, channelName, twitchCommand),
-                    0, twitchCommand.getPeriod(), TimeUnit.MINUTES);
+            scheduler.scheduleAtFixedRate
+                    (new TwitchCommandTimerTask(twitchClientHolder, channelName, twitchCommand, twitchAuthService),
+                            0, twitchCommand.getPeriod(), TimeUnit.MINUTES);
             hashMap.put(twitchCommand.getId(), scheduler);
+            log.info("Create timerTask for command: !" + twitchCommand.getName() + " with Id: " + twitchCommand.getId());
         }
     }
 
@@ -58,6 +63,7 @@ public class TwitchCommandTimerService {
         if (schedulerCommand != null) {
             schedulerCommand.shutdown();
             hashMap.remove(id);
+            log.info("Delete timerTask for command with Id: " + id);
         }
     }
 
