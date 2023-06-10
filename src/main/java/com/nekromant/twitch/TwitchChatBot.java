@@ -28,7 +28,7 @@ public class TwitchChatBot {
     private ChannelPointsRedemptionService channelPointsRedemptionService;
     private ResponseService responseService;
     private TwitchClientHolder twitchClientHolder;
-    private TwitchUserMessageService twitchUserMessageService;
+    private TwitchUserService twitchUserService;
 
     @Autowired
     public TwitchChatBot(TwitchAuthService twitchAuthService,
@@ -36,7 +36,7 @@ public class TwitchChatBot {
                          ModerationTwitchHelix moderationTwitchHelix,
                          ChannelPointsRedemptionService channelPointsRedemptionService,
                          ResponseService responseService, TwitchCommandTimerService twitchCommandTimerService,
-                         TwitchClientHolder twitchClientHolder, TwitchUserMessageService twitchUserMessageService) {
+                         TwitchClientHolder twitchClientHolder, TwitchUserService twitchUserService) {
         this.twitchAuthService = twitchAuthService;
         this.channelName = channelName;
         this.moderationTwitchHelix = moderationTwitchHelix;
@@ -44,7 +44,7 @@ public class TwitchChatBot {
         this.responseService = responseService;
         this.twitchCommandTimerService = twitchCommandTimerService;
         this.twitchClientHolder = twitchClientHolder;
-        this.twitchUserMessageService = twitchUserMessageService;
+        this.twitchUserService = twitchUserService;
         start();
     }
 
@@ -90,7 +90,7 @@ public class TwitchChatBot {
         twitchClient.getEventManager().onEvent(RewardRedeemedEvent.class, event -> channelPointsRedemptionService.onEvent(event));
 
         twitchClient.getEventManager().onEvent(ChannelMessageEvent.class,
-                event -> twitchUserMessageService.saveTwitchUserMessage(event));
+                event -> twitchUserService.saveTwitchUserMessage(event));
         twitchClientHolder.setTwitchClient(twitchClient);
     }
 
