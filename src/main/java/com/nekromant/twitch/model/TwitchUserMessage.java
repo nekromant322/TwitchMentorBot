@@ -17,12 +17,12 @@ public class TwitchUserMessage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
-    private String name;
-    @Column
     private String message;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "twitchUser_id")
+    private TwitchUser twitchUser;
 
-    public TwitchUserMessage(String name, String message) {
-        this.name = name;
+    public TwitchUserMessage(String message) {
         this.message = message;
     }
 }
