@@ -7,20 +7,23 @@ import com.nekromant.twitch.repository.TwitchUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class TwitchUserService {
     @Autowired
     private TwitchUserRepository twitchUserRepository;
 
     public void saveTwitchUserMessage(ChannelMessageEvent event) {
+        Long idTwitchUser = Long.valueOf(event.getMessageEvent().getUser().getId());
         String message = event.getMessage();
         String nameTwitchUser = event.getMessageEvent().getUser().getName();
-        TwitchUser twitchUser = twitchUserRepository.findByName(nameTwitchUser);
-        if (twitchUser != null) {
-            save(twitchUser, message);
+        Optional<TwitchUser> twitchUser = twitchUserRepository.findById(idTwitchUser);
+        if (twitchUser.isPresent()) {
+            save(twitchUser.get(), message);
 
         } else {
-            TwitchUser newTwitchUser = new TwitchUser(nameTwitchUser);
+            TwitchUser newTwitchUser = new TwitchUser(idTwitchUser, nameTwitchUser);
             save(newTwitchUser, message);
         }
     }
@@ -30,6 +33,5 @@ public class TwitchUserService {
         twitchUser.getMessages().add(twitchUserMessage);
         twitchUserMessage.setTwitchUser(twitchUser);
         twitchUserRepository.save(twitchUser);
-
     }
 }
