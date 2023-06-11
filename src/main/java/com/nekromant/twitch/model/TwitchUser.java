@@ -16,14 +16,14 @@ import java.util.List;
 @NoArgsConstructor
 public class TwitchUser {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
     private String name;
     @OneToMany(mappedBy = "twitchUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<TwitchUserMessage> messages = new ArrayList<>();
 
-    public TwitchUser(String name) {
+    public TwitchUser(Long id, String name) {
+        this.id = id;
         this.name = name;
     }
 }
