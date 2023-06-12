@@ -1,13 +1,11 @@
 package com.nekromant.twitch.model;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 
-@Data
 @Entity(name = "twitch_message")
 @Getter
 @Setter
