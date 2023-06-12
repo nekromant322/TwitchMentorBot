@@ -5,9 +5,6 @@ import com.github.philippheuer.events4j.simple.SimpleEventHandler;
 import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.TwitchClientBuilder;
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
-import com.github.twitch4j.events.ChannelGoLiveEvent;
-import com.github.twitch4j.events.ChannelGoOfflineEvent;
-import com.github.twitch4j.helix.TwitchHelix;
 import com.github.twitch4j.pubsub.events.RewardRedeemedEvent;
 import com.nekromant.twitch.model.TwitchToken;
 import com.nekromant.twitch.service.ChannelPointsRedemptionService;
@@ -20,8 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import java.util.Collections;
 @Getter
 @Component
 public class TwitchChatBot {
@@ -33,22 +28,19 @@ public class TwitchChatBot {
     private ModerationTwitchHelix moderationTwitchHelix;
     private ChannelPointsRedemptionService channelPointsRedemptionService;
     private ResponseService responseService;
-    private TwitchClientHolder twitchClientHolder;
 
     @Autowired
     public TwitchChatBot(TwitchAuthService twitchAuthService,
                          @Value("${twitch.channelName}") String channelName,
                          ModerationTwitchHelix moderationTwitchHelix,
                          ChannelPointsRedemptionService channelPointsRedemptionService,
-                         ResponseService responseService, TwitchCommandTimerService twitchCommandTimerService,
-                         TwitchClientHolder twitchClientHolder) {
+                         ResponseService responseService, TwitchCommandTimerService twitchCommandTimerService) {
         this.twitchAuthService = twitchAuthService;
         this.channelName = channelName;
         this.moderationTwitchHelix = moderationTwitchHelix;
         this.channelPointsRedemptionService = channelPointsRedemptionService;
         this.responseService = responseService;
         this.twitchCommandTimerService = twitchCommandTimerService;
-        this.twitchClientHolder = twitchClientHolder;
         start();
     }
 
@@ -92,7 +84,6 @@ public class TwitchChatBot {
         String channelId = twitchClient.getChat().getChannelNameToChannelId().get(channelName);
         twitchClient.getPubSub().listenForChannelPointsRedemptionEvents(credentialForChannelPoints, channelId);
         twitchClient.getEventManager().onEvent(RewardRedeemedEvent.class, event -> channelPointsRedemptionService.onEvent(event));
-        twitchClientHolder.setTwitchClient(twitchClient);
     }
 
     public void restart() {
@@ -110,8 +101,9 @@ public class TwitchChatBot {
             restart();
         }
     }
-    @PostConstruct
-    public void startingCommandsByTime() {
-        twitchCommandTimerService.executedCommandsByTime();
+
+    @Scheduled(fixedDelay = 60000)
+    public void executedCommandsByTime() {
+        twitchCommandTimerService.executedCommandsByTime(twitchClient);
     }
 }
