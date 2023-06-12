@@ -32,7 +32,6 @@ public class TwitchCommandTimerService {
 
     public void executedCommandsByTime(TwitchClient twitchClient) {
         if (isLiveStream(twitchClient)) {
-
             List<TwitchCommand> twitchCommands = twitchCommandRepository
                     .findAllByPeriodNotAndEnabledIsTrue(NOT_PERIOD_EXECUTION);
 
@@ -52,12 +51,8 @@ public class TwitchCommandTimerService {
         if (twitchCommand.getLastCompletionTime() == null) {
             return true;
         }
-        long time = Duration.between(twitchCommand.getLastCompletionTime(), Instant.now()).toMinutes();
-        Long timeCommand = twitchCommand.getPeriod();
-        System.out.println("Разница между первым запуском " + twitchCommand.getName() + " для команды: " + time + " Период команды: " + timeCommand);
-
-        return time
-                >= timeCommand;
+        return Duration.between(twitchCommand.getLastCompletionTime(), Instant.now()).toMinutes()
+                >= twitchCommand.getPeriod();
     }
 
     private boolean isLiveStream(TwitchClient twitchClient) {
