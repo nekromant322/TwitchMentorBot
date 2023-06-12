@@ -11,8 +11,6 @@ import java.util.List;
 public class TwitchCommandService {
     @Autowired
     private TwitchCommandRepository twitchCommandRepository;
-    @Autowired
-    private TwitchCommandTimerService twitchCommandTimerService;
 
     public List<TwitchCommand> getCommands() {
         return (List<TwitchCommand>) twitchCommandRepository.findAll();
@@ -31,7 +29,6 @@ public class TwitchCommandService {
 
     public void saveCommand(TwitchCommand command) {
         twitchCommandRepository.save(command);
-        twitchCommandTimerService.createTimerTask(command);
     }
 
     public void editCommand(TwitchCommand updatedCommand) {
@@ -40,12 +37,10 @@ public class TwitchCommandService {
         commandToUpdate.setResponse(updatedCommand.getResponse());
         commandToUpdate.setPeriod(updatedCommand.getPeriod());
         commandToUpdate.setEnabled(updatedCommand.isEnabled());
-        twitchCommandTimerService.updateTimerTask(updatedCommand);
         twitchCommandRepository.save(commandToUpdate);
     }
 
     public void deleteCommand(Long id) {
-        twitchCommandTimerService.deleteTimerTask(id);
         twitchCommandRepository.deleteById(id);
     }
 }

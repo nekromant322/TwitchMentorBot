@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.Instant;
 
 @Data
 @Entity(name = "twitch_commands")
@@ -28,6 +29,9 @@ public class TwitchCommand {
 
     @Column
     private boolean enabled;
+
+    @Column
+    private Instant lastCompletionTime;
 
     public TwitchCommand(String name, String response) {
         this.name = name;

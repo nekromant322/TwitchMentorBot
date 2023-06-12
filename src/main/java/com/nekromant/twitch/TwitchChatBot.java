@@ -14,8 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-
 @Getter
 @Component
 public class TwitchChatBot {
@@ -27,7 +25,6 @@ public class TwitchChatBot {
     private ModerationTwitchHelix moderationTwitchHelix;
     private ChannelPointsRedemptionService channelPointsRedemptionService;
     private ResponseService responseService;
-    private TwitchClientHolder twitchClientHolder;
     private TwitchUserService twitchUserService;
 
     @Autowired
@@ -36,14 +33,13 @@ public class TwitchChatBot {
                          ModerationTwitchHelix moderationTwitchHelix,
                          ChannelPointsRedemptionService channelPointsRedemptionService,
                          ResponseService responseService, TwitchCommandTimerService twitchCommandTimerService,
-                         TwitchClientHolder twitchClientHolder, TwitchUserService twitchUserService) {
+                         TwitchUserService twitchUserService) {
         this.twitchAuthService = twitchAuthService;
         this.channelName = channelName;
         this.moderationTwitchHelix = moderationTwitchHelix;
         this.channelPointsRedemptionService = channelPointsRedemptionService;
         this.responseService = responseService;
         this.twitchCommandTimerService = twitchCommandTimerService;
-        this.twitchClientHolder = twitchClientHolder;
         this.twitchUserService = twitchUserService;
         start();
     }
@@ -91,7 +87,6 @@ public class TwitchChatBot {
 
         twitchClient.getEventManager().onEvent(ChannelMessageEvent.class,
                 event -> twitchUserService.saveTwitchUserMessage(event));
-        twitchClientHolder.setTwitchClient(twitchClient);
     }
 
     public void restart() {
@@ -109,8 +104,9 @@ public class TwitchChatBot {
             restart();
         }
     }
-    @PostConstruct
-    public void startingCommandsByTime() {
-        twitchCommandTimerService.executedCommandsByTime();
+
+    @Scheduled(fixedDelay = 60000)
+    public void executedCommandsByTime() {
+        twitchCommandTimerService.executedCommandsByTime(twitchClient);
     }
 }
