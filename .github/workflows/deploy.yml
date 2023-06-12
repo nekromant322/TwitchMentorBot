@@ -67,9 +67,6 @@ jobs:
             echo PANEL_USER = ${{ secrets.PANEL_USER }} >> twitch-env.txt
             echo PANEL_PASSWORD = ${{ secrets.PANEL_PASSWORD }} >> twitch-env.txt
             
-#            docker stop twitch-bot-app
-#            docker rm twitch-bot-app
-#            docker rmi mabalda/twitch-chat-bot-twitch-bot-app:latest
             docker-compose --env-file twitch-env.txt up -d twitch-bot-app
             docker ps -a  
             rm twitch-env.txt
