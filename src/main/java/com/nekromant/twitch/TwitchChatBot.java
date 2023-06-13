@@ -7,10 +7,7 @@ import com.github.twitch4j.TwitchClientBuilder;
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 import com.github.twitch4j.pubsub.events.RewardRedeemedEvent;
 import com.nekromant.twitch.model.TwitchToken;
-import com.nekromant.twitch.service.ChannelPointsRedemptionService;
-import com.nekromant.twitch.service.ResponseService;
-import com.nekromant.twitch.service.TwitchAuthService;
-import com.nekromant.twitch.service.TwitchCommandTimerService;
+import com.nekromant.twitch.service.*;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,19 +25,22 @@ public class TwitchChatBot {
     private ModerationTwitchHelix moderationTwitchHelix;
     private ChannelPointsRedemptionService channelPointsRedemptionService;
     private ResponseService responseService;
+    private TwitchUserService twitchUserService;
 
     @Autowired
     public TwitchChatBot(TwitchAuthService twitchAuthService,
                          @Value("${twitch.channelName}") String channelName,
                          ModerationTwitchHelix moderationTwitchHelix,
                          ChannelPointsRedemptionService channelPointsRedemptionService,
-                         ResponseService responseService, TwitchCommandTimerService twitchCommandTimerService) {
+                         ResponseService responseService, TwitchCommandTimerService twitchCommandTimerService,
+                         TwitchUserService twitchUserService) {
         this.twitchAuthService = twitchAuthService;
         this.channelName = channelName;
         this.moderationTwitchHelix = moderationTwitchHelix;
         this.channelPointsRedemptionService = channelPointsRedemptionService;
         this.responseService = responseService;
         this.twitchCommandTimerService = twitchCommandTimerService;
+        this.twitchUserService = twitchUserService;
         start();
     }
 
@@ -84,6 +84,9 @@ public class TwitchChatBot {
         String channelId = twitchClient.getChat().getChannelNameToChannelId().get(channelName);
         twitchClient.getPubSub().listenForChannelPointsRedemptionEvents(credentialForChannelPoints, channelId);
         twitchClient.getEventManager().onEvent(RewardRedeemedEvent.class, event -> channelPointsRedemptionService.onEvent(event));
+
+        twitchClient.getEventManager().onEvent(ChannelMessageEvent.class,
+                event -> twitchUserService.saveTwitchUserMessage(event));
     }
 
     public void restart() {
