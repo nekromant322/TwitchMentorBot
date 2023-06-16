@@ -50,3 +50,9 @@ feign:
 pixelWars:
   width: 160
   height: 95
+
+chatGPT:
+  API_KEY: Bearer ${API_KEY}
+  URL:
+    client: https://api.openai.com
+    POST: /v1/chat/completions
