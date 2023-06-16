@@ -48,6 +48,6 @@ public class TwitchUserService {
     }
 
     public TwitchUser getTwitchUserWithMostMessages() {
-        return twitchUserRepository.findTwitchUserWithMaxMessages();
+        return twitchUserRepository.findFirst();
     }
 }
