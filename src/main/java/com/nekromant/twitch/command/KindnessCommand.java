@@ -15,7 +15,7 @@ public class KindnessCommand extends BotCommand {
 
     @Autowired
     public KindnessCommand() {
-        super("kindness", "Рассчитывает показатель доброты");
+        super("доброта", "Рассчитывает показатель доброты");
     }
 
     @Override
