@@ -45,8 +45,6 @@ public class KindnessService {
     }
 
     public void evaluationKindnessUser(TwitchUser twitchUser) {
-        System.out.println(twitchUser.getMessages().size());
-        System.out.println(twitchUser.getName());
         if (!twitchUser.getMessages().isEmpty()) {
             String twitchUserMessages = twitchUser.getMessages().stream()
                     .map(TwitchUserMessage::getMessage)
