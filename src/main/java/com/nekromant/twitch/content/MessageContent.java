@@ -8,4 +8,5 @@ public class MessageContent {
     public static final String NO_PERMISSION = "Тебе недоступна эта команда";
     public static final String AVAILABLE_COMMANDS = "Доступные команды: ";
     public static final String NO_AVAILABLE_COMMANDS = "Нет доступных команд";
+    public static final String INDEX_YOUR_KINDNESS = "Оценка вашей доброты равна: ";
 }
