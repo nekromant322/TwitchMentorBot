@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -45,7 +44,6 @@ public class KindnessService {
         evaluationKindnessUser(twitchUserService.getTwitchUserWithMostMessages());
     }
 
-    @Transactional
     public void evaluationKindnessUser(TwitchUser twitchUser) {
         if (twitchUser != null) {
             String twitchUserMessages = twitchUser.getMessages().stream()
