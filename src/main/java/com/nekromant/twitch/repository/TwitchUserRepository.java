@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface TwitchUserRepository extends JpaRepository<TwitchUser, Long> {
-    @Query(value = "SELECT  u FROM twitch_users u WHERE size(u.messages)  " +
-            "= (SELECT MAX(size(u2.messages)) FROM twitch_users u2 WHERE size(u2.messages) > 0)")
-    TwitchUser findTwitchUserWithMaxMessages();
+    @Query(value = "SELECT u.* FROM twitch_users u JOIN twitch_message m ON u.id = m.twitch_user_id GROUP BY u.id " +
+            "ORDER BY COUNT(m.id) DESC LIMIT 1", nativeQuery = true)
+    TwitchUser findFirst();
 }
