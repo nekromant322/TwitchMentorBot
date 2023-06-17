@@ -17,19 +17,17 @@ public class TwitchUserService {
     public void saveTwitchUserMessage(ChannelMessageEvent event) {
         Long idTwitchUser = Long.valueOf(event.getMessageEvent().getUser().getId());
         String message = event.getMessage();
-        if (message.startsWith("!")) {
-            return;
-        }
-        String nameTwitchUser = event.getMessageEvent().getUser().getName();
-        TwitchUser twitchUser = getTwitchUserById(idTwitchUser);
-        if (twitchUser != null) {
-            addMessage(twitchUser, message);
+        if (!message.startsWith("!")) {
+            String nameTwitchUser = event.getMessageEvent().getUser().getName();
+            TwitchUser twitchUser = getTwitchUserById(idTwitchUser);
+            if (twitchUser != null) {
+                addMessage(twitchUser, message);
 
-        } else {
-            TwitchUser newTwitchUser = new TwitchUser(idTwitchUser, nameTwitchUser);
-            addMessage(newTwitchUser, message);
+            } else {
+                TwitchUser newTwitchUser = new TwitchUser(idTwitchUser, nameTwitchUser);
+                addMessage(newTwitchUser, message);
+            }
         }
-
     }
 
     public TwitchUser getTwitchUserById(Long id) {
