@@ -5,11 +5,11 @@ import com.nekromant.twitch.model.TwitchUser;
 import com.nekromant.twitch.model.TwitchUserMessage;
 import com.nekromant.twitch.repository.TwitchUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-@Service
+@Component
 public class TwitchUserService {
     @Autowired
     private TwitchUserRepository twitchUserRepository;
