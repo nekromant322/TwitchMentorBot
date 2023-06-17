@@ -9,15 +9,14 @@ import com.nekromant.twitch.repository.TwitchUserMessageRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Service
+@Component
 public class KindnessService {
     @Autowired
     ChatGptService chatGptService;
@@ -45,7 +44,6 @@ public class KindnessService {
         evaluationKindnessUser(twitchUserService.getTwitchUserWithMostMessages());
     }
 
-    @Transactional
     public void evaluationKindnessUser(TwitchUser twitchUser) {
         if (twitchUser != null) {
             String twitchUserMessages = twitchUser.getMessages().stream()
