@@ -13,7 +13,7 @@ public class ChatGptService {
     private ChatGptFeign chatGptFeign;
     @Autowired
     private ChatGPTJson chatGPTJson;
-    @Value("${chatGPT.API_KEY}")
+    @Value("${chatGPT.API_KEY_Chat_GPT}")
     private String API_KEY;
 
     public String getIndexKindness(String message) {
