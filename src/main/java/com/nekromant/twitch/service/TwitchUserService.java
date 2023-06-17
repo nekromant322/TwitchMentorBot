@@ -17,37 +17,21 @@ public class TwitchUserService {
     public void saveTwitchUserMessage(ChannelMessageEvent event) {
         Long idTwitchUser = Long.valueOf(event.getMessageEvent().getUser().getId());
         String message = event.getMessage();
-        if (!message.startsWith("!")) {
-            String nameTwitchUser = event.getMessageEvent().getUser().getName();
-            TwitchUser twitchUser = getTwitchUserById(idTwitchUser);
-            if (twitchUser != null) {
-                addMessage(twitchUser, message);
+        String nameTwitchUser = event.getMessageEvent().getUser().getName();
+        Optional<TwitchUser> twitchUser = twitchUserRepository.findById(idTwitchUser);
+        if (twitchUser.isPresent()) {
+            save(twitchUser.get(), message);
 
-            } else {
-                TwitchUser newTwitchUser = new TwitchUser(idTwitchUser, nameTwitchUser);
-                addMessage(newTwitchUser, message);
-            }
+        } else {
+            TwitchUser newTwitchUser = new TwitchUser(idTwitchUser, nameTwitchUser);
+            save(newTwitchUser, message);
         }
     }
 
-    public TwitchUser getTwitchUserById(Long id) {
-        Optional<TwitchUser> twitchUser = twitchUserRepository.findById(id);
-        return twitchUser.orElse(null);
-
-    }
-
-    private void addMessage(TwitchUser twitchUser, String message) {
+    private void save(TwitchUser twitchUser, String message) {
         TwitchUserMessage twitchUserMessage = new TwitchUserMessage(message);
         twitchUser.getMessages().add(twitchUserMessage);
         twitchUserMessage.setTwitchUser(twitchUser);
-        save(twitchUser);
-    }
-
-    public void save(TwitchUser twitchUser) {
         twitchUserRepository.save(twitchUser);
-    }
-
-    public TwitchUser getTwitchUserWithMostMessages() {
-        return twitchUserRepository.findTwitchUserWithMaxMessages();
     }
 }
