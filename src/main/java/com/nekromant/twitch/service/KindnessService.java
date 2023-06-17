@@ -55,18 +55,12 @@ public class KindnessService {
             save(kindness, twitchUser);
             deleteMessagesByTwitchUser(twitchUser);
             log.info("Выполняется оценка доброты пользователя " + twitchUser.getName());
-        } else {
-            log.info("Сообщения для оценки доброты закончились");
         }
     }
 
     private Kindness createKindness(String twitchUserMessages, TwitchUser twitchUser) {
         double newLengthMessages = twitchUserMessages.length();
-        double newIndexKindness = DEFAULT_INDEX_KINDNESS;
-        String responseChatGPT = chatGptService.getIndexKindness(twitchUserMessages).replaceAll("\\D", "");
-        if (!responseChatGPT.isEmpty()) {
-            newIndexKindness = Double.parseDouble(responseChatGPT);
-        }
+        double newIndexKindness = evaluationTextByChatGPT(twitchUserMessages);
         Kindness kindnessByUser = twitchUser.getKindness();
         if (kindnessByUser != null) {
             Kindness newKindness = calculationIndexKindness(kindnessByUser.getLengthMessages(), newLengthMessages,
@@ -87,6 +81,15 @@ public class KindnessService {
                 newLengthMessages / allLengthMessages * newIndexKindness);
 
         return new Kindness(Instant.now(), calculatedIndexKindness, allLengthMessages);
+    }
+
+    private double evaluationTextByChatGPT(String text) {
+        String responseChatGPT = chatGptService.getIndexKindness(text).replaceAll("\\D", "");
+        if (!responseChatGPT.isEmpty()) {
+            return Double.parseDouble(responseChatGPT);
+        } else {
+            return DEFAULT_INDEX_KINDNESS;
+        }
     }
 
     private void save(Kindness kindness, TwitchUser twitchUser) {
