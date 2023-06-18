@@ -20,6 +20,9 @@ public class TwitchUser {
     @OneToMany(mappedBy = "twitchUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<TwitchUserMessage> messages = new ArrayList<>();
 
+    @OneToOne(mappedBy = "twitchUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Kindness kindness;
+
     public TwitchUser(Long id, String name) {
         this.id = id;
         this.name = name;
