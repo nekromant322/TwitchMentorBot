@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -46,11 +47,7 @@ public class KindnessService {
 
     public void evaluationKindnessUser(TwitchUser twitchUser) {
         if (twitchUser != null) {
-            String twitchUserMessages = twitchUser.getMessages().stream()
-                    .map(TwitchUserMessage::getMessage)
-                    .collect(Collectors.joining(", "));
-
-            Kindness kindness = createKindness(twitchUserMessages, twitchUser);
+            Kindness kindness = createKindness(twitchUser);
             twitchUser.setMessages(new ArrayList<>());
             save(kindness, twitchUser);
             deleteMessagesByTwitchUser(twitchUser);
@@ -58,9 +55,17 @@ public class KindnessService {
         }
     }
 
-    private Kindness createKindness(String twitchUserMessages, TwitchUser twitchUser) {
-        double newLengthMessages = twitchUserMessages.length();
-        double newIndexKindness = evaluationTextByChatGPT(twitchUserMessages);
+    private Kindness createKindness(TwitchUser twitchUser) {
+        List<String> twitchUserMessages = twitchUser.getMessages().stream()
+                .map(TwitchUserMessage::getMessage)
+                .collect(Collectors.toList());
+        int sizeMessages = twitchUserMessages.size() / 2;
+        String firstParMessages = String.join(", ", twitchUserMessages.subList(0, sizeMessages));
+        String secondParMessages =
+                String.join(", ", twitchUserMessages.subList(sizeMessages, twitchUserMessages.size()));
+
+        double newLengthMessages = firstParMessages.length() + secondParMessages.length();
+        double newIndexKindness = evaluationTextByChatGPT(firstParMessages) + evaluationTextByChatGPT(secondParMessages);
         Kindness kindnessByUser = twitchUser.getKindness();
         if (kindnessByUser != null) {
             Kindness newKindness = calculationIndexKindness(kindnessByUser.getLengthMessages(), newLengthMessages,
