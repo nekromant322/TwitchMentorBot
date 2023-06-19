@@ -59,13 +59,14 @@ public class KindnessService {
         List<String> twitchUserMessages = twitchUser.getMessages().stream()
                 .map(TwitchUserMessage::getMessage)
                 .collect(Collectors.toList());
-        int sizeMessages = twitchUserMessages.size() / 2;
-        String firstParMessages = String.join(", ", twitchUserMessages.subList(0, sizeMessages));
-        String secondParMessages =
-                String.join(", ", twitchUserMessages.subList(sizeMessages, twitchUserMessages.size()));
+        int sizeHalfMessages = twitchUserMessages.size() / 2;
+        String firstPartMessages = String.join(", ", twitchUserMessages.subList(0, sizeHalfMessages));
+        String secondPartMessages =
+                String.join(", ", twitchUserMessages.subList(sizeHalfMessages, twitchUserMessages.size()));
 
-        double newLengthMessages = firstParMessages.length() + secondParMessages.length();
-        double newIndexKindness = evaluationTextByChatGPT(firstParMessages) + evaluationTextByChatGPT(secondParMessages);
+        double newLengthMessages = firstPartMessages.length() + secondPartMessages.length();
+        double newIndexKindness = (evaluationTextByChatGPT(firstPartMessages)
+                + evaluationTextByChatGPT(secondPartMessages)) / 2;
         Kindness kindnessByUser = twitchUser.getKindness();
         if (kindnessByUser != null) {
             Kindness newKindness = calculationIndexKindness(kindnessByUser.getLengthMessages(), newLengthMessages,
