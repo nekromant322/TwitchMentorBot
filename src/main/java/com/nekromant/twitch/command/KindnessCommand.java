@@ -24,7 +24,7 @@ public class KindnessCommand extends BotCommand {
         String senderUsername = event.getMessageEvent().getUser().getName();
         Long idUser = Long.valueOf(event.getMessageEvent().getUser().getId());
         Message replyMessage = new Message(senderUsername,
-                INDEX_YOUR_KINDNESS + kindnessService.getIndexKindness(idUser));
+                INDEX_YOUR_KINDNESS + kindnessService.getIndexKindness(idUser, senderUsername));
 
         event.getMessageEvent().getTwitchChat().sendMessage(channelName, replyMessage.getMessage());
     }
