@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class ChatGptService {
-    private final String PREFIX = "Оцени доброжелательность текста, дай единственную оценку от 0 до 100, " +
+    private final static String PREFIX = "Оцени доброжелательность текста, дай единственную оценку от 0 до 100, " +
             "отвечай только цифрами:";
     @Autowired
     private ChatGptFeign chatGptFeign;

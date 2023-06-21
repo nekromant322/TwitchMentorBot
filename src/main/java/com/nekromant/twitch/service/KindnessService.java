@@ -25,9 +25,9 @@ public class KindnessService {
     private TwitchUserService twitchUserService;
     @Autowired
     private TwitchUserMessageRepository twitchUserMessageRepository;
-    private final double DEFAULT_INDEX_KINDNESS = 100;
-    private final double DEFAULT_LENGTH_MESSAGES = 200;
-    private final double FAILED_EVALUATION_INDEX_KINDNESS = 100;
+    private static final double DEFAULT_INDEX_KINDNESS = 100;
+    private static final double DEFAULT_LENGTH_MESSAGES = 200;
+    private static final double FAILED_EVALUATION_INDEX_KINDNESS = 75;
 
     public double getIndexKindness(Long idUser, String nameUser) {
         TwitchUser twitchUser = twitchUserService.getTwitchUserById(idUser);
@@ -44,6 +44,13 @@ public class KindnessService {
         return DEFAULT_INDEX_KINDNESS;
     }
 
+    public String getIndexKindnessByName(String nameUser) {
+        TwitchUser twitchUser = twitchUserService.getTwitchUserByName(nameUser);
+        if (twitchUser != null) {
+            return String.valueOf(getIndexKindness(twitchUser.getId(), nameUser));
+        }
+        return null;
+    }
 
     public void evaluationKindnessUserWithMostMessages() {
         evaluationKindnessUser(twitchUserService.getTwitchUserWithMostMessages());
@@ -111,7 +118,6 @@ public class KindnessService {
             if (indexKindness > 0 && indexKindness <= 100) {
                 return indexKindness;
             }
-            return Double.parseDouble(responseChatGPT);
         }
         return FAILED_EVALUATION_INDEX_KINDNESS;
     }
