@@ -1,6 +1,5 @@
 package com.nekromant.twitch.service;
 
-import com.nekromant.twitch.chatGPT.ChatGptService;
 import com.nekromant.twitch.model.Kindness;
 import com.nekromant.twitch.model.TwitchUser;
 import com.nekromant.twitch.model.TwitchUserMessage;
@@ -8,7 +7,6 @@ import com.nekromant.twitch.repository.KindnessRepository;
 import com.nekromant.twitch.repository.TwitchUserMessageRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -20,38 +18,51 @@ import java.util.stream.Collectors;
 @Service
 public class KindnessService {
     @Autowired
-    ChatGptService chatGptService;
+    private ChatGptService chatGptService;
     @Autowired
-    KindnessRepository kindnessRepository;
+    private KindnessRepository kindnessRepository;
     @Autowired
-    TwitchUserService twitchUserService;
+    private TwitchUserService twitchUserService;
     @Autowired
-    TwitchUserMessageRepository twitchUserMessageRepository;
-    private final double DEFAULT_INDEX_KINDNESS = 100;
-    private final double DEFAULT_LENGTH_MESSAGES = 200;
+    private TwitchUserMessageRepository twitchUserMessageRepository;
+    private static final double DEFAULT_INDEX_KINDNESS = 100;
+    private static final double DEFAULT_LENGTH_MESSAGES = 200;
+    private static final double FAILED_EVALUATION_INDEX_KINDNESS = 75;
 
-    public double getIndexKindness(Long idUser) {
+    public double getIndexKindness(Long idUser, String nameUser) {
         TwitchUser twitchUser = twitchUserService.getTwitchUserById(idUser);
-        Kindness kindnessByUser = twitchUser.getKindness();
-        if (kindnessByUser != null) {
-            return kindnessByUser.getIndexKindness();
+        if (twitchUser != null) {
+            Kindness kindnessByUser = twitchUser.getKindness();
+            if (kindnessByUser != null) {
+                return kindnessByUser.getIndexKindness();
+            }
+            save(new Kindness(Instant.now(), DEFAULT_INDEX_KINDNESS, DEFAULT_LENGTH_MESSAGES), twitchUser);
+            return DEFAULT_INDEX_KINDNESS;
         }
-        save(new Kindness(Instant.now(), DEFAULT_INDEX_KINDNESS, DEFAULT_LENGTH_MESSAGES), twitchUser);
+        save(new Kindness(Instant.now(), DEFAULT_INDEX_KINDNESS, DEFAULT_LENGTH_MESSAGES),
+                new TwitchUser(idUser, nameUser));
         return DEFAULT_INDEX_KINDNESS;
     }
 
-    @Scheduled(fixedDelay = 90000)
-    public void evaluationKindnessAllUsers() {
+    public String getIndexKindnessByName(String nameUser) {
+        TwitchUser twitchUser = twitchUserService.getTwitchUserByName(nameUser);
+        if (twitchUser != null) {
+            return String.valueOf(getIndexKindness(twitchUser.getId(), nameUser));
+        }
+        return null;
+    }
+
+    public void evaluationKindnessUserWithMostMessages() {
         evaluationKindnessUser(twitchUserService.getTwitchUserWithMostMessages());
     }
 
-    public void evaluationKindnessUser(TwitchUser twitchUser) {
+    private void evaluationKindnessUser(TwitchUser twitchUser) {
         if (twitchUser != null) {
+            log.info("Выполняется оценка доброты пользователя " + twitchUser.getName());
             Kindness kindness = createKindness(twitchUser);
             twitchUser.setMessages(new ArrayList<>());
             save(kindness, twitchUser);
             deleteMessagesByTwitchUser(twitchUser);
-            log.info("Выполняется оценка доброты пользователя " + twitchUser.getName());
         }
     }
 
@@ -59,14 +70,9 @@ public class KindnessService {
         List<String> twitchUserMessages = twitchUser.getMessages().stream()
                 .map(TwitchUserMessage::getMessage)
                 .collect(Collectors.toList());
-        int sizeHalfMessages = twitchUserMessages.size() / 2;
-        String firstPartMessages = String.join(", ", twitchUserMessages.subList(0, sizeHalfMessages));
-        String secondPartMessages =
-                String.join(", ", twitchUserMessages.subList(sizeHalfMessages, twitchUserMessages.size()));
+        double newLengthMessages = String.join(", ", twitchUserMessages).length();
+        double newIndexKindness = getIndexKindnessByChatGPT(twitchUserMessages);
 
-        double newLengthMessages = firstPartMessages.length() + secondPartMessages.length();
-        double newIndexKindness = (evaluationTextByChatGPT(firstPartMessages)
-                + evaluationTextByChatGPT(secondPartMessages)) / 2;
         Kindness kindnessByUser = twitchUser.getKindness();
         if (kindnessByUser != null) {
             Kindness newKindness = calculationIndexKindness(kindnessByUser.getLengthMessages(), newLengthMessages,
@@ -89,13 +95,31 @@ public class KindnessService {
         return new Kindness(Instant.now(), calculatedIndexKindness, allLengthMessages);
     }
 
+    private double getIndexKindnessByChatGPT(List<String> twitchUserMessages) {
+        try {
+            return evaluationTextByChatGPT(String.join(", ", twitchUserMessages));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            int sizeHalfMessages = twitchUserMessages.size() / 2;
+            String firstPartMessages = String.join(", ", twitchUserMessages.subList(0, sizeHalfMessages));
+            String secondPartMessages =
+                    String.join(", ", twitchUserMessages.subList(sizeHalfMessages, twitchUserMessages.size()));
+            return (evaluationTextByChatGPT(firstPartMessages)
+                    + evaluationTextByChatGPT(secondPartMessages)) / 2;
+        }
+    }
+
     private double evaluationTextByChatGPT(String text) {
         String responseChatGPT = chatGptService.getIndexKindness(text).replaceAll("\\D", "");
+        log.info("Сообщения для оценки чатом chatGPT: " + text);
+        log.info("Ответ chatGPT: " + responseChatGPT);
         if (!responseChatGPT.isEmpty()) {
-            return Double.parseDouble(responseChatGPT);
-        } else {
-            return DEFAULT_INDEX_KINDNESS;
+            double indexKindness = Double.parseDouble(responseChatGPT);
+            if (indexKindness > 0 && indexKindness <= 100) {
+                return indexKindness;
+            }
         }
+        return FAILED_EVALUATION_INDEX_KINDNESS;
     }
 
     private void save(Kindness kindness, TwitchUser twitchUser) {
@@ -109,7 +133,7 @@ public class KindnessService {
         kindnessRepository.delete(kindness);
     }
 
-    public void deleteMessagesByTwitchUser(TwitchUser twitchUser) {
+    private void deleteMessagesByTwitchUser(TwitchUser twitchUser) {
         twitchUserMessageRepository.deleteAllByTwitchUser(twitchUser);
     }
 }

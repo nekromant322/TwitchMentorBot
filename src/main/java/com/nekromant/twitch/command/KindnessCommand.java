@@ -6,10 +6,13 @@ import com.nekromant.twitch.service.KindnessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.nekromant.twitch.content.MessageContent.INDEX_YOUR_KINDNESS;
+import java.util.Locale;
+
+import static com.nekromant.twitch.content.MessageContent.*;
 
 @Component
 public class KindnessCommand extends BotCommand {
+    private final int LENGTH_COMMAND_KINDNESS = 9;
     @Autowired
     private KindnessService kindnessService;
 
@@ -22,10 +25,21 @@ public class KindnessCommand extends BotCommand {
     public void processMessage(ChannelMessageEvent event) {
         String channelName = event.getChannel().getName();
         String senderUsername = event.getMessageEvent().getUser().getName();
+        String replyMessageText = NOT_FOUND_USER;
+        Message replyMessage = new Message(senderUsername, "");
         Long idUser = Long.valueOf(event.getMessageEvent().getUser().getId());
-        Message replyMessage = new Message(senderUsername,
-                INDEX_YOUR_KINDNESS + kindnessService.getIndexKindness(idUser));
 
+        String textCommand = event.getMessage();
+        if (textCommand.length() > LENGTH_COMMAND_KINDNESS) {
+            String userName = textCommand.substring(LENGTH_COMMAND_KINDNESS).toLowerCase(Locale.ROOT);
+            String indexKindness = kindnessService.getIndexKindnessByName(userName);
+            if (indexKindness != null) {
+                replyMessageText = String.format(INDEX_KINDNESS_USER, userName) + indexKindness;
+            }
+        } else {
+            replyMessageText = INDEX_YOUR_KINDNESS + kindnessService.getIndexKindness(idUser, senderUsername);
+        }
+        replyMessage.setMessageText(replyMessageText);
         event.getMessageEvent().getTwitchChat().sendMessage(channelName, replyMessage.getMessage());
     }
 }

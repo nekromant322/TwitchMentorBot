@@ -29,13 +29,15 @@ public class TwitchUserService {
             TwitchUser newTwitchUser = new TwitchUser(idTwitchUser, nameTwitchUser);
             addMessage(newTwitchUser, message);
         }
-
     }
 
     public TwitchUser getTwitchUserById(Long id) {
         Optional<TwitchUser> twitchUser = twitchUserRepository.findById(id);
         return twitchUser.orElse(null);
+    }
 
+    public TwitchUser getTwitchUserByName(String name) {
+        return twitchUserRepository.findTwitchUserByName(name);
     }
 
     private void addMessage(TwitchUser twitchUser, String message) {

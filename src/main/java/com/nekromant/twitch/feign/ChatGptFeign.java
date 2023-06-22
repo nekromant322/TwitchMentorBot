@@ -1,4 +1,4 @@
-package com.nekromant.twitch.chatGPT;
+package com.nekromant.twitch.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
