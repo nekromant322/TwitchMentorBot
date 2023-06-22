@@ -10,7 +10,7 @@ public class CommandSchedule {
     @Autowired
     private TwitchCommandTimerService twitchCommandTimerService;
 
-    @Scheduled(fixedDelay = 60000)
+    @Scheduled(fixedDelayString = "${schedule.periodExecutedCommandsByTime}")
     public void executedCommandsByTime() {
         twitchCommandTimerService.executedCommandsByTime();
     }
