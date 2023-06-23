@@ -10,8 +10,8 @@ public class KindnessSchedule {
     @Autowired
     private KindnessService kindnessService;
 
-    @Scheduled(fixedDelay = 90000)
-    public void evaluationKindnessUserByChatGPT(){
+    @Scheduled(fixedDelayString = "${schedule.periodEvaluationKindness}")
+    public void evaluationKindnessUserByChatGPT() {
         kindnessService.evaluationKindnessUserWithMostMessages();
     }
 }

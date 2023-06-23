@@ -56,3 +56,7 @@ chatGPT:
   URL:
     client: https://api.openai.com
     POST: /v1/chat/completions
+schedule:
+  periodEvaluationKindness: 90000
+  periodValidateConnection: PT01H
+  periodExecutedCommandsByTime: 60000
