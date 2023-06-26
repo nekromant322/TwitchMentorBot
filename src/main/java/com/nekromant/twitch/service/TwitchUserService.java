@@ -16,7 +16,7 @@ public class TwitchUserService {
 
     public void saveTwitchUserMessage(ChannelMessageEvent event) {
         Long idTwitchUser = Long.valueOf(event.getMessageEvent().getUser().getId());
-        String message = event.getMessage();
+        String message = event.getMessage().replaceAll("\\d", "");
         if (message.startsWith("!")) {
             return;
         }

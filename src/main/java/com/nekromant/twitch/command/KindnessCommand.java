@@ -12,7 +12,7 @@ import static com.nekromant.twitch.content.MessageContent.*;
 
 @Component
 public class KindnessCommand extends BotCommand {
-    private final int LENGTH_COMMAND_KINDNESS = 9;
+    private final static int LENGTH_COMMAND_KINDNESS = 8;
     @Autowired
     private KindnessService kindnessService;
 
@@ -29,7 +29,7 @@ public class KindnessCommand extends BotCommand {
         Message replyMessage = new Message(senderUsername, "");
         Long idUser = Long.valueOf(event.getMessageEvent().getUser().getId());
 
-        String textCommand = event.getMessage();
+        String textCommand = event.getMessage().replaceAll("\\s", "");
         if (textCommand.length() > LENGTH_COMMAND_KINDNESS) {
             String userName = textCommand.substring(LENGTH_COMMAND_KINDNESS).toLowerCase(Locale.ROOT);
             String indexKindness = kindnessService.getIndexKindnessByName(userName);
