@@ -1,9 +1,8 @@
 package com.nekromant.twitch.command;
 
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
-import lombok.experimental.FieldNameConstants;
 
-@FieldNameConstants
+
 public abstract class BotCommand {
     private final String commandIdentifier;
     private final String description;
