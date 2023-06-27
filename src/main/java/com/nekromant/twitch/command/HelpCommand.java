@@ -40,14 +40,22 @@ public class HelpCommand extends BotCommand {
         String customCommand = getCustomCommands();
         String twitchCommand = getTwitchCommands();
         if (!customCommand.equals(twitchCommand)) {
-            StringJoiner commandJoiner = new StringJoiner(" ");
-            commandJoiner.add(AVAILABLE_COMMANDS);
-            commandJoiner.add(customCommand);
-            commandJoiner.add(twitchCommand);
-            return commandJoiner.toString();
+            return getAvailableCommands(customCommand, twitchCommand);
         } else {
             return NO_AVAILABLE_COMMANDS;
         }
+    }
+
+    private String getAvailableCommands(String customCommand, String twitchCommand) {
+        StringJoiner commandJoiner = new StringJoiner(" ");
+        commandJoiner.add(AVAILABLE_COMMANDS);
+        if (!customCommand.equals(AVAILABLE_COMMANDS)) {
+            commandJoiner.add(customCommand);
+        }
+        if (!twitchCommand.equals(AVAILABLE_COMMANDS)) {
+            commandJoiner.add(twitchCommand);
+        }
+        return commandJoiner.toString();
     }
 
     private String getCustomCommands() {
