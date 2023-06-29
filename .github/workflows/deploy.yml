@@ -67,6 +67,8 @@ jobs:
             echo PANEL_USER = ${{ secrets.PANEL_USER }} >> twitch-env.txt
             echo PANEL_PASSWORD = ${{ secrets.PANEL_PASSWORD }} >> twitch-env.txt
             echo API_KEY_Chat_GPT = ${{ secrets.API_KEY_Chat_GPT }} >> twitch-env.txt
+            echo DONATION_ALERTS_CLIENT_ID = ${{ secrets.DONATION_ALERTS_CLIENT_ID }} >> twitch-env.txt
+            echo DONATION_ALERTS_SECRET = ${{ secrets.DONATION_ALERTS_SECRET }} >> twitch-env.txt
             
             docker stop twitch-bot-app
             docker rm twitch-bot-app
