@@ -2,6 +2,7 @@ package com.nekromant.twitch.command;
 
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 
+
 public abstract class BotCommand {
     private final String commandIdentifier;
     private final String description;

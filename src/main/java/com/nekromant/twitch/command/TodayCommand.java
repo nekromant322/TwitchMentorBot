@@ -1,9 +1,9 @@
 package com.nekromant.twitch.command;
 
+import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 import com.nekromant.twitch.content.Message;
 import com.nekromant.twitch.dto.BookedReviewDTO;
 import com.nekromant.twitch.feign.MentoringReviewBotFeign;
-import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 import com.nekromant.twitch.model.ReviewSchedule;
 import com.nekromant.twitch.service.ReviewScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
