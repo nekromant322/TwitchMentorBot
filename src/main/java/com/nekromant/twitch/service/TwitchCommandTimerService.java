@@ -31,20 +31,9 @@ public class TwitchCommandTimerService {
     }
 
     public void executedCommandsByTime(TwitchClient twitchClient) {
-        if (isLiveStream(twitchClient)) {
-            List<TwitchCommand> twitchCommands = twitchCommandRepository
-                    .findAllByPeriodNotAndEnabledIsTrue(NOT_PERIOD_EXECUTION);
-
-            for (TwitchCommand twitchCommand : twitchCommands) {
-                if (checkPeriod(twitchCommand)) {
-                    twitchClient.getChat().sendMessage(channelName, twitchCommand.getResponse());
-
-                    twitchCommand.setLastCompletionTime(Instant.now());
-                    twitchCommandRepository.save(twitchCommand);
-                    log.info("Running task for command: !" + twitchCommand.getName());
-                }
-            }
-        }
+        List<TwitchCommand> twitchCommands = twitchCommandRepository
+                .findAllByPeriodNotAndEnabledIsTrue(NOT_PERIOD_EXECUTION);
+        updateTimeAndSendMessage(twitchClient, twitchCommands);
     }
 
     private boolean checkPeriod(TwitchCommand twitchCommand) {
@@ -61,5 +50,18 @@ public class TwitchCommandTimerService {
                         Collections.singletonList(channelName))
                 .execute().getStreams();
         return !streams.isEmpty();
+    }
+
+    private void updateTimeAndSendMessage(TwitchClient twitchClient, List<TwitchCommand> twitchCommands) {
+        for (TwitchCommand twitchCommand : twitchCommands) {
+            if (checkPeriod(twitchCommand)) {
+                if (isLiveStream(twitchClient)) {
+                    twitchClient.getChat().sendMessage(channelName, twitchCommand.getResponse());
+                    log.info("Running task for command: !" + twitchCommand.getName());
+                }
+                twitchCommand.setLastCompletionTime(Instant.now());
+                twitchCommandRepository.save(twitchCommand);
+            }
+        }
     }
 }
