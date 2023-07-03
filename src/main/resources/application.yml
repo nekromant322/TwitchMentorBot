@@ -56,7 +56,20 @@ chatGPT:
   URL:
     client: https://api.openai.com
     POST: /v1/chat/completions
+
+donationAlerts:
+  auth:
+    clientId: ${DONATION_ALERTS_CLIENT_ID}
+    secret: ${DONATION_ALERTS_SECRET}
+    grantType: refresh_token
+    url: https://www.donationalerts.com
+    post: /oauth/token
+  donations:
+    url: https://www.donationalerts.com
+    post: /api/v1/alerts/donations?last
+
 schedule:
   periodEvaluationKindness: 90000
   periodValidateConnection: PT01H
   periodExecutedCommandsByTime: 60000
+  periodAddKindnessForDonat: 60000
