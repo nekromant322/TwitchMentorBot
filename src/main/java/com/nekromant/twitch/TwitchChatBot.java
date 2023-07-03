@@ -7,17 +7,18 @@ import com.github.twitch4j.TwitchClientBuilder;
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
 import com.github.twitch4j.pubsub.events.RewardRedeemedEvent;
 import com.nekromant.twitch.model.TwitchToken;
-import com.nekromant.twitch.service.*;
+import com.nekromant.twitch.service.ChannelPointsRedemptionService;
+import com.nekromant.twitch.service.ResponseService;
+import com.nekromant.twitch.service.TwitchAuthService;
+import com.nekromant.twitch.service.TwitchUserService;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Getter
 @Component
 public class TwitchChatBot {
-    private TwitchCommandTimerService twitchCommandTimerService;
     private final static String PREFIX = "!";
     private TwitchClient twitchClient;
     private String channelName;
@@ -32,14 +33,13 @@ public class TwitchChatBot {
                          @Value("${twitch.channelName}") String channelName,
                          ModerationTwitchHelix moderationTwitchHelix,
                          ChannelPointsRedemptionService channelPointsRedemptionService,
-                         ResponseService responseService, TwitchCommandTimerService twitchCommandTimerService,
+                         ResponseService responseService,
                          TwitchUserService twitchUserService) {
         this.twitchAuthService = twitchAuthService;
         this.channelName = channelName;
         this.moderationTwitchHelix = moderationTwitchHelix;
         this.channelPointsRedemptionService = channelPointsRedemptionService;
         this.responseService = responseService;
-        this.twitchCommandTimerService = twitchCommandTimerService;
         this.twitchUserService = twitchUserService;
         start();
     }
@@ -96,17 +96,11 @@ public class TwitchChatBot {
         start();
     }
 
-    @Scheduled(initialDelayString = "PT01H", fixedDelayString = "PT01H")
     public void validateConnection() {
         TwitchToken authToken = twitchAuthService.getAuthToken();
         if (!twitchAuthService.validateToken(authToken)) {
             twitchAuthService.getAndSaveNewAuthTokenByRefreshToken(authToken.getRefreshToken());
             restart();
         }
-    }
-
-    @Scheduled(fixedDelay = 60000)
-    public void executedCommandsByTime() {
-        twitchCommandTimerService.executedCommandsByTime(twitchClient);
     }
 }

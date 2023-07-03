@@ -2,6 +2,7 @@ package com.nekromant.twitch.service;
 
 import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.helix.domain.Stream;
+import com.nekromant.twitch.TwitchChatBot;
 import com.nekromant.twitch.model.TwitchCommand;
 import com.nekromant.twitch.repository.TwitchCommandRepository;
 import lombok.Setter;
@@ -20,6 +21,8 @@ import java.util.List;
 @Component
 public class TwitchCommandTimerService {
     @Autowired
+    private TwitchChatBot twitchChatBot;
+    @Autowired
     private TwitchCommandRepository twitchCommandRepository;
     @Autowired
     private TwitchAuthService twitchAuthService;
@@ -30,7 +33,8 @@ public class TwitchCommandTimerService {
     public TwitchCommandTimerService() {
     }
 
-    public void executedCommandsByTime(TwitchClient twitchClient) {
+    public void executedCommandsByTime() {
+        TwitchClient twitchClient = twitchChatBot.getTwitchClient();
         List<TwitchCommand> twitchCommands = twitchCommandRepository
                 .findAllByPeriodNotAndEnabledIsTrue(NOT_PERIOD_EXECUTION);
         for (TwitchCommand twitchCommand : twitchCommands) {
@@ -54,10 +58,22 @@ public class TwitchCommandTimerService {
     }
 
     private boolean isLiveStream(TwitchClient twitchClient) {
-        List<Stream> streams = twitchClient.getHelix().getStreams(twitchAuthService.getAuthToken()
+        List<Stream> streams;
+        try {
+            streams = getStreams(twitchClient);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            twitchChatBot.validateConnection();
+            streams = getStreams(twitchChatBot.getTwitchClient());
+            return !streams.isEmpty();
+        }
+        return !streams.isEmpty();
+    }
+
+    private List<Stream> getStreams(TwitchClient twitchClient) {
+        return twitchClient.getHelix().getStreams(twitchAuthService.getAuthToken()
                                 .getAccessToken(), null, null, 1, null, null, null,
                         Collections.singletonList(channelName))
                 .execute().getStreams();
-        return !streams.isEmpty();
     }
 }

@@ -1,5 +1,6 @@
 package com.nekromant.twitch.service;
 
+import com.nekromant.twitch.model.Donat;
 import com.nekromant.twitch.model.Kindness;
 import com.nekromant.twitch.model.TwitchUser;
 import com.nekromant.twitch.model.TwitchUserMessage;
@@ -28,6 +29,7 @@ public class KindnessService {
     private static final double DEFAULT_INDEX_KINDNESS = 100;
     private static final double DEFAULT_LENGTH_MESSAGES = 200;
     private static final double FAILED_EVALUATION_INDEX_KINDNESS = 75;
+    private static final double INDEX_CONVERTING_AMOUNT_INTO_KINDNESS = 10;
 
     public double getIndexKindness(Long idUser, String nameUser) {
         TwitchUser twitchUser = twitchUserService.getTwitchUserById(idUser);
@@ -135,5 +137,30 @@ public class KindnessService {
 
     private void deleteMessagesByTwitchUser(TwitchUser twitchUser) {
         twitchUserMessageRepository.deleteAllByTwitchUser(twitchUser);
+    }
+
+    public void addKindnessForDonat(Donat donat) {
+        String userName = donat.getName();
+        TwitchUser twitchUser = twitchUserService.getTwitchUserByName(userName);
+        if (twitchUser != null) {
+            Kindness kindnessByUser = twitchUser.getKindness();
+            if (kindnessByUser != null) {
+                kindnessByUser.setIndexKindness(calculationIndexKindnessForDonat(kindnessByUser, donat));
+                save(kindnessByUser, twitchUser);
+                log.info("Добавление доброты за счёт доната пользователю: " + userName);
+                return;
+            }
+        }
+        log.info("При добавлении доброты за счёт доната, пользователь с данным именем не найден: " + userName);
+    }
+
+    private double calculationIndexKindnessForDonat(Kindness kindness, Donat donat) {
+        double additionalKindness = Math.ceil(donat.getAmount() / INDEX_CONVERTING_AMOUNT_INTO_KINDNESS);
+        double calculatedIndexKindness = kindness.getIndexKindness() + additionalKindness;
+
+        if (calculatedIndexKindness <= DEFAULT_INDEX_KINDNESS) {
+            return calculatedIndexKindness;
+        }
+        return DEFAULT_INDEX_KINDNESS;
     }
 }
