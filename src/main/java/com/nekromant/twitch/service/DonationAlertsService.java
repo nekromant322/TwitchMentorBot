@@ -11,6 +11,7 @@ import com.nekromant.twitch.repository.DonationAlertsTokenRepository;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,6 @@ public class DonationAlertsService {
     private DonationAlertsTokenMapper donationAlertsTokenMapper;
     @Autowired
     private DonatMapper donatMapper;
-    private static final int STATUS_CODE_SUCCESSFUL_EXECUTION = 200;
 
     public List<Donat> getDonations() {
         return getResponseFromDonationAlerts().getData()
@@ -42,9 +42,13 @@ public class DonationAlertsService {
     private DonationResponse getResponseFromDonationAlerts() {
         try {
             return donationAlertsFeign.getDonations(" Bearer " + getAuthToken().getAccessToken());
-        } catch (Exception e) {
-            log.error("Токен DonationAlerts невалидный: " + e.getMessage());
-            getAndSaveNewAuthTokenByRefreshToken();
+        } catch (FeignException e) {
+            if (e.status() == HttpStatus.UNAUTHORIZED.value()) {
+                log.error("Токен DonationAlerts невалидный: " + e.getMessage());
+                getAndSaveNewAuthTokenByRefreshToken();
+            } else {
+                log.error("Не удалось получить донаты от DonationAlerts: " + e.getMessage());
+            }
             return donationAlertsFeign.getDonations(" Bearer " + getAuthToken().getAccessToken());
         }
     }
@@ -54,8 +58,7 @@ public class DonationAlertsService {
         try {
             ResponseEntity<DonationAlertsToken> responseByRefreshToken = donationAlertsAuthFeign
                     .getNewTokenByRefreshToken(donationAlertsTokenMapper.toDonationAlertsTokenDTO(token));
-            System.out.println(responseByRefreshToken);
-            if (responseByRefreshToken.getStatusCodeValue() == STATUS_CODE_SUCCESSFUL_EXECUTION) {
+            if (responseByRefreshToken.getStatusCodeValue() == HttpStatus.OK.value()) {
                 DonationAlertsToken newDonationAlertsToken = responseByRefreshToken.getBody();
                 token.setAccessToken(newDonationAlertsToken.getAccessToken());
                 token.setExpiresIn(newDonationAlertsToken.getExpiresIn());

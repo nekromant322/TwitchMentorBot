@@ -8,6 +8,7 @@ import com.nekromant.twitch.repository.KindnessRepository;
 import com.nekromant.twitch.repository.TwitchUserMessageRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -29,7 +30,8 @@ public class KindnessService {
     private static final double DEFAULT_INDEX_KINDNESS = 100;
     private static final double DEFAULT_LENGTH_MESSAGES = 200;
     private static final double FAILED_EVALUATION_INDEX_KINDNESS = 75;
-    private static final double INDEX_CONVERTING_AMOUNT_INTO_KINDNESS = 10;
+    @Value("${donationAlerts.donations.indexConvertingKindness}")
+    private double indexConvertingKindness;
 
     public double getIndexKindness(Long idUser, String nameUser) {
         TwitchUser twitchUser = twitchUserService.getTwitchUserById(idUser);
@@ -155,7 +157,7 @@ public class KindnessService {
     }
 
     private double calculationIndexKindnessForDonat(Kindness kindness, Donat donat) {
-        double additionalKindness = Math.ceil(donat.getAmount() / INDEX_CONVERTING_AMOUNT_INTO_KINDNESS);
+        double additionalKindness = Math.ceil(donat.getAmount() / indexConvertingKindness);
         double calculatedIndexKindness = kindness.getIndexKindness() + additionalKindness;
 
         if (calculatedIndexKindness <= DEFAULT_INDEX_KINDNESS) {
