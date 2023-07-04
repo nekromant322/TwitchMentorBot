@@ -67,6 +67,7 @@ donationAlerts:
   donations:
     url: https://www.donationalerts.com
     post: /api/v1/alerts/donations?last
+    indexConvertingKindness: 10
 
 schedule:
   periodEvaluationKindness: 90000
