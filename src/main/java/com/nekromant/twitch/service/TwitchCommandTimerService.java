@@ -5,6 +5,7 @@ import com.github.twitch4j.helix.domain.Stream;
 import com.nekromant.twitch.TwitchChatBot;
 import com.nekromant.twitch.model.TwitchCommand;
 import com.nekromant.twitch.repository.TwitchCommandRepository;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @Slf4j
 @Setter
+@NoArgsConstructor
 @Component
 public class TwitchCommandTimerService {
     @Autowired
@@ -30,23 +32,18 @@ public class TwitchCommandTimerService {
     private String channelName;
     private Long NOT_PERIOD_EXECUTION = 0L;
 
-    public TwitchCommandTimerService() {
-    }
-
     public void executedCommandsByTime() {
         TwitchClient twitchClient = twitchChatBot.getTwitchClient();
-        if (isLiveStream(twitchClient)) {
-            List<TwitchCommand> twitchCommands = twitchCommandRepository
-                    .findAllByPeriodNotAndEnabledIsTrue(NOT_PERIOD_EXECUTION);
-
-            for (TwitchCommand twitchCommand : twitchCommands) {
-                if (checkPeriod(twitchCommand)) {
+        List<TwitchCommand> twitchCommands = twitchCommandRepository
+                .findAllByPeriodNotAndEnabledIsTrue(NOT_PERIOD_EXECUTION);
+        for (TwitchCommand twitchCommand : twitchCommands) {
+            if (checkPeriod(twitchCommand)) {
+                if (isLiveStream(twitchClient)) {
                     twitchClient.getChat().sendMessage(channelName, twitchCommand.getResponse());
-
-                    twitchCommand.setLastCompletionTime(Instant.now());
-                    twitchCommandRepository.save(twitchCommand);
                     log.info("Running task for command: !" + twitchCommand.getName());
                 }
+                twitchCommand.setLastCompletionTime(Instant.now());
+                twitchCommandRepository.save(twitchCommand);
             }
         }
     }
