@@ -4,7 +4,7 @@ services:
   twitch-bot-db:
     image: postgres:14.1-alpine
     container_name: twitch-bot-db
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_DB: twitch_bot
       POSTGRES_USER: ${DB_USER}
@@ -16,6 +16,7 @@ services:
     #     build: ./
     image: mabalda/twitch-chat-bot-twitch-bot-app:latest
     container_name: twitch-bot-app
+    restart: unless-stopped
     environment:
       POSTGRES_DB: twitch_bot
       POSTGRES_USER: ${DB_USER}
