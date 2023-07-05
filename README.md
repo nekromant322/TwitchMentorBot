@@ -27,6 +27,8 @@
 - Bot App - для функций чата
 - Moderation App - для функций с наградами и просмотра списка модераторов
 - PixelWars App - для работы редактора пикселей для зрителей канала
+- ChatGPT App - для оценки доброты пользователей
+- DonationAlerts App - для добавления доброты за донаты
 
 Для корректного тестирования функций в своем канале советую зарегистрировать еще один Твич аккаунт и уже на нем создавать приложения.
 
@@ -40,8 +42,7 @@
     
     Все скоупы можно посмотреть [тут](https://dev.twitch.tv/docs/authentication/scopes/).
     
-    Есть [другой быстрый способ выпуска токенов](https://twitchtokengenerator.com/), но в этом случае используется клиент айди токен генератора, что в будущем может привести к поломкам.
-    
+    Есть [другой быстрый способ выпуска токенов](https://twitchtokengenerator.com/), но в этом случае используется клиент айди токен генератора, что в будущем может привести к поломкам. 
 
 Шаги выше необходимо повторить 2 раза: для Bot и для Moderation. И дополнительно только первый шаг для PixelWars (см. application.yml).
 
@@ -50,6 +51,40 @@
 POSTGRES_PASSWORD и POSTGRES_USER можно придумать свои или взять стандартные postgres, postgres. По умолчанию POSTGRES_DB=twitch_bot.
 
 Полученные токены (доступа и рефреш) в первый раз понадобится вручную внести в таблицу twitch_token БД, указав для чатбота type - “auth”, а для модерации - “moderation”.
+
+3. Для работы с ChatGPT создаём secret Key https://platform.openai.com/account/api-keys, при создании копируем key - это наш API_KEY_Chat_GPT
+   На момент написания туториала OpenAI не доступен на территории РФ, поэтому:
+   -Используем VPN
+   -Регистрируемся из под гугловской почты
+   -Возможно потребуется подтверждение по номеру телефона, зарегистрированном не в РФ
+   (можно использовать онлайн сервисы для подтверждения) Рекомендую https://365sms.org/ru
+    
+4.Вот гайд от [donationalerts] https://www.donationalerts.com/apidoc#advertisement. Для ленивых ниже инструкция.
+Необходимо создать новое приложение https://www.donationalerts.com/application/clients
+- имя любое 
+-URL: http://localhost:3000
+App ID - это твой client_id от donationalerts (Эти креды необходимо добавить в application.yml)
+API Key - это твой client_secret от donationalerts (Эти креды необходимо добавить в application.yml)
+Потом необходимо вставить в браузере такой запрос:
+https://www.donationalerts.com/oauth/authorize?
+client_id=ТВОЙ_client_id
+&redirect_uri=http://localhost:3000
+&response_type=code
+&scope=oauth-donation-index
+- необходимо подтвердить и получишь ссылку по типу:
+
+http://localhost:3000/?code=ТВОЙ_КОД_АВТОРИЗАЦИИ
+Следующим шагом необходимо в посмане собрать POST запрос(body -> x-www-form-urlencoded) по типу:
+https://www.donationalerts.com/oauth/token
+
+grant_type=authorization_code
+client_id=ТВОЙ_client_id
+client_secret=ТВОЙ_client_secret
+redirect_uri=http://localhost:3000
+code=ТВОЙ_КОД_АВТОРИЗАЦИИ
+
+в ответ получишь json с токенами(эти токены необхожимо добавить в таблицу donation_alerts_token)
+
 
 ### Для разворачивания Postgres:
 
