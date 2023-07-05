@@ -28,6 +28,7 @@ public class ChatGptService {
             throw new RuntimeException(e);
         }
     }
+    //тест
 
     private JSONObject createJsonRequest(String message) throws JSONException {
         JSONArray messagesArray = new JSONArray();
