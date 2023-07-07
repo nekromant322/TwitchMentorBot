@@ -3,7 +3,6 @@ package com.nekromant.twitch.service;
 import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.helix.domain.Stream;
 import com.nekromant.twitch.TwitchChatBot;
-import com.nekromant.twitch.config.LinkedHashSetOfTwitchCommandConfig;
 import com.nekromant.twitch.model.TwitchCommand;
 import com.nekromant.twitch.repository.TwitchCommandRepository;
 import lombok.NoArgsConstructor;
@@ -32,35 +31,28 @@ public class TwitchCommandTimerService {
     private TwitchCommandRepository twitchCommandRepository;
     @Autowired
     private TwitchAuthService twitchAuthService;
-    @Autowired
-    private LinkedHashSetOfTwitchCommandConfig linkedHashSetOfTwitchCommandConfig;
     @Value("${twitch.channelName}")
     private String channelName;
-    @Value("${timeSlots.notPeriodExecution}")
-    private Long NOT_PERIOD_EXECUTION;
     @Value("${timeSlots.allowedTimeIntervalInMinutes}")
     private Integer ALLOWED_TIME_INTERVAL_IN_MINUTES;
+    private LinkedHashSet<TwitchCommand> linkedHashSet = new LinkedHashSet<>();
 
-    public void addCommandToLinkedHashSet() {
+    public void linkedHashSetManagement() {
         TwitchClient twitchClient = twitchChatBot.getTwitchClient();
         if (isLiveStream(twitchClient)) {
-            if (isNewStream()) {
-                initialCallCommandOperation();
-            } else {
-                normalCallCommandOperation();
-            }
+            fillLinkedHashSet(commandsWereNotSentWithinTheAllowedTime());
         } else {
             cleanLinkedHashSet();
         }
     }
 
-    public void getCommandFromLinkedHashSet() {
+    public void sendCommandFromLinkedHashSet() {
         TwitchClient twitchClient = twitchChatBot.getTwitchClient();
-        Optional<TwitchCommand> twitchCommand = linkedHashSetOfTwitchCommandConfig
-                .getTwitchCommandLinkedHashSet().stream().findFirst();
+        Optional<TwitchCommand> twitchCommand = linkedHashSet.stream().findFirst();
         if (isLiveStream(twitchClient) && twitchCommand.isPresent()) {
             twitchClient.getChat().sendMessage(channelName, twitchCommand.get().getResponse());
-            linkedHashSetOfTwitchCommandConfig.getTwitchCommandLinkedHashSet().remove(twitchCommand.get());
+            linkedHashSet.remove(twitchCommand.get());
+            twitchCommand.get().setLastCompletionTime(Instant.now());
             twitchCommandRepository.save(twitchCommand.get());
             log.info("Running task for command: !" + twitchCommand.get().getName());
         }
@@ -86,46 +78,36 @@ public class TwitchCommandTimerService {
                 .execute().getStreams();
     }
 
-    private boolean isNewStream() {
+    private boolean commandsWereNotSentWithinTheAllowedTime() {
         return twitchCommandRepository
-                .findAllByPeriodNotAndEnabledIsTrue(NOT_PERIOD_EXECUTION)
+                .getTwitchCommandsSortedByPeriodWithEnabledTrueAndPeriodNotZero()
                 .stream()
                 .noneMatch(tc -> Duration.between(tc.getLastCompletionTime(), Instant.now()).toMinutes()
-                        < ALLOWED_TIME_INTERVAL_IN_MINUTES); //tc.getPeriod()
+                        < ALLOWED_TIME_INTERVAL_IN_MINUTES);
     }
 
-    private void initialCallCommandOperation() {
-        List<TwitchCommand> twitchCommandsSortedByPeriod = twitchCommandRepository
-                        .getTwitchCommandsSortedByPeriodWithEnabledTrueAndPeriodNot(NOT_PERIOD_EXECUTION);
-        for (TwitchCommand twitchCommand : twitchCommandsSortedByPeriod) {
-            twitchCommand.setLastCompletionTime(Instant.now());
-            twitchCommandRepository.save(twitchCommand);
-            addNextCommandsToLinkedHashSet(twitchCommand);
+    private void fillLinkedHashSet(boolean isNewStream) {
+        List<TwitchCommand> twitchCommands = twitchCommandRepository
+                .getTwitchCommandsSortedByPeriodWithEnabledTrueAndPeriodNotZero();
+        if (isNewStream) {
+            twitchCommands.forEach(tc -> tc.setLastCompletionTime(Instant.now()));
+            twitchCommandRepository.saveAll(twitchCommands);
         }
+        twitchCommands.forEach(this::addCommandsToLinkedHashSet);
     }
 
-    private void normalCallCommandOperation() {
-        List<TwitchCommand> twitchCommandsSortedByLastCompletionTime = twitchCommandRepository
-                .getTwiCommandsSortedByLastCompletionTimeWithEnabledTrueAndPeriodNot(NOT_PERIOD_EXECUTION);
-        for (TwitchCommand twitchCommand : twitchCommandsSortedByLastCompletionTime) {
-            addNextCommandsToLinkedHashSet(twitchCommand);
-        }
-    }
-
-    private void addNextCommandsToLinkedHashSet(TwitchCommand twitchCommand) {
+    private void addCommandsToLinkedHashSet(TwitchCommand twitchCommand) {
         if (Math.abs(Duration.between(twitchCommand.getLastCompletionTime(), Instant.now())
                 .minus(twitchCommand.getPeriod(), ChronoUnit.MINUTES).toMinutes())
                 <= ALLOWED_TIME_INTERVAL_IN_MINUTES) {
-            linkedHashSetOfTwitchCommandConfig.getTwitchCommandLinkedHashSet().add(twitchCommand);
+            linkedHashSet.add(twitchCommand);
         }
     }
 
     private void cleanLinkedHashSet() {
-        LinkedHashSet<TwitchCommand> twitchCommandLinkedHashSet =
-                linkedHashSetOfTwitchCommandConfig.getTwitchCommandLinkedHashSet();
+        LinkedHashSet<TwitchCommand> twitchCommandLinkedHashSet = linkedHashSet;
         if (!twitchCommandLinkedHashSet.isEmpty()) {
-            linkedHashSetOfTwitchCommandConfig.getTwitchCommandLinkedHashSet()
-                    .removeAll(twitchCommandLinkedHashSet);
+            linkedHashSet.removeAll(twitchCommandLinkedHashSet);
         }
     }
 }

@@ -76,5 +76,4 @@ schedule:
   periodAddKindnessForDonat: 60000
 
 timeSlots:
-  notPeriodExecution: !!int 0
-  allowedTimeIntervalInMinutes: !!int 2
+  allowedTimeIntervalInMinutes: 20

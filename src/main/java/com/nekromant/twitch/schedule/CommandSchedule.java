@@ -12,11 +12,11 @@ public class CommandSchedule {
 
     @Scheduled(fixedDelayString = "${schedule.periodExecutedCommandsByTime}")
     public void executedCommandsByTime() {
-        twitchCommandTimerService.addCommandToLinkedHashSet();
+        twitchCommandTimerService.linkedHashSetManagement();
     }
 
     @Scheduled(fixedDelayString = "${schedule.periodGetExecutedCommandsByTime}")
-    public void getExecutedCommandsByTime() {
-        twitchCommandTimerService.getCommandFromLinkedHashSet();
+    public void sendExecutedCommandsByTime() {
+        twitchCommandTimerService.sendCommandFromLinkedHashSet();
     }
 }
