@@ -3,6 +3,7 @@ package com.nekromant.twitch.service;
 import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.helix.domain.Stream;
 import com.nekromant.twitch.TwitchChatBot;
+import com.nekromant.twitch.config.properties.ScheduleConfigProperties;
 import com.nekromant.twitch.model.TwitchCommand;
 import com.nekromant.twitch.repository.TwitchCommandRepository;
 import lombok.NoArgsConstructor;
@@ -33,8 +34,8 @@ public class TwitchCommandTimerService {
     private TwitchAuthService twitchAuthService;
     @Value("${twitch.channelName}")
     private String channelName;
-    @Value("${timeSlots.allowedTimeIntervalInMinutes}")
-    private Integer ALLOWED_TIME_INTERVAL_IN_MINUTES;
+    @Autowired
+    private ScheduleConfigProperties scheduleConfigProperties;
     private LinkedHashSet<TwitchCommand> linkedHashSet = new LinkedHashSet<>();
 
     public void linkedHashSetManagement() {
@@ -78,14 +79,30 @@ public class TwitchCommandTimerService {
                 .execute().getStreams();
     }
 
+    /**
+     * Метод определяет логику работы с командами:
+     *      'true' – у нас новый стрим вне 'scheduleConfigProperties.getAllowedTimeIntervalInMinutes()' диапазона;
+     *      'false' – у нас продолжается работа с запущенным стримом.
+     * @return 'true', если ни одна команда не запускалась последние
+     * 'scheduleConfigProperties.getAllowedTimeIntervalInMinutes()' минут; 'false' в противном случаее.
+     */
     private boolean commandsWereNotSentWithinTheAllowedTime() {
         return twitchCommandRepository
                 .getTwitchCommandsSortedByPeriodWithEnabledTrueAndPeriodNotZero()
                 .stream()
                 .noneMatch(tc -> Duration.between(tc.getLastCompletionTime(), Instant.now()).toMinutes()
-                        < ALLOWED_TIME_INTERVAL_IN_MINUTES);
+                        < scheduleConfigProperties.getAllowedTimeIntervalInMinutes());
     }
 
+    /**
+     * Метод заполняет 'LinkedHashSet', когда стрим запущен.
+     * Параметр 'isNewStream = true':
+     *      Имеем новый стрим вне диапазона временного значения
+     *      'scheduleConfigProperties.getAllowedTimeIntervalInMinutes()'.
+     *      Происходит 'обнуление' времени последнего вызова команд.
+     * Параметр 'isNewStream = false':
+     *      Имеем дело с запущенным стримом.
+     */
     private void fillLinkedHashSet(boolean isNewStream) {
         List<TwitchCommand> twitchCommands = twitchCommandRepository
                 .getTwitchCommandsSortedByPeriodWithEnabledTrueAndPeriodNotZero();
@@ -96,10 +113,15 @@ public class TwitchCommandTimerService {
         twitchCommands.forEach(this::addCommandsToLinkedHashSet);
     }
 
+    /**
+     * Метод добавляем команду 'twitchCommand' в очередь при условии, что
+     * |(последний вызов команды + период команды) - нынешнее время| <= допустимое время
+     * для добавления в 'LinkedHashSet'.
+     */
     private void addCommandsToLinkedHashSet(TwitchCommand twitchCommand) {
         if (Math.abs(Duration.between(twitchCommand.getLastCompletionTime(), Instant.now())
                 .minus(twitchCommand.getPeriod(), ChronoUnit.MINUTES).toMinutes())
-                <= ALLOWED_TIME_INTERVAL_IN_MINUTES) {
+                <= scheduleConfigProperties.getAllowedTimeIntervalInMinutes()) {
             linkedHashSet.add(twitchCommand);
         }
     }

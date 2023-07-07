@@ -10,12 +10,12 @@ public class CommandSchedule {
     @Autowired
     private TwitchCommandTimerService twitchCommandTimerService;
 
-    @Scheduled(fixedDelayString = "${schedule.periodExecutedCommandsByTime}")
+    @Scheduled(fixedDelayString = "#{@scheduleConfigProperties.periodExecutedCommandsByTime}")
     public void executedCommandsByTime() {
         twitchCommandTimerService.linkedHashSetManagement();
     }
 
-    @Scheduled(fixedDelayString = "${schedule.periodGetExecutedCommandsByTime}")
+    @Scheduled(fixedDelayString = "#{@scheduleConfigProperties.periodSendExecutedCommandsByTime}")
     public void sendExecutedCommandsByTime() {
         twitchCommandTimerService.sendCommandFromLinkedHashSet();
     }

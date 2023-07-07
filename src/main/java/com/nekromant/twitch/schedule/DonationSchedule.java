@@ -10,7 +10,7 @@ public class DonationSchedule {
     @Autowired
     private DonatService donatService;
 
-    @Scheduled(fixedDelayString = "${schedule.periodAddKindnessForDonat}")
+    @Scheduled(fixedDelayString = "#{@scheduleConfigProperties.periodAddKindnessForDonat}")
     public void addKindnessForDonat() {
         donatService.addKindnessForDonat();
     }
