@@ -10,8 +10,8 @@ public class ConnectionSchedule {
     @Autowired
     private TwitchChatBot twitchChatBot;
 
-    @Scheduled(initialDelayString = "${schedule.periodValidateConnection}",
-            fixedDelayString = "${schedule.periodValidateConnection}")
+    @Scheduled(initialDelayString = "#{@scheduleConfigProperties.periodValidateConnection}",
+            fixedDelayString = "#{@scheduleConfigProperties.periodValidateConnection}")
     public void validateConnection() {
         twitchChatBot.validateConnection();
     }

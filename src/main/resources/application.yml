@@ -73,4 +73,6 @@ schedule:
   periodEvaluationKindness: 90000
   periodValidateConnection: PT01H
   periodExecutedCommandsByTime: 60000
+  periodSendExecutedCommandsByTime: 120000
   periodAddKindnessForDonat: 60000
+  allowedTimeIntervalInMinutes: 20
