@@ -73,7 +73,7 @@ jobs:
             docker stop twitch-bot-app
             docker rm twitch-bot-app
             docker rmi mabalda/twitch-chat-bot-twitch-bot-app:latest
-            docker-compose --env-file twitch-env.txt up -d twitch-bot-app
+            docker-compose --env-file twitch-env.txt up -d
             docker ps -a  
             rm twitch-env.txt
     
