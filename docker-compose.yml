@@ -11,6 +11,10 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5432:5432"
+    logging:
+      driver: "json-file" 
+      options:
+        max-size: 50m
 
   twitch-bot-app:
     #     build: ./
@@ -37,3 +41,7 @@ services:
       DONATION_ALERTS_SECRET: ${DONATION_ALERTS_SECRET}
     ports:
       - "9000:8080"
+    logging:
+      driver: "json-file" 
+      options:
+        max-size: 50m
