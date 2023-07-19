@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Setter
@@ -36,12 +37,15 @@ public class TwitchCommandTimerService {
     private String channelName;
     @Autowired
     private ScheduleConfigProperties scheduleConfigProperties;
+
+    private int CONFIDENCE_TIME_INTERVAL_IN_MINUTES = 1;
+
     private LinkedHashSet<TwitchCommand> linkedHashSet = new LinkedHashSet<>();
 
     public void linkedHashSetManagement() {
         TwitchClient twitchClient = twitchChatBot.getTwitchClient();
         if (isLiveStream(twitchClient)) {
-            fillLinkedHashSet(commandsWereNotSentWithinTheAllowedTime());
+            fillLinkedHashSet();
         } else {
             cleanLinkedHashSet();
         }
@@ -51,6 +55,11 @@ public class TwitchCommandTimerService {
         TwitchClient twitchClient = twitchChatBot.getTwitchClient();
         Optional<TwitchCommand> twitchCommand = linkedHashSet.stream().findFirst();
         if (isLiveStream(twitchClient) && twitchCommand.isPresent()) {
+            log.info("Список команд в очереди до отправки команды в чат: " + linkedHashSet
+                    .stream()
+                    .map(TwitchCommand::getName)
+                    .collect(Collectors.joining(" ")));
+
             twitchClient.getChat().sendMessage(channelName, twitchCommand.get().getResponse());
             linkedHashSet.remove(twitchCommand.get());
             twitchCommand.get().setLastCompletionTime(Instant.now());
@@ -81,34 +90,39 @@ public class TwitchCommandTimerService {
 
     /**
      * Метод определяет логику работы с командами:
-     *      'true' – у нас новый стрим вне 'scheduleConfigProperties.getAllowedTimeIntervalInMinutes()' диапазона;
-     *      'false' – у нас продолжается работа с запущенным стримом.
-     * @return 'true', если ни одна команда не запускалась последние
-     * 'scheduleConfigProperties.getAllowedTimeIntervalInMinutes()' минут; 'false' в противном случаее.
+     * @return 'true', если хотя бы одна команда запускалась позднее [собственный период вызова +
+     *              'CONFIDENCE_TIME_INTERVAL_IN_MINUTES' + 'интервал отправки команд в чат'] минут назад.
+     *              CONFIDENCE_TIME_INTERVAL_IN_MINUTES выступает в качестве
+     *              доверительного временного интервала для устранения ошибок, связанных со временем.
+     *              'Интервал отправки команд в чат' == 'scheduleConfigProperties.periodSendExecutedCommandsByTime';
+     *         'false' в противном случаее.
      */
-    private boolean commandsWereNotSentWithinTheAllowedTime() {
-        return twitchCommandRepository
-                .getTwitchCommandsSortedByPeriodWithEnabledTrueAndPeriodNotZero()
-                .stream()
-                .noneMatch(tc -> Duration.between(tc.getLastCompletionTime(), Instant.now()).toMinutes()
-                        < scheduleConfigProperties.getAllowedTimeIntervalInMinutes());
+    private boolean commandsWereNotSentWithinTheAllowedTime(List<TwitchCommand> twitchCommands) {
+        return twitchCommands.stream()
+                .anyMatch(tc -> Duration.between(tc.getLastCompletionTime(), Instant.now()).toMinutes()
+                        > tc.getPeriod() +
+                        CONFIDENCE_TIME_INTERVAL_IN_MINUTES +
+                        Duration.ofMillis(Long.parseLong(scheduleConfigProperties.getPeriodSendExecutedCommandsByTime()))
+                                .toMinutes());
     }
 
     /**
      * Метод заполняет 'LinkedHashSet', когда стрим запущен.
-     * Параметр 'isNewStream = true':
-     *      Имеем новый стрим вне диапазона временного значения
-     *      'scheduleConfigProperties.getAllowedTimeIntervalInMinutes()'.
+     * Метод 'commandsWereNotSentWithinTheAllowedTime(twitchCommands) = true':
+     *      Имеем новый стрим, поскольку есть хотя бы одна команда, которая запускалась давно –
+     *      вне диапазона установленного времени [период команды + 'CONFIDENCE_TIME_INTERVAL_IN_MINUTES'
+     *      + 'интервал отправки команд в чат'].
      *      Происходит 'обнуление' времени последнего вызова команд.
-     * Параметр 'isNewStream = false':
+     * Метод 'commandsWereNotSentWithinTheAllowedTime(twitchCommands) = false':
      *      Имеем дело с запущенным стримом.
      */
-    private void fillLinkedHashSet(boolean isNewStream) {
+    private void fillLinkedHashSet() {
         List<TwitchCommand> twitchCommands = twitchCommandRepository
                 .getTwitchCommandsSortedByPeriodWithEnabledTrueAndPeriodNotZero();
-        if (isNewStream) {
+        if (commandsWereNotSentWithinTheAllowedTime(twitchCommands)) {
             twitchCommands.forEach(tc -> tc.setLastCompletionTime(Instant.now()));
             twitchCommandRepository.saveAll(twitchCommands);
+            linkedHashSet.addAll(twitchCommands);
         }
         twitchCommands.forEach(this::addCommandsToLinkedHashSet);
     }
