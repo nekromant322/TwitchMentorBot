@@ -1,5 +1,5 @@
 twitch:
-  channelName: ${CHANNEL_NAME:overridetech}
+  channelName: ${CHANNEL_NAME:yadren_matron}
   auth:
     botClientId: ${BOT_CLIENT_ID}
     botSecret: ${BOT_SECRET}

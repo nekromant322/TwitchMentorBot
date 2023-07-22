@@ -87,6 +87,9 @@ public class TwitchChatBot {
 
         twitchClient.getEventManager().onEvent(ChannelMessageEvent.class,
                 event -> twitchUserService.saveTwitchUserMessage(event));
+
+        twitchClient.getEventManager().onEvent(ChannelMessageEvent.class,
+                event -> twitchUserService.tryToTimeoutUser(event, authToken.getAccessToken(), channelId, channelId));
     }
 
     public void restart() {

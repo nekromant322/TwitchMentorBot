@@ -1,6 +1,9 @@
 package com.nekromant.twitch.service;
 
 import com.github.twitch4j.chat.events.channel.ChannelMessageEvent;
+import com.github.twitch4j.common.events.domain.EventUser;
+import com.github.twitch4j.helix.domain.BanUserInput;
+import com.nekromant.twitch.ModerationTwitchHelix;
 import com.nekromant.twitch.model.TwitchUser;
 import com.nekromant.twitch.model.TwitchUserMessage;
 import com.nekromant.twitch.repository.TwitchUserRepository;
@@ -13,6 +16,10 @@ import java.util.Optional;
 public class TwitchUserService {
     @Autowired
     private TwitchUserRepository twitchUserRepository;
+    @Autowired
+    private ModerationTwitchHelix moderationTwitchHelix;
+    private final String USER_NEEDS_A_TIMEOUT = "meowhardy";
+    private int timeoutUserMessageCount = 0;
 
     public void saveTwitchUserMessage(ChannelMessageEvent event) {
         Long idTwitchUser = Long.valueOf(event.getMessageEvent().getUser().getId());
@@ -53,5 +60,27 @@ public class TwitchUserService {
 
     public TwitchUser getTwitchUserWithMostMessages() {
         return twitchUserRepository.findFirst();
+    }
+
+    public void tryToTimeoutUser(ChannelMessageEvent event, String authToken, String broadcasterId, String moderatorId) {
+        System.out.println("trying to timeout");
+        EventUser eventUser = event.getUser();
+
+        if (eventUser.getName().equals(USER_NEEDS_A_TIMEOUT)) {
+            this.timeoutUserMessageCount++;
+            System.out.println("Сообщений: " + timeoutUserMessageCount);
+
+            if (this.timeoutUserMessageCount == 2) {
+                this.timeoutUserMessageCount = 0;
+                BanUserInput banUserInput = new BanUserInput(USER_NEEDS_A_TIMEOUT, "REASON", 600);
+                moderationTwitchHelix.banUser(authToken, broadcasterId, moderatorId, banUserInput);
+                System.out.println("authToken: " + authToken);
+                System.out.println("broadcasterId: " + broadcasterId);
+                System.out.println("moderatorId: " + moderatorId);
+                System.out.println(banUserInput.getUserId());
+                System.out.println("banned");
+//                как то кинуть таймаут
+            }
+        }
     }
 }

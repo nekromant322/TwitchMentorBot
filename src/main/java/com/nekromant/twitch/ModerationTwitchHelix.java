@@ -1,6 +1,7 @@
 package com.nekromant.twitch;
 
 import com.github.twitch4j.helix.TwitchHelix;
+import com.github.twitch4j.helix.domain.BanUserInput;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,5 +23,9 @@ public class ModerationTwitchHelix {
 
     public String getModerationToken() {
         return moderationToken;
+    }
+
+    public void banUser(String authToken, String broadcasterId, String moderatorId, BanUserInput data) {
+        this.helix.banUser(authToken, broadcasterId, moderatorId, data);
     }
 }
