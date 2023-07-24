@@ -1,5 +1,7 @@
 package com.nekromant.twitch.service;
 
+import com.nekromant.twitch.exception.NotFoundDonationAlertsTokenException;
+import com.nekromant.twitch.exception.UnauthorizedDonationAlertsTokenException;
 import com.nekromant.twitch.feign.DonationAlertsAuthFeign;
 import com.nekromant.twitch.feign.DonationAlertsFeign;
 import com.nekromant.twitch.mapper.DonatMapper;
@@ -40,8 +42,9 @@ public class DonationAlertsService {
     }
 
     private DonationResponse getResponseFromDonationAlerts() {
+        DonationResponse donationResponse;
         try {
-            return donationAlertsFeign.getDonations(" Bearer " + getAuthToken().getAccessToken());
+            donationResponse = donationAlertsFeign.getDonations(" Bearer " + getAuthToken().getAccessToken());
         } catch (FeignException e) {
             if (e.status() == HttpStatus.UNAUTHORIZED.value()) {
                 log.error("Токен DonationAlerts невалидный: " + e.getMessage());
@@ -49,8 +52,11 @@ public class DonationAlertsService {
             } else {
                 log.error("Не удалось получить донаты от DonationAlerts: " + e.getMessage());
             }
-            return donationAlertsFeign.getDonations(" Bearer " + getAuthToken().getAccessToken());
+            throw new UnauthorizedDonationAlertsTokenException("Токен DonationAlerts невалидный");
+        } catch (Exception e) {
+            throw new NotFoundDonationAlertsTokenException("Токен DonationAlerts не найден");
         }
+        return donationResponse;
     }
 
     public void getAndSaveNewAuthTokenByRefreshToken() {
@@ -60,11 +66,13 @@ public class DonationAlertsService {
                     .getNewTokenByRefreshToken(donationAlertsTokenMapper.toDonationAlertsTokenDTO(token));
             if (responseByRefreshToken.getStatusCodeValue() == HttpStatus.OK.value()) {
                 DonationAlertsToken newDonationAlertsToken = responseByRefreshToken.getBody();
-                token.setAccessToken(newDonationAlertsToken.getAccessToken());
-                token.setExpiresIn(newDonationAlertsToken.getExpiresIn());
-                token.setRefreshToken(newDonationAlertsToken.getRefreshToken());
-                donationAlertsTokenRepository.save(token);
-                log.info("Обновление токена DonationAlerts выполнен");
+                if (newDonationAlertsToken != null) {
+                    token.setAccessToken(newDonationAlertsToken.getAccessToken());
+                    token.setExpiresIn(newDonationAlertsToken.getExpiresIn());
+                    token.setRefreshToken(newDonationAlertsToken.getRefreshToken());
+                    donationAlertsTokenRepository.save(token);
+                    log.info("Обновление токена DonationAlerts выполнен");
+                }
             }
         } catch (FeignException e) {
             log.error(e.getMessage());
