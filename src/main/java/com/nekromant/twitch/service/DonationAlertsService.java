@@ -66,11 +66,13 @@ public class DonationAlertsService {
                     .getNewTokenByRefreshToken(donationAlertsTokenMapper.toDonationAlertsTokenDTO(token));
             if (responseByRefreshToken.getStatusCodeValue() == HttpStatus.OK.value()) {
                 DonationAlertsToken newDonationAlertsToken = responseByRefreshToken.getBody();
-                token.setAccessToken(newDonationAlertsToken.getAccessToken());
-                token.setExpiresIn(newDonationAlertsToken.getExpiresIn());
-                token.setRefreshToken(newDonationAlertsToken.getRefreshToken());
-                donationAlertsTokenRepository.save(token);
-                log.info("Обновление токена DonationAlerts выполнен");
+                if (newDonationAlertsToken != null) {
+                    token.setAccessToken(newDonationAlertsToken.getAccessToken());
+                    token.setExpiresIn(newDonationAlertsToken.getExpiresIn());
+                    token.setRefreshToken(newDonationAlertsToken.getRefreshToken());
+                    donationAlertsTokenRepository.save(token);
+                    log.info("Обновление токена DonationAlerts выполнен");
+                }
             }
         } catch (FeignException e) {
             log.error(e.getMessage());
