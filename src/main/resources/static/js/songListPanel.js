@@ -3,7 +3,7 @@ window.onload = function () {
 }
 
 function getAllSongs() {
-    $.get('/songs/panel/list', function (data) {
+    $.get('/songs/list', function (data) {
 
         let table = "";
 

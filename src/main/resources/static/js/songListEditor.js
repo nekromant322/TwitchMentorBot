@@ -10,7 +10,7 @@ function addSong() {
 
     $.ajax({
         type: 'POST',
-        url: '/songs/editor',
+        url: '/songs',
         async: false,
         data: JSON.stringify({
             'artist': artist,
@@ -35,7 +35,7 @@ function clearAddSong() {
 }
 
 function getAllSongs() {
-    $.get('/songs/editor/list', function (data) {
+    $.get('/songs/list', function (data) {
 
         let table = "";
 
@@ -90,7 +90,7 @@ $('#edit-button').click(function () {
     let comment = $('#edit-comment').val();
 
     $.ajax({
-        url: '/songs/editor/' + id,
+        url: '/songs/' + id,
         type: 'POST',
         cache: false,
         async: false,
@@ -137,7 +137,7 @@ $('#delete-button').click(function () {
     let id = $('#delete-id').val();
 
     $.ajax({
-        url:'/songs/editor/' + id,
+        url:'/songs/' + id,
         type: 'DELETE',
         cache: false,
         async: false,

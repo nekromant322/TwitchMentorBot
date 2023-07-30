@@ -14,12 +14,12 @@ public class SongController {
     @Autowired
     private SongService songService;
 
-    @GetMapping("/editor/list")
+    @GetMapping("/list")
     public List<Song> songList() {
         return songService.getAllSongs();
     }
 
-    @PostMapping("/editor")
+    @PostMapping
     public void create(@RequestBody SongDTO songDTO) {
         songService.save(songDTO);
     }
@@ -29,18 +29,13 @@ public class SongController {
         return songService.getSongById(id);
     }
 
-    @PostMapping("/editor/{id}")
+    @PostMapping("/{id}")
     public void editSong(@RequestBody SongDTO songDTO, @PathVariable Long id) {
         songService.update(songDTO, id);
     }
 
-    @DeleteMapping("/editor/{id}")
+    @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         songService.delete(id);
-    }
-
-    @GetMapping("/panel/list")
-    public List<Song> songArtistAndNameList() {
-        return songService.getAllSongs();
     }
 }
