@@ -41,6 +41,9 @@ spring:
       ddl-auto: update
     generate-ddl: true
 
+  profiles:
+    active: ${SPRING_APPLICATION_PROFILE:dev}
+
 feign:
   client:
     config:
