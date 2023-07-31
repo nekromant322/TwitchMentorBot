@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SongListCommand extends BotCommand {
-    @Value("https://overridetech.ru/twitch-bot/songList/panel")
+    @Value("${twitch.song-list.songListUrl}")
     private String songListUrl;
 
     public SongListCommand() {
