@@ -15,8 +15,8 @@ public class SongController {
     private SongService songService;
 
     @GetMapping("/list")
-    public List<Song> songList() {
-        return songService.getAllSongs();
+    public List<SongDTO> songDTOList() {
+        return songService.getAllSongsDTO();
     }
 
     @PostMapping
@@ -25,8 +25,8 @@ public class SongController {
     }
 
     @GetMapping("/{id}")
-    public SongDTO getSong(@PathVariable Long id) {
-        return songService.getSongById(id);
+    public SongDTO getSongDTO(@PathVariable Long id) {
+        return songService.getSongDTOById(id);
     }
 
     @PostMapping("/{id}")

@@ -8,18 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SongService {
-
     @Autowired
     private SongRepository songRepository;
-
     @Autowired
     private SongMapper songMapper;
 
-    public List<Song> getAllSongs() {
-        return songRepository.findAll();
+    public List<SongDTO> getAllSongsDTO() {
+        return songRepository.findAll().stream()
+                .map(SongMapper::mapToSongDTO)
+                .collect(Collectors.toList());
     }
 
     public void save(SongDTO songDTO) {
@@ -40,8 +41,11 @@ public class SongService {
         songRepository.deleteById(id);
     }
 
-    public SongDTO getSongById(Long id) {
-        Song song = songRepository.findById(id).get();
-        return songMapper.mapToSongDTO(song);
+    public SongDTO getSongDTOById(Long id) {
+        return SongMapper.mapToSongDTO(getSongById(id));
+    }
+
+    public Song getSongById(Long id) {
+        return songRepository.findById(id).get();
     }
 }

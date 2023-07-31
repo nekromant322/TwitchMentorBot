@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SongListCommand extends BotCommand{
+public class SongListCommand extends BotCommand {
     @Value("${twitch.song-list.songListRedirectUrl}")
-    String songListUrl;
+    private String songListUrl;
 
     public SongListCommand() {
         super("sl", "Отправляет ссылку на song list");

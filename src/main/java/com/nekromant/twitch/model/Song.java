@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Data
 @Entity(name = "songs")
 @Builder
 @Getter
@@ -12,7 +11,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Song {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
