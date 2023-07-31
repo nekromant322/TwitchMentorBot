@@ -35,6 +35,7 @@ public class DailyBonusService {
         if (now.isAfter(lastTimeUsed) && ChronoUnit.DAYS.between(lastTimeUsed, now) > 0) {
             dailyBonus.setPoints(dailyBonus.getPoints() + 1);
             dailyBonus.setLastTimeUsed(now);
+            dailyBonus.setTwitchUser(user);
             dailyBonusRepository.save(dailyBonus);
             twitchUserService.save(user);
             return true;
