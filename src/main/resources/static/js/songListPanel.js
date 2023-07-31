@@ -3,7 +3,7 @@ window.onload = function () {
 }
 
 function getAllSongs() {
-    $.get('/songs/list', function (data) {
+    $.get('../songs', function (data) {
 
         let table = "";
 
@@ -23,7 +23,7 @@ function getAllSongs() {
 
 function copySong(id) {
     $.ajax({
-        url: '/songs/' + id,
+        url: '../songs/' + id,
         type: 'GET',
         success: function (data) {
             navigator.clipboard.writeText(data.artist + ' - ' + data.name);
