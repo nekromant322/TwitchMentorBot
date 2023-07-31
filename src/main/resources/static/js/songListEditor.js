@@ -43,7 +43,7 @@ function getAllSongs() {
             table = table + "<tr>" +
                 "<td>" + data[i].artist + "</td>" +
                 "<td>" + data[i].name + "</td>" +
-                "<td>" + data[i].chordsLink + "</td>" +
+                "<td><a href=" + data[i].chordsLink + ">" + data[i].chordsLink + "</a></td>" +
                 "<td>" + data[i].comment + "</td>" +
                 "<td><button onclick='editSong(" + data[i].id + ")' " +
                 "type='button' " +
