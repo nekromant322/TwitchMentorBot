@@ -46,4 +46,14 @@ public class PageController {
     public String getLoginPage() {
         return "/login.html";
     }
+
+    @GetMapping("/songList/editor")
+    public String getSongListEditor() {
+        return "/songListEditor.html";
+    }
+
+    @GetMapping("/songList/panel")
+    public String getSongListPanel() {
+        return "/songListPanel.html";
+    }
 }
