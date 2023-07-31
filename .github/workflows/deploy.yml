@@ -69,7 +69,7 @@ jobs:
             echo API_KEY_Chat_GPT = ${{ secrets.API_KEY_Chat_GPT }} >> twitch-env.txt
             echo DONATION_ALERTS_CLIENT_ID = ${{ secrets.DONATION_ALERTS_CLIENT_ID }} >> twitch-env.txt
             echo DONATION_ALERTS_SECRET = ${{ secrets.DONATION_ALERTS_SECRET }} >> twitch-env.txt
-            echo SONG_LIST_URL = overridetech.ru/songList/panel >> twitch-env.txt
+            echo SONG_LIST_URL = overridetech.ru/twitch-bot/songList/panel >> twitch-env.txt
             
             docker stop twitch-bot-app
             docker rm twitch-bot-app
