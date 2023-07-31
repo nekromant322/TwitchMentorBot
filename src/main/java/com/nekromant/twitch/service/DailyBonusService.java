@@ -3,6 +3,7 @@ package com.nekromant.twitch.service;
 import com.github.twitch4j.common.events.domain.EventUser;
 import com.nekromant.twitch.model.DailyBonus;
 import com.nekromant.twitch.model.TwitchUser;
+import com.nekromant.twitch.repository.DailyBonusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,9 @@ public class DailyBonusService {
 
     @Autowired
     private TwitchUserService twitchUserService;
+
+    @Autowired
+    private DailyBonusRepository dailyBonusRepository;
 
     public boolean takeBonus(EventUser eventUser) {
         Long userId = Long.valueOf(eventUser.getId());
@@ -31,6 +35,7 @@ public class DailyBonusService {
         if (now.isAfter(lastTimeUsed) && ChronoUnit.DAYS.between(lastTimeUsed, now) > 0) {
             dailyBonus.setPoints(dailyBonus.getPoints() + 1);
             dailyBonus.setLastTimeUsed(now);
+            dailyBonusRepository.save(dailyBonus);
             twitchUserService.save(user);
             return true;
         }
