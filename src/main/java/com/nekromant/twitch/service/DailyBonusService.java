@@ -21,6 +21,10 @@ public class DailyBonusService {
         if (user == null) {
             user = twitchUserService.save(new TwitchUser(Long.valueOf(eventUser.getId()), eventUser.getName()));
         }
+        if (user.getDailyBonus() == null) {
+            user.setDailyBonus(new DailyBonus());
+        }
+
         DailyBonus dailyBonus = user.getDailyBonus();
         LocalDate lastTimeUsed = dailyBonus.getLastTimeUsed();
         LocalDate now = LocalDate.now();
@@ -37,6 +41,9 @@ public class DailyBonusService {
         TwitchUser twitchUser = twitchUserService.getTwitchUserById(Long.valueOf(user.getId()));
         if (twitchUser == null) {
             return 0;
+        }
+        if (twitchUser.getDailyBonus() == null) {
+            twitchUser.setDailyBonus(new DailyBonus());
         }
         return twitchUser.getDailyBonus().getPoints();
     }
