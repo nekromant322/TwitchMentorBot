@@ -10,7 +10,7 @@ function addSong() {
 
     $.ajax({
         type: 'POST',
-        url: '/songs',
+        url: '../songs',
         async: false,
         data: JSON.stringify({
             'artist': artist,
@@ -35,7 +35,7 @@ function clearAddSong() {
 }
 
 function getAllSongs() {
-    $.get('/songs', function (data) {
+    $.get('../songs', function (data) {
 
         let table = "";
 
@@ -69,7 +69,7 @@ function editSong(id) {
     })
 
     $.ajax({
-        url: '/songs/' + id,
+        url: '../songs/' + id,
         type: 'GET',
         success: function (data) {
             $('#edit-id').val(data.id).attr('disabled', 'disabled');
@@ -90,7 +90,7 @@ $('#edit-button').click(function () {
     let comment = $('#edit-comment').val();
 
     $.ajax({
-        url: '/songs/' + id,
+        url: '../songs/' + id,
         type: 'POST',
         cache: false,
         async: false,
@@ -120,7 +120,7 @@ function deleteSong(id) {
     })
 
     $.ajax({
-        url: '/songs/' + id,
+        url: '../songs/' + id,
         type: 'GET',
         success: function (data) {
             $('#delete-id').val(data.id).attr('disabled', 'disabled');
@@ -137,7 +137,7 @@ $('#delete-button').click(function () {
     let id = $('#delete-id').val();
 
     $.ajax({
-        url:'/songs/' + id,
+        url:'../songs/' + id,
         type: 'DELETE',
         cache: false,
         async: false,
