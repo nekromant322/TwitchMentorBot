@@ -14,7 +14,7 @@ public class SongController {
     @Autowired
     private SongService songService;
 
-    @GetMapping("/list")
+    @GetMapping
     public List<SongDTO> songDTOList() {
         return songService.getAllSongsDTO();
     }

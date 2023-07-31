@@ -35,7 +35,7 @@ function clearAddSong() {
 }
 
 function getAllSongs() {
-    $.get('/songs/list', function (data) {
+    $.get('/songs', function (data) {
 
         let table = "";
 
