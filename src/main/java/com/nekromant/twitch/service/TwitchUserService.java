@@ -47,8 +47,8 @@ public class TwitchUserService {
         save(twitchUser);
     }
 
-    public void save(TwitchUser twitchUser) {
-        twitchUserRepository.save(twitchUser);
+    public TwitchUser save(TwitchUser twitchUser) {
+        return twitchUserRepository.save(twitchUser);
     }
 
     public TwitchUser getTwitchUserWithMostMessages() {

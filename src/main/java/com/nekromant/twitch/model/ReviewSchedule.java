@@ -11,12 +11,12 @@ public class ReviewSchedule {
     @Id
     private Long id;
 
-    @Column()
+    @Column
     private String reviews;
 
-    @Column()
+    @Column
     private LocalDateTime startTime;
 
-    @Column()
+    @Column
     private LocalDateTime endTime;
 }
