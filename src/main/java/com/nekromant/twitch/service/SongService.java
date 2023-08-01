@@ -18,7 +18,7 @@ public class SongService {
     private SongMapper songMapper;
 
     public List<SongDTO> getAllSongsDTO() {
-        return songRepository.findAll().stream()
+        return songRepository.findAllOrderedByArtistAndName().stream()
                 .map(SongMapper::mapToSongDTO)
                 .collect(Collectors.toList());
     }
