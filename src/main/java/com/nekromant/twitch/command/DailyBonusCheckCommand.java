@@ -42,7 +42,7 @@ public class DailyBonusCheckCommand extends BotCommand {
 
         if (!targetUsername.equals("")) {
             EventUser targetEventUser = new EventUser(String.valueOf(twitchUserRepository
-                    .findTwitchUserByName(targetUsername).getId()), targetUsername);
+                    .findTwitchUserByName(targetUsername.toLowerCase()).getId()), targetUsername);
             return new Message(senderUsername, String.format(TARGET_USER_DAILY_BONUS_COUNT, targetUsername,
                     getBonus(targetEventUser), getPosition(targetEventUser)));
         } else {
