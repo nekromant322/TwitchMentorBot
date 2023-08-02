@@ -11,4 +11,6 @@ public class MessageContent {
     public static final String INDEX_YOUR_KINDNESS = "Оценка вашей доброты равна: ";
     public static final String INDEX_KINDNESS_USER = "Оценка доброты пользователя @%s равна: ";
     public static final String NOT_FOUND_USER = "Данный пользователь не найден";
+    public static final String USER_DAILY_BONUS_COUNT = "Выпито %s смузи, место в топе смузихлёбов - %s";
+    public static final String TARGET_USER_DAILY_BONUS_COUNT = "Пользователем %s выпито %s смузи, место в топе смузихлёбов - %s";
 }

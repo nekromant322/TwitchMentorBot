@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import static com.nekromant.twitch.content.MessageContent.USER_DAILY_BONUS_COUNT;
+import static com.nekromant.twitch.content.MessageContent.TARGET_USER_DAILY_BONUS_COUNT;
+
 @Component
 public class DailyBonusCheckCommand extends BotCommand {
 
@@ -37,16 +40,15 @@ public class DailyBonusCheckCommand extends BotCommand {
                 .skip(1)
                 .collect(Collectors.joining(" "));
 
-        if (!(targetUsername.equals(""))) {
+        if (!targetUsername.equals("")) {
             EventUser targetEventUser = new EventUser(String.valueOf(twitchUserRepository
                     .findTwitchUserByName(targetUsername).getId()), targetUsername);
-            return new Message(senderUsername, "Пользователем " + targetUsername +
-                    " выпито " + getBonus(targetEventUser) +
-                    " смузи, место в топе смузихлебов - " + getPosition(targetEventUser));
+            return new Message(senderUsername, String.format(TARGET_USER_DAILY_BONUS_COUNT, targetUsername,
+                    getBonus(targetEventUser), getPosition(targetEventUser)));
         } else {
             EventUser senderEventUser = event.getMessageEvent().getUser();
-            return new Message(senderUsername, "Выпито " + getBonus(senderEventUser) +
-                    " смузи, место в топе смузихлебов - " + getPosition(senderEventUser));
+            return new Message(senderUsername, String.format(USER_DAILY_BONUS_COUNT, getBonus(senderEventUser),
+                    getPosition(senderEventUser)));
         }
     }
 
