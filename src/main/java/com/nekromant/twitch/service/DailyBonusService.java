@@ -53,4 +53,8 @@ public class DailyBonusService {
         }
         return twitchUser.getDailyBonus().getPoints();
     }
+
+    public Long getPosition(EventUser user) {
+        return dailyBonusRepository.getPosition(Long.valueOf(user.getId()));
+    }
 }
