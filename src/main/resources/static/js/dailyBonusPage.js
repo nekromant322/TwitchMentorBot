@@ -3,17 +3,16 @@ window.onload = function () {
 }
 
 function getDailyBonusList() {
-    $.get('../bonus', function (data) {
+    $.get('../bonuses', function (data) {
 
         let table = "";
 
         for (i = 0; i < data.length; i++) {
             table = table + "<tr>" +
-                "<td>" + data[i].twitchUser + "</td>" +
+                "<td>" + data[i].twitchUserName + "</td>" +
                 "<td>" + data[i].points + "</td>" +
                 "<td>" + data[i].lastTimeUsed + "</td>" +
                 "</tr>";
-            console.log(data[i]);
         }
 
         $('#daily-bonus-table-body').html(table);
@@ -22,7 +21,7 @@ function getDailyBonusList() {
 
 function getTxtDailyBonusListForPointAucImport() {
     $.ajax({
-        url: '../bonus/file',
+        url: '../bonuses/file',
         type: 'GET',
         async: false,
         success: function (data) {

@@ -1,9 +1,6 @@
 package com.nekromant.twitch.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -18,5 +15,5 @@ public class DailyBonusDTO {
 
     private Integer points;
 
-    private String twitchUser;
+    private String twitchUserName;
 }

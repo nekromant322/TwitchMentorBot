@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DailyBonusMapper {
+    /** Константа-множитель для создания id объектов PointAucObjectDTO такого вида, который требуется pointauc`у */
     public static final Double POINT_AUC_ID_GENERATION_MULTIPLIER = 0.0000000000000001;
 
     public static DailyBonusDTO mapToDailyBonusDTO(DailyBonus dailyBonus) {
@@ -14,7 +15,7 @@ public class DailyBonusMapper {
                 .id(dailyBonus.getId())
                 .lastTimeUsed(dailyBonus.getLastTimeUsed())
                 .points(dailyBonus.getPoints())
-                .twitchUser(dailyBonus.getTwitchUser().getName())
+                .twitchUserName(dailyBonus.getTwitchUser().getName())
                 .build();
     }
 

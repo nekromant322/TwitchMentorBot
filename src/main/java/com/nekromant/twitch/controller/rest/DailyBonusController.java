@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/bonus")
+@RequestMapping("/bonuses")
 public class DailyBonusController {
 
     @Autowired
