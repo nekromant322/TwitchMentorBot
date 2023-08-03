@@ -56,4 +56,9 @@ public class PageController {
     public String getSongListPanel() {
         return "/songListPanel.html";
     }
+
+    @GetMapping("/dailyBonus")
+    public String getDailyBonusPage() {
+        return "/dailyBonusPage.html";
+    }
 }
