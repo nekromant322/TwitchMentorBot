@@ -1,7 +1,6 @@
 package com.nekromant.twitch.service;
 
 import com.github.twitch4j.TwitchClient;
-import com.github.twitch4j.helix.domain.Stream;
 import com.nekromant.twitch.TwitchChatBot;
 import com.nekromant.twitch.config.properties.ScheduleConfigProperties;
 import com.nekromant.twitch.model.TwitchCommand;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Component;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -27,14 +25,19 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Component
 public class TwitchCommandTimerService {
+
     @Autowired
     private TwitchChatBot twitchChatBot;
+
     @Autowired
     private TwitchCommandRepository twitchCommandRepository;
+
     @Autowired
-    private TwitchAuthService twitchAuthService;
+    private TwitchLiveService twitchLiveService;
+
     @Value("${twitch.channelName}")
     private String channelName;
+
     @Autowired
     private ScheduleConfigProperties scheduleConfigProperties;
 
@@ -43,8 +46,7 @@ public class TwitchCommandTimerService {
     private LinkedHashSet<TwitchCommand> linkedHashSet = new LinkedHashSet<>();
 
     public void linkedHashSetManagement() {
-        TwitchClient twitchClient = twitchChatBot.getTwitchClient();
-        if (isLiveStream(twitchClient)) {
+        if (twitchLiveService.isLiveStream()) {
             fillLinkedHashSet();
         } else {
             cleanLinkedHashSet();
@@ -54,7 +56,7 @@ public class TwitchCommandTimerService {
     public void sendCommandFromLinkedHashSet() {
         TwitchClient twitchClient = twitchChatBot.getTwitchClient();
         Optional<TwitchCommand> twitchCommand = linkedHashSet.stream().findFirst();
-        if (isLiveStream(twitchClient) && twitchCommand.isPresent()) {
+        if (twitchLiveService.isLiveStream() && twitchCommand.isPresent()) {
             log.info("Список команд в очереди до отправки команды в чат: " + linkedHashSet
                     .stream()
                     .map(TwitchCommand::getName)
@@ -68,34 +70,15 @@ public class TwitchCommandTimerService {
         }
     }
 
-    private boolean isLiveStream(TwitchClient twitchClient) {
-        List<Stream> streams;
-        try {
-            streams = getStreams(twitchClient);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            twitchChatBot.validateConnection();
-            streams = getStreams(twitchChatBot.getTwitchClient());
-            return !streams.isEmpty();
-        }
-        return !streams.isEmpty();
-    }
-
-    private List<Stream> getStreams(TwitchClient twitchClient) {
-        return twitchClient.getHelix().getStreams(twitchAuthService.getAuthToken()
-                                .getAccessToken(), null, null, 1, null, null, null,
-                        Collections.singletonList(channelName))
-                .execute().getStreams();
-    }
-
     /**
      * Метод определяет логику работы с командами:
+     *
      * @return 'true', если хотя бы одна команда запускалась позднее [собственный период вызова +
-     *              'CONFIDENCE_TIME_INTERVAL_IN_MINUTES' + 'интервал отправки команд в чат'] минут назад.
-     *              CONFIDENCE_TIME_INTERVAL_IN_MINUTES выступает в качестве
-     *              доверительного временного интервала для устранения ошибок, связанных со временем.
-     *              'Интервал отправки команд в чат' == 'scheduleConfigProperties.periodSendExecutedCommandsByTime';
-     *         'false' в противном случаее.
+     * 'CONFIDENCE_TIME_INTERVAL_IN_MINUTES' + 'интервал отправки команд в чат'] минут назад.
+     * CONFIDENCE_TIME_INTERVAL_IN_MINUTES выступает в качестве
+     * доверительного временного интервала для устранения ошибок, связанных со временем.
+     * 'Интервал отправки команд в чат' == 'scheduleConfigProperties.periodSendExecutedCommandsByTime';
+     * 'false' в противном случаее.
      */
     private boolean commandsWereNotSentWithinTheAllowedTime(List<TwitchCommand> twitchCommands) {
         return twitchCommands.stream()
@@ -109,12 +92,12 @@ public class TwitchCommandTimerService {
     /**
      * Метод заполняет 'LinkedHashSet', когда стрим запущен.
      * Метод 'commandsWereNotSentWithinTheAllowedTime(twitchCommands) = true':
-     *      Имеем новый стрим, поскольку есть хотя бы одна команда, которая запускалась давно –
-     *      вне диапазона установленного времени [период команды + 'CONFIDENCE_TIME_INTERVAL_IN_MINUTES'
-     *      + 'интервал отправки команд в чат'].
-     *      Происходит 'обнуление' времени последнего вызова команд.
+     * Имеем новый стрим, поскольку есть хотя бы одна команда, которая запускалась давно –
+     * вне диапазона установленного времени [период команды + 'CONFIDENCE_TIME_INTERVAL_IN_MINUTES'
+     * + 'интервал отправки команд в чат'].
+     * Происходит 'обнуление' времени последнего вызова команд.
      * Метод 'commandsWereNotSentWithinTheAllowedTime(twitchCommands) = false':
-     *      Имеем дело с запущенным стримом.
+     * Имеем дело с запущенным стримом.
      */
     private void fillLinkedHashSet() {
         List<TwitchCommand> twitchCommands = twitchCommandRepository
