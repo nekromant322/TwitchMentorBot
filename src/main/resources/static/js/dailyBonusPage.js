@@ -3,7 +3,7 @@ window.onload = function () {
 }
 
 function getDailyBonusList() {
-    $.get('../bonuses', function (data) {
+    $.get('./bonuses', function (data) {
 
         let table = "";
 
@@ -21,7 +21,7 @@ function getDailyBonusList() {
 
 function getTxtDailyBonusListForPointAucImport() {
     $.ajax({
-        url: '../bonuses/file',
+        url: './bonuses/file',
         type: 'GET',
         async: false,
         success: function (data) {
