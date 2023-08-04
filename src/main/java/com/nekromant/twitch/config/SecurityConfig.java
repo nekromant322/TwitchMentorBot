@@ -36,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/commands/**", "/songList/editor/**").hasRole("ADMIN")
+                .antMatchers("/commands/**", "/songList/editor/**", "/dailyBonus/**").hasRole("ADMIN")
                 .anyRequest().permitAll()
                 .and().formLogin()
                 .loginPage("/login").defaultSuccessUrl("/commands", true).permitAll();

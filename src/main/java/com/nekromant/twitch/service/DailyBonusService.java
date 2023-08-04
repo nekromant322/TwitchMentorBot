@@ -1,6 +1,9 @@
 package com.nekromant.twitch.service;
 
 import com.github.twitch4j.common.events.domain.EventUser;
+import com.nekromant.twitch.dto.DailyBonusDTO;
+import com.nekromant.twitch.dto.PointAucObjectDTO;
+import com.nekromant.twitch.mapper.DailyBonusMapper;
 import com.nekromant.twitch.model.DailyBonus;
 import com.nekromant.twitch.model.TwitchUser;
 import com.nekromant.twitch.repository.DailyBonusRepository;
@@ -9,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DailyBonusService {
@@ -56,5 +61,17 @@ public class DailyBonusService {
 
     public Long getPosition(EventUser user) {
         return dailyBonusRepository.getPosition(Long.valueOf(user.getId()));
+    }
+
+    public List<DailyBonusDTO> getDailyBonusDTOList() {
+        return dailyBonusRepository.findAllOrderedByBonusAndTwitchUser().stream()
+                .map(DailyBonusMapper::mapToDailyBonusDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<PointAucObjectDTO> getPointAucObjectDTOList() {
+        return dailyBonusRepository.findAllOrderedByBonusAndTwitchUser().stream()
+                .map(DailyBonusMapper::mapToPointAucObjectDTO)
+                .collect(Collectors.toList());
     }
 }
