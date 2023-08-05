@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 public class ScheduleConfigProperties {
     private String periodEvaluationKindness;
     private String periodValidateConnection;
-    private String periodExecutedCommandsByTime;
     private String periodSendExecutedCommandsByTime;
     private String periodAddKindnessForDonat;
 
