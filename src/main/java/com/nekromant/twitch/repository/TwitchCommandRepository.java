@@ -12,6 +12,6 @@ public interface TwitchCommandRepository extends CrudRepository<TwitchCommand, L
     TwitchCommand findByName(String name);
 
     @Query(value = "SELECT * FROM twitch_commands WHERE period <> 0 AND enabled = TRUE " +
-            "ORDER BY period, last_completion_time", nativeQuery = true)
-    List<TwitchCommand> getTwitchCommandsSortedByPeriodWithEnabledTrueAndPeriodNotZero();
+            "ORDER BY last_completion_time, period", nativeQuery = true)
+    List<TwitchCommand> getTwitchCommandsSortedByLastCompletionTimeAndPeriodWithEnabledTrueAndPeriodNotZero();
 }
