@@ -13,7 +13,9 @@ import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 @Setter
@@ -36,9 +38,16 @@ public class TwitchCommandTimerService {
     public void sendCommands() {
         if (twitchLiveService.isLiveStream()) {
             Optional<TwitchCommand> twitchCommand = twitchCommandRepository
-                    .getTwitchCommandsSortedByLastCompletionTimeAndPeriodWithEnabledTrueAndPeriodNotZero()
+                    .getTwitchCommandsSortedByLastCompletionTimeAndPeriodWithEnabledTrueAndPeriodNotZeroAndLastCompletionTimeIsNotNullAndResponseIsNotNull()
                     .stream()
-                    .filter(tc -> Duration.between(tc.getLastCompletionTime(), Instant.now()).toMinutes() > tc.getPeriod())
+                    .filter(tc -> {
+                        AtomicBoolean result = new AtomicBoolean(false);
+                        Optional.ofNullable(tc.getLastCompletionTime()).ifPresent(lastCompletionTime ->
+                                Optional.ofNullable(tc.getPeriod()).ifPresent(period ->
+                                        result.set(Duration.between(lastCompletionTime.truncatedTo(ChronoUnit.MINUTES),
+                                                Instant.now().truncatedTo(ChronoUnit.MINUTES)).toMinutes() > period)));
+                        return result.get();
+                    })
                     .findFirst();
             if (twitchCommand.isPresent()) {
                 TwitchClient twitchClient = twitchChatBot.getTwitchClient();
