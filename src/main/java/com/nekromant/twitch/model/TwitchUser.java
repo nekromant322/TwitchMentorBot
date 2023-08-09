@@ -24,7 +24,7 @@ public class TwitchUser {
     private Kindness kindness;
 
     @OneToOne(mappedBy = "twitchUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private DailyBonus dailyBonus = new DailyBonus();
+    private DailyBonus dailyBonus;
 
     public TwitchUser(Long id, String name) {
         this.id = id;
