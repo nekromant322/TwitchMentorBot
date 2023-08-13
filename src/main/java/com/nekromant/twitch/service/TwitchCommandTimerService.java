@@ -38,8 +38,15 @@ public class TwitchCommandTimerService {
     public void sendCommands() {
         if (twitchLiveService.isLiveStream()) {
             Optional<TwitchCommand> twitchCommand = twitchCommandRepository
-                    .getTwitchCommandsSortedByLastCompletionTimeAndPeriodWithEnabledTrueAndPeriodNotZeroAndLastCompletionTimeIsNotNullAndResponseIsNotNull()
+                    .getTwitchCommandsSortedByLastCompletionTimeAndPeriodWithEnabledTrueAndPeriodNotZeroAndResponseIsNotNull()
                     .stream()
+                    .peek(tc -> {
+                        if(Optional.ofNullable(tc.getLastCompletionTime()).isEmpty()) {
+                            tc.setLastCompletionTime(Instant.now().truncatedTo(ChronoUnit.MINUTES)
+                                    .minus(tc.getPeriod(), ChronoUnit.MINUTES));
+                            twitchCommandRepository.save(tc);
+                        }
+                    })
                     .filter(tc -> {
                         AtomicBoolean result = new AtomicBoolean(false);
                         Optional.ofNullable(tc.getLastCompletionTime()).ifPresent(lastCompletionTime ->
