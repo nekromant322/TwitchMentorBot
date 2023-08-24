@@ -1,9 +1,11 @@
 package com.nekromant.twitch.controller.rest;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/micro")
 public class MicrophoneController {
 
     private boolean microEnabled = true;
@@ -16,6 +18,11 @@ public class MicrophoneController {
     @GetMapping("/unmuted")
     public void unmuted() {
         microEnabled = true;
+    }
+
+    @GetMapping("/toggle")
+    public void toggle() {
+       microEnabled = !microEnabled;
     }
 
     @GetMapping("/getState")
