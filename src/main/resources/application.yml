@@ -16,10 +16,6 @@ twitch:
     adminPassword: ${ADMIN_PASSWORD}
 
 
-  rewardTitle:
-    onePixelReward: 1 пиксель !pw
-    fivePixelReward: 5 пикселей !pw
-    twentyFivePixelReward: 25 пикселей !pw
 
 telegram:
   mentorUsername: Marandyuk_Anatolii
