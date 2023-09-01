@@ -26,9 +26,9 @@ public class SmothieRewardService implements RewardService {
         Long userId = Long.valueOf(event.getRedemption().getUser().getId());
         String displayName = event.getRedemption().getUser().getDisplayName();
         if (dailyBonusService.takeBonus(userId, displayName)) {
-            twitchChatBot.sendMessage(BONUS_SUCCESS);
+            twitchChatBot.sendMessage(username + " " + BONUS_SUCCESS);
         } else {
-            twitchChatBot.sendMessage(BONUS_FAILED);
+            twitchChatBot.sendMessage(username + " " + BONUS_FAILED);
         }
     }
 
