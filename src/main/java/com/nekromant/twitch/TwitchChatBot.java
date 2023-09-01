@@ -104,4 +104,8 @@ public class TwitchChatBot {
             restart();
         }
     }
+
+    public void sendMessage(String message) {
+        twitchClient.getChat().sendMessage(channelName, message);
+    }
 }
