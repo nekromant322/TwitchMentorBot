@@ -25,10 +25,13 @@ public class DailyBonusService {
     private DailyBonusRepository dailyBonusRepository;
 
     public boolean takeBonus(EventUser eventUser) {
-        Long userId = Long.valueOf(eventUser.getId());
+       return takeBonus(Long.valueOf(eventUser.getId()), eventUser.getName());
+    }
+
+    public boolean takeBonus(Long userId, String name) {
         TwitchUser user = twitchUserService.getTwitchUserById(userId);
         if (user == null) {
-            user = twitchUserService.save(new TwitchUser(Long.valueOf(eventUser.getId()), eventUser.getName()));
+            user = twitchUserService.save(new TwitchUser(Long.valueOf(userId), name));
         }
         if (user.getDailyBonus() == null) {
             user.setDailyBonus(new DailyBonus());
