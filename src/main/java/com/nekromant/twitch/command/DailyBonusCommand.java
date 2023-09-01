@@ -35,7 +35,7 @@ public class DailyBonusCommand extends BotCommand {
         String channelName = event.getChannel().getName();
         String senderUsername = event.getMessageEvent().getUser().getName();
         Message replyMessage = new Message(senderUsername, "");
-        if(dailyBonusService.takeBonus(event.getUser())) {
+        if (dailyBonusService.takeBonus(event.getUser())) {
             replyMessage.setMessageText(BONUS_SUCCESS);
         } else {
             replyMessage.setMessageText(BONUS_FAILED);
