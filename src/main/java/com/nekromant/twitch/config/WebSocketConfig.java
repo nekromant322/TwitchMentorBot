@@ -11,12 +11,6 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
-    public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.setApplicationDestinationPrefixes("/twitch-bot/pixel");
-        config.enableSimpleBroker("/twitch-bot/pixel");
-    }
-
-    @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/twitch-bot/ws").setAllowedOriginPatterns("*");
         registry.addEndpoint("/twitch-bot/ws").setAllowedOriginPatterns("*").withSockJS();

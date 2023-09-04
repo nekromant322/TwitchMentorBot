@@ -5,6 +5,7 @@ import com.nekromant.twitch.feign.TwitchAuthFeign;
 import com.nekromant.twitch.model.TwitchToken;
 import com.nekromant.twitch.repository.TwitchTokenRepository;
 import feign.FeignException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 @Service
+@Slf4j
 public class TwitchAuthService {
     @Value("${twitch.auth.botClientId}")
     private String botClientId;
@@ -50,7 +52,7 @@ public class TwitchAuthService {
                 return token;
             }
         } catch (FeignException e) {
-            System.out.println(e.getMessage());
+            log.error("Error while getAndSaveNewModerationToken", e);
         }
         return null;
     }
@@ -61,11 +63,11 @@ public class TwitchAuthService {
         try {
             ResponseEntity<ValidationTokenDTO> response = twitchAuthFeign.validateToken(getAuthHeader(accessToken));
             if (response.getStatusCodeValue() == 200) {
-                System.out.println("Токен валидный - " + LocalDateTime.now().toLocalTime().toString());
+                log.info("Токен валидный - " + LocalDateTime.now().toLocalTime().toString());
                 return true;
             }
         } catch (FeignException e) {
-            System.out.println(e.getMessage());
+            log.error("Error while validateToken", e);
         }
         return false;
     }
@@ -83,7 +85,7 @@ public class TwitchAuthService {
                 return newTwitchToken;
             }
         } catch (FeignException e) {
-            System.out.println(e.getMessage());
+            log.error("Error while getAndSaveNewAuthTokenByRefreshToken", e);
         }
 
         return null;

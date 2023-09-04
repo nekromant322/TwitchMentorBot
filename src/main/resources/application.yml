@@ -5,10 +5,6 @@ twitch:
     botSecret: ${BOT_SECRET}
     moderationSecret: ${MODERATION_SECRET}
     moderationClientId: ${MODERATION_CLIENT_ID}
-  pixel-wars:
-    pixelWarsClientId: ${PIXEL_WARS_CLIENT_ID}
-    pixelWarsSecret: ${PIXEL_WARS_SECRET}
-    pixelWarsRedirectUrl: ${PIXEL_WARS_REDIRECT_URL:http://localhost:8080/pixel/editor}
   song-list:
     songListUrl: ${SONG_LIST_URL:http://localhost:8080/songList/panel}
   security-config:
@@ -48,9 +44,7 @@ feign:
       default:
         loggerLevel: full
 
-pixelWars:
-  width: 160
-  height: 95
+
 
 chatGPT:
   API_KEY_Chat_GPT: Bearer ${API_KEY_Chat_GPT}
