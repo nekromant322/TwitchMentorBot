@@ -4,11 +4,13 @@ import com.github.twitch4j.pubsub.events.RewardRedeemedEvent;
 import com.nekromant.twitch.TwitchChatBot;
 import com.nekromant.twitch.content.Message;
 import com.nekromant.twitch.service.DailyBonusService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class SmothieRewardService implements RewardService {
 
     @Autowired
@@ -26,9 +28,9 @@ public class SmothieRewardService implements RewardService {
         Long userId = Long.valueOf(event.getRedemption().getUser().getId());
         String displayName = event.getRedemption().getUser().getDisplayName();
         if (dailyBonusService.takeBonus(userId, displayName)) {
-            twitchChatBot.sendMessage(username + " " + BONUS_SUCCESS);
+            log.info(username + " " + BONUS_SUCCESS);
         } else {
-            twitchChatBot.sendMessage(username + " " + BONUS_FAILED);
+            log.info(username + " " + BONUS_FAILED);
         }
     }
 
