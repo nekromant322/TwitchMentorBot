@@ -17,7 +17,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Service
+//@Service
+//TODO remove when openAI token ready
 public class KindnessService {
     @Autowired
     private ChatGptService chatGptService;

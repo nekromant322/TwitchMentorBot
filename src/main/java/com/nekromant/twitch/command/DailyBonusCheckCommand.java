@@ -11,8 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import static com.nekromant.twitch.content.MessageContent.USER_DAILY_BONUS_COUNT;
-import static com.nekromant.twitch.content.MessageContent.TARGET_USER_DAILY_BONUS_COUNT;
+import static com.nekromant.twitch.content.MessageContent.*;
 
 @Component
 public class DailyBonusCheckCommand extends BotCommand {
@@ -43,12 +42,25 @@ public class DailyBonusCheckCommand extends BotCommand {
         if (!targetUsername.equals("")) {
             EventUser targetEventUser = new EventUser(String.valueOf(twitchUserRepository
                     .findTwitchUserByName(targetUsername.toLowerCase()).getId()), targetUsername);
+
+
+            int bonus = getBonus(targetEventUser);
+            if(bonus == 0) {
+                return new Message(senderUsername, String.format(NO_SMOTHIE_DRUNK_FOR_TARGET, targetUsername));
+            }
+            Long position = getPosition(targetEventUser);
             return new Message(senderUsername, String.format(TARGET_USER_DAILY_BONUS_COUNT, targetUsername,
-                    getBonus(targetEventUser), getPosition(targetEventUser)));
+                    bonus, position));
         } else {
             EventUser senderEventUser = event.getMessageEvent().getUser();
-            return new Message(senderUsername, String.format(USER_DAILY_BONUS_COUNT, getBonus(senderEventUser),
-                    getPosition(senderEventUser)));
+            int bonus = getBonus(senderEventUser);
+
+            if(bonus == 0) {
+                return new Message(senderUsername, String.format(NO_SMOTHIE_DRUNK));
+            }
+            Long position = getPosition(senderEventUser);
+            return new Message(senderUsername, String.format(USER_DAILY_BONUS_COUNT, bonus,
+                    position));
         }
     }
 

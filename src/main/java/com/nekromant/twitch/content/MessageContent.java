@@ -13,4 +13,6 @@ public class MessageContent {
     public static final String NOT_FOUND_USER = "Данный пользователь не найден";
     public static final String USER_DAILY_BONUS_COUNT = "Выпито %s смузи, место в топе смузихлёбов - %s";
     public static final String TARGET_USER_DAILY_BONUS_COUNT = "Пользователем %s выпито %s смузи, место в топе смузихлёбов - %s";
+    public static final String NO_SMOTHIE_DRUNK = "Ты еще не пил смузи, используй награду каждый день, чтоб побеждать в розыгрышах";
+    public static final String NO_SMOTHIE_DRUNK_FOR_TARGET = "%s не пил смузи, используй награду каждый день, чтоб побеждать в розыгрышах";
 }
