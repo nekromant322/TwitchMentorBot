@@ -10,7 +10,8 @@ import java.util.Locale;
 
 import static com.nekromant.twitch.content.MessageContent.*;
 
-@Component
+//@Component
+//TODO remove when openAI token ready
 public class KindnessCommand extends BotCommand {
     private final static int LENGTH_COMMAND_KINDNESS = 8;
     @Autowired
