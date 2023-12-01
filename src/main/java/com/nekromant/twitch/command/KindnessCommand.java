@@ -12,35 +12,35 @@ import static com.nekromant.twitch.content.MessageContent.*;
 
 //@Component
 //TODO remove when openAI token ready
-public class KindnessCommand extends BotCommand {
-    private final static int LENGTH_COMMAND_KINDNESS = 8;
-    @Autowired
-    private KindnessService kindnessService;
-
-    @Autowired
-    public KindnessCommand() {
-        super("доброта", "Рассчитывает показатель доброты");
-    }
-
-    @Override
-    public void processMessage(ChannelMessageEvent event) {
-        String channelName = event.getChannel().getName();
-        String senderUsername = event.getMessageEvent().getUser().getName();
-        String replyMessageText = NOT_FOUND_USER;
-        Message replyMessage = new Message(senderUsername, "");
-        Long idUser = Long.valueOf(event.getMessageEvent().getUser().getId());
-
-        String textCommand = event.getMessage().replaceAll("\\s", "");
-        if (textCommand.length() > LENGTH_COMMAND_KINDNESS) {
-            String userName = textCommand.substring(LENGTH_COMMAND_KINDNESS).toLowerCase(Locale.ROOT);
-            String indexKindness = kindnessService.getIndexKindnessByName(userName);
-            if (indexKindness != null) {
-                replyMessageText = String.format(INDEX_KINDNESS_USER, userName) + indexKindness;
-            }
-        } else {
-            replyMessageText = INDEX_YOUR_KINDNESS + kindnessService.getIndexKindness(idUser, senderUsername);
-        }
-        replyMessage.setMessageText(replyMessageText);
-        event.getMessageEvent().getTwitchChat().sendMessage(channelName, replyMessage.getMessage());
-    }
-}
+//public class KindnessCommand extends BotCommand {
+//    private final static int LENGTH_COMMAND_KINDNESS = 8;
+//    @Autowired
+//    private KindnessService kindnessService;
+//
+//    @Autowired
+//    public KindnessCommand() {
+//        super("доброта", "Рассчитывает показатель доброты");
+//    }
+//
+//    @Override
+//    public void processMessage(ChannelMessageEvent event) {
+//        String channelName = event.getChannel().getName();
+//        String senderUsername = event.getMessageEvent().getUser().getName();
+//        String replyMessageText = NOT_FOUND_USER;
+//        Message replyMessage = new Message(senderUsername, "");
+//        Long idUser = Long.valueOf(event.getMessageEvent().getUser().getId());
+//
+//        String textCommand = event.getMessage().replaceAll("\\s", "");
+//        if (textCommand.length() > LENGTH_COMMAND_KINDNESS) {
+//            String userName = textCommand.substring(LENGTH_COMMAND_KINDNESS).toLowerCase(Locale.ROOT);
+//            String indexKindness = kindnessService.getIndexKindnessByName(userName);
+//            if (indexKindness != null) {
+//                replyMessageText = String.format(INDEX_KINDNESS_USER, userName) + indexKindness;
+//            }
+//        } else {
+//            replyMessageText = INDEX_YOUR_KINDNESS + kindnessService.getIndexKindness(idUser, senderUsername);
+//        }
+//        replyMessage.setMessageText(replyMessageText);
+//        event.getMessageEvent().getTwitchChat().sendMessage(channelName, replyMessage.getMessage());
+//    }
+//}
