@@ -42,8 +42,6 @@ public class DailyBonusCheckCommand extends BotCommand {
         if (!targetUsername.equals("")) {
             EventUser targetEventUser = new EventUser(String.valueOf(twitchUserRepository
                     .findTwitchUserByName(targetUsername.toLowerCase()).getId()), targetUsername);
-
-
             int bonus = getBonus(targetEventUser);
             if(bonus == 0) {
                 return new Message(senderUsername, String.format(NO_SMOTHIE_DRUNK_FOR_TARGET, targetUsername));

@@ -9,6 +9,8 @@ import com.nekromant.twitch.model.TwitchUser;
 import com.nekromant.twitch.repository.DailyBonusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -28,6 +30,7 @@ public class DailyBonusService {
        return takeBonus(Long.valueOf(eventUser.getId()), eventUser.getName());
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public boolean takeBonus(Long userId, String name) {
         TwitchUser user = twitchUserService.getTwitchUserById(userId);
         if (user == null) {
@@ -44,7 +47,8 @@ public class DailyBonusService {
             dailyBonus.setPoints(dailyBonus.getPoints() + 1);
             dailyBonus.setLastTimeUsed(now);
             dailyBonus.setTwitchUser(user);
-            dailyBonusRepository.save(dailyBonus);
+            DailyBonus saved = dailyBonusRepository.save(dailyBonus);
+            user.setDailyBonus(saved);
             twitchUserService.save(user);
             return true;
         }
