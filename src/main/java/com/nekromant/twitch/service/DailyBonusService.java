@@ -34,7 +34,7 @@ public class DailyBonusService {
     public boolean takeBonus(Long userId, String name) {
         TwitchUser user = twitchUserService.getTwitchUserById(userId);
         if (user == null) {
-            user = twitchUserService.save(new TwitchUser(Long.valueOf(userId), name));
+            user = twitchUserService.save(new TwitchUser(userId, name));
         }
         if (user.getDailyBonus() == null) {
             user.setDailyBonus(new DailyBonus());
