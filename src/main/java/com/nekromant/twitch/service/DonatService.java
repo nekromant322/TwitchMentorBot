@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Slf4j
-@Service
+//TODO remove when openAI token ready
+//@Service
 public class DonatService {
     @Autowired
     private KindnessService kindnessService;

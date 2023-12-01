@@ -5,12 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
+//TODO remove when openAI token ready
 public class DonationSchedule {
     @Autowired
     private DonatService donatService;
 
-    @Scheduled(fixedDelayString = "#{@scheduleConfigProperties.periodAddKindnessForDonat}")
+//    @Scheduled(fixedDelayString = "#{@scheduleConfigProperties.periodAddKindnessForDonat}")
     public void addKindnessForDonat() {
         donatService.addKindnessForDonat();
     }
