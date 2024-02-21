@@ -67,6 +67,6 @@ donationAlerts:
 schedule:
   periodEvaluationKindness: 90000
   periodValidateConnection: PT01H
-  periodSendExecutedCommandsByTime: 180000
+  periodSendExecutedCommandsByTime: 380000
   periodAddKindnessForDonat: 60000
   allowedTimeIntervalInMinutes: 20
