@@ -14,7 +14,7 @@ jobs:
       - name: Copy docker-compose.yaml via SSH
         uses: appleboy/scp-action@master
         with:
-          host: overridetech.ru
+          host: 195.133.147.161
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: 22
@@ -51,7 +51,7 @@ jobs:
       - name: Connect with SSH and Deploy
         uses: appleboy/ssh-action@v0.1.8
         with:
-          host: overridetech.ru
+          host: 195.133.147.161
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
@@ -74,5 +74,5 @@ jobs:
             docker rmi mabalda/twitch-chat-bot-twitch-bot-app:latest
             docker-compose --env-file twitch-env.txt up -d
             docker ps -a  
-            rm twitch-env.txt
+#            rm twitch-env.txt
     
