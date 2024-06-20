@@ -16,7 +16,7 @@ jobs:
         with:
           host: 195.133.147.161
           username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           source: "docker-compose.yml"
           target: "/home/github-twitch-bot"
@@ -53,7 +53,7 @@ jobs:
         with:
           host: 195.133.147.161
           username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             echo DB_USER = ${{ secrets.DB_USER }} > twitch-env.txt
             echo DB_PASSWORD = ${{ secrets.DB_PASSWORD }} >> twitch-env.txt
