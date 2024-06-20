@@ -69,10 +69,10 @@ jobs:
             echo SPRING_APPLICATION_PROFILE = prod >> twitch-env.txt
             echo SONG_LIST_URL = overridetech.ru/twitch-bot/songList/panel >> twitch-env.txt
             
-            docker stop twitch-bot-app
-            docker rm twitch-bot-app
-            docker rmi mabalda/twitch-chat-bot-twitch-bot-app:latest
-            docker compose --env-file twitch-env.txt up -d
-            docker ps -a  
+            sudo docker stop twitch-bot-app
+            sudo docker rm twitch-bot-app
+            sudo docker rmi mabalda/twitch-chat-bot-twitch-bot-app:latest
+            sudo docker compose --env-file twitch-env.txt up -d
+            sudo docker ps -a
 #            rm twitch-env.txt
     
