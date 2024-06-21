@@ -41,6 +41,6 @@ services:
   #   ports:
   #     - "9000:8080"
   #   logging:
-      driver: "json-file"
-      options:
-        max-size: 50m
+      # driver: "json-file"
+      # options:
+      #   max-size: 50m
