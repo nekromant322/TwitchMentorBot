@@ -16,31 +16,31 @@ services:
       options:
         max-size: 50m
 
-  twitch-bot-app:
-    #     build: ./
-    image: mabalda/twitch-chat-bot-twitch-bot-app:latest
-    container_name: twitch-bot-app
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: twitch_bot
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      ADMIN: ${PANEL_USER}
-      ADMIN_PASSWORD: ${PANEL_PASSWORD}
-      POSTGRES_HOST: twitch-bot-db
-      BOT_CLIENT_ID: ${BOT_CLIENT_ID}
-      BOT_SECRET: ${BOT_SECRET}
-      CHANNEL_NAME: overridetech
-      MODERATION_SECRET: ${MODERATION_SECRET}
-      MODERATION_CLIENT_ID: ${MODERATION_CLIENT_ID}
-      API_KEY_Chat_GPT: ${API_KEY_Chat_GPT}
-      DONATION_ALERTS_CLIENT_ID: ${DONATION_ALERTS_CLIENT_ID}
-      DONATION_ALERTS_SECRET: ${DONATION_ALERTS_SECRET}
-      SPRING_APPLICATION_PROFILE: ${SPRING_APPLICATION_PROFILE}
-      SONG_LIST_URL: ${SONG_LIST_URL}
-    ports:
-      - "9000:8080"
-    logging:
-      driver: "json-file"
-      options:
-        max-size: 50m
+#  twitch-bot-app:
+#    #     build: ./
+#    image: mabalda/twitch-chat-bot-twitch-bot-app:latest
+#    container_name: twitch-bot-app
+#    restart: unless-stopped
+#    environment:
+#      POSTGRES_DB: twitch_bot
+#      POSTGRES_USER: ${DB_USER}
+#      POSTGRES_PASSWORD: ${DB_PASSWORD}
+#      ADMIN: ${PANEL_USER}
+#      ADMIN_PASSWORD: ${PANEL_PASSWORD}
+#      POSTGRES_HOST: twitch-bot-db
+#      BOT_CLIENT_ID: ${BOT_CLIENT_ID}
+#      BOT_SECRET: ${BOT_SECRET}
+#      CHANNEL_NAME: overridetech
+#      MODERATION_SECRET: ${MODERATION_SECRET}
+#      MODERATION_CLIENT_ID: ${MODERATION_CLIENT_ID}
+#      API_KEY_Chat_GPT: ${API_KEY_Chat_GPT}
+#      DONATION_ALERTS_CLIENT_ID: ${DONATION_ALERTS_CLIENT_ID}
+#      DONATION_ALERTS_SECRET: ${DONATION_ALERTS_SECRET}
+#      SPRING_APPLICATION_PROFILE: ${SPRING_APPLICATION_PROFILE}
+#      SONG_LIST_URL: ${SONG_LIST_URL}
+#    ports:
+#      - "9000:8080"
+#    logging:
+#      driver: "json-file"
+#      options:
+#        max-size: 50m
