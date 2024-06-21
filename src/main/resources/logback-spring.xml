@@ -3,7 +3,7 @@
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <springProfile name="!dev">
         <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-            <destination>109.71.181.154:5000</destination>
+            <destination>194.87.237.197:50000</destination>
             <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
                 <providers>
                     <mdc/>
