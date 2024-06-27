@@ -67,13 +67,11 @@ jobs:
             echo DONATION_ALERTS_CLIENT_ID = ${{ secrets.DONATION_ALERTS_CLIENT_ID }} >> twitch-env.txt
             echo DONATION_ALERTS_SECRET = ${{ secrets.DONATION_ALERTS_SECRET }} >> twitch-env.txt
             echo SPRING_APPLICATION_PROFILE = prod >> twitch-env.txt
-            echo SONG_LIST_URL = overridetech.ru/twitch-bot/songList/panel >> twitch-env.txt
-#            Четыре сикрета ниже используются только для восстановления учетки твич чат бота
             echo TWITCH_CHATBOT_LOGIN = ${{ secrets.TWITCH_CHATBOT_LOGIN }} >> twitch-env.txt
             echo TWITCH_CHATBOT_PASSWORD = ${{ secrets.TWITCH_CHATBOT_PASSWORD }} >> twitch-env.txt
             echo CHATBOT_GMAIL_LOGIN = ${{ secrets.CHATBOT_GMAIL_LOGIN }} >> twitch-env.txt
             echo CHATBOT_GMAIL_PASSWORD = ${{ secrets.CHATBOT_GMAIL_PASSWORD }} >> twitch-env.txt
-            
+            echo SONG_LIST_URL = overridetech.ru/twitch-bot/songList/panel >> twitch-env.txt
             
             sudo docker stop twitch-bot-app
             sudo docker rm twitch-bot-app
