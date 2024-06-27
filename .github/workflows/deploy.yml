@@ -73,6 +73,8 @@ jobs:
             echo TWITCH_CHATBOT_PASSWORD = ${{ secrets.TWITCH_CHATBOT_PASSWORD }} >> twitch-env.txt
             echo CHATBOT_GMAIL_LOGIN = ${{ secrets.CHATBOT_GMAIL_LOGIN }} >> twitch-env.txt
             echo CHATBOT_GMAIL_PASSWORD = ${{ secrets.CHATBOT_GMAIL_PASSWORD }} >> twitch-env.txt
+            
+            
             sudo docker stop twitch-bot-app
             sudo docker rm twitch-bot-app
             sudo docker rmi nekromant322/twitch-chat-bot-twitch-bot-app:latest
