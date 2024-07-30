@@ -34,6 +34,7 @@ public class DailyBonusCheckCommand extends BotCommand {
 
     public Message getReplyMessage(ChannelMessageEvent event) {
         String message = event.getMessage();
+        message = removeRedundantSymbols(message);
         String senderUsername = event.getMessageEvent().getUser().getName();
         String targetUsername = Arrays.stream(message.split(" "))
                 .skip(1)
@@ -60,6 +61,10 @@ public class DailyBonusCheckCommand extends BotCommand {
             return new Message(senderUsername, String.format(USER_DAILY_BONUS_COUNT, bonus,
                     position));
         }
+    }
+
+    private String removeRedundantSymbols(String message) {
+        return message.replaceAll(" 󠀀", "");
     }
 
     public int getBonus(EventUser eventUser) {
