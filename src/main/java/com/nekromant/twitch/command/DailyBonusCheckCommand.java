@@ -64,7 +64,7 @@ public class DailyBonusCheckCommand extends BotCommand {
     }
 
     private String removeRedundantSymbols(String message) {
-        return message.replaceAll(" 󠀀", "");
+        return message.replaceAll(" \\udb40\\udc00", "");
     }
 
     public int getBonus(EventUser eventUser) {
