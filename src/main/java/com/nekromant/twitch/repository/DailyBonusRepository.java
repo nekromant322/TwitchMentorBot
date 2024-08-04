@@ -10,9 +10,8 @@ import java.util.List;
 
 @Repository
 public interface DailyBonusRepository extends CrudRepository<DailyBonus, Long> {
-    @Query(value = "WITH ranking AS ( SELECT db.points, db.twitch_user_id, " +
-            "row_number() OVER(ORDER BY db.points DESC, db.twitch_user_id ASC) AS pos FROM daily_bonus db) " +
-            "SELECT r.pos FROM ranking r WHERE r.twitch_user_id = :id", nativeQuery = true)
+    @Query(value = "SELECT count(*) + 1 FROM daily_bonus db " +
+            "WHERE db.points > (SELECT db.points FROM daily_bonus db WHERE db.twitch_user_id = :id)", nativeQuery = true)
     Long getPosition(@Param("id") Long id);
 
     @Query(value = "SELECT * FROM daily_bonus ORDER BY points DESC, twitch_user_id ASC", nativeQuery = true)
