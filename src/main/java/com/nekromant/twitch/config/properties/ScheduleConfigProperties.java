@@ -12,6 +12,6 @@ public class ScheduleConfigProperties {
     private String periodValidateConnection;
     private String periodSendExecutedCommandsByTime;
     private String periodAddKindnessForDonat;
-
+    private String periodSendYoutubeShorts;
     private Long allowedTimeIntervalInMinutes;
 }

@@ -61,7 +61,7 @@ POSTGRES_PASSWORD и POSTGRES_USER можно придумать свои или
    -Возможно потребуется подтверждение по номеру телефона, зарегистрированном не в РФ
    (можно использовать онлайн сервисы для подтверждения) Рекомендую https://365sms.org/ru
     
-4.Вот гайд от [donationalerts] https://www.donationalerts.com/apidoc#advertisement. Для ленивых ниже инструкция.
+4. Вот гайд от [donationalerts] https://www.donationalerts.com/apidoc#advertisement. Для ленивых ниже инструкция.
 Необходимо создать новое приложение https://www.donationalerts.com/application/clients
 - имя любое 
 -URL: http://localhost:3000
@@ -86,6 +86,22 @@ redirect_uri=http://localhost:3000
 code=ТВОЙ_КОД_АВТОРИЗАЦИИ
 
 в ответ получишь json с токенами(эти токены необхожимо добавить в таблицу donation_alerts_token)
+
+5. Для работы с YouTube:
+- Создать аккаунт Google, если его нет
+- Создать проект в [консоли разработчиков Google](https://console.developers.google.com/?hl=ru) и [получить API Key](https://developers.google.com/youtube/registering_an_application?hl=ru), чтобы ваше приложение могло отправлять запросы API
+   1. Откройте[страницу «Учетные данные»](https://console.cloud.google.com/apis/credentials?hl=ru) в консоли API.
+   2. Создайте ключ API в консоли, нажав [Создать учетные данные](https://console.cloud.google.com/apis/credentials?hl=ru) > Ключ API. Это наш **YOUTUBE_API_KEY**
+- После создания проекта убедитесь, что API данных YouTube является одним из сервисов, для использования которых зарегистрировано ваше приложение:
+   1. Перейдите в[консоль API](https://console.cloud.google.com/?hl=ru) и выберите проект, который вы только что зарегистрировали.
+   2. Посетите [страницу «Включенные API»](https://console.cloud.google.com/apis/enabled?hl=ru). Убедитесь, что в списке API для API данных YouTube v3 включен статус «ВКЛ».
+- Далее аналогичным получению API Key получаем **YOUTUBE_CLIENT_ID** и **YOUTUBE_SECRET**:
+   1. Для этого в [консоли разработчиков Google](https://console.developers.google.com/?hl=ru) нажмите [Создать учетные данные](https://console.cloud.google.com/apis/credentials?hl=ru) > OAuth client ID.
+- Получаем **YOUTUBE_CHANNEL_ID**
+   1. Для этого заходим на канал, с которого будем тянуть видео
+   2. Жмём "Ещё" в описании канала под его названием
+   3. "Поделиться каналом"
+   4. "Скопировать идентификатор канала"
 
 
 ### Для разворачивания Postgres:
