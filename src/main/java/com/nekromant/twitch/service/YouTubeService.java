@@ -55,7 +55,7 @@ public class YouTubeService {
         String title = snippet.getTitle();
         String videoLink = WATCH + videoId.getVideoId();
 
-        return "Зацени моё последнее видео! \"" + title + "\": " + videoLink;
+        return "Зацени последний шортс! \"" + title + "\": " + videoLink;
     }
 
     private SearchListResponse getLastVideoInfo(YouTube youtubeClient) {

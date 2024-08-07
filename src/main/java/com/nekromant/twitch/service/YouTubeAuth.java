@@ -19,6 +19,7 @@ import java.util.List;
 @Slf4j
 @Component
 public class YouTubeAuth {
+    public static final String SCOPE = "https://www.googleapis.com/auth/youtube.readonly";
     @Value("${youtube.auth.clientId}")
     private String clientId;
     @Value("${youtube.auth.secret}")
@@ -37,7 +38,7 @@ public class YouTubeAuth {
             JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
             AuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-                    httpTransport, jsonFactory, clientId, clientSecret, List.of("https://www.googleapis.com/auth/youtube.readonly")).build();
+                    httpTransport, jsonFactory, clientId, clientSecret, List.of(SCOPE)).build();
             HttpRequestInitializer requestInitializer = flow.getRequestInitializer();
 
             youtubeClient = new YouTube.Builder(httpTransport, jsonFactory, requestInitializer).setApplicationName("YoutubeService").build();

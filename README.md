@@ -90,13 +90,29 @@ code=ТВОЙ_КОД_АВТОРИЗАЦИИ
 5. Для работы с YouTube:
 - Создать аккаунт Google, если его нет
 - Создать проект в [консоли разработчиков Google](https://console.developers.google.com/?hl=ru) и [получить API Key](https://developers.google.com/youtube/registering_an_application?hl=ru), чтобы ваше приложение могло отправлять запросы API
-   1. Откройте[страницу «Учетные данные»](https://console.cloud.google.com/apis/credentials?hl=ru) в консоли API.
-   2. Создайте ключ API в консоли, нажав [Создать учетные данные](https://console.cloud.google.com/apis/credentials?hl=ru) > Ключ API. Это наш **YOUTUBE_API_KEY**
-- После создания проекта убедитесь, что API данных YouTube является одним из сервисов, для использования которых зарегистрировано ваше приложение:
+   1. В [консоли разработчиков Google](https://console.developers.google.com/?hl=ru) нажмите **NEW PROJECT** и заполните имя проекта на свой вкус.
+   2. В [консоли разработчиков Google](https://console.developers.google.com/?hl=ru) в левом верхнем углу выберите созданным проект.
+   3. Откройте [страницу "Credentials"](https://console.cloud.google.com/apis/credentials?hl=ru) в меню слева консоли API. Если меню нет, нажмите три полоски слева от лого Google Cloud.
+   4. Создайте ключ API в консоли, нажав [Create credentials](https://console.cloud.google.com/apis/credentials?hl=ru) > "API Key". Это наша переменная **YOUTUBE_API_KEY**
+- После создания проекта и получения API key убедитесь, что API данных YouTube является одним из сервисов, для использования которых зарегистрировано ваше приложение:
    1. Перейдите в[консоль API](https://console.cloud.google.com/?hl=ru) и выберите проект, который вы только что зарегистрировали.
-   2. Посетите [страницу «Включенные API»](https://console.cloud.google.com/apis/enabled?hl=ru). Убедитесь, что в списке API для API данных YouTube v3 включен статус «ВКЛ».
-- Далее аналогичным получению API Key получаем **YOUTUBE_CLIENT_ID** и **YOUTUBE_SECRET**:
-   1. Для этого в [консоли разработчиков Google](https://console.developers.google.com/?hl=ru) нажмите [Создать учетные данные](https://console.cloud.google.com/apis/credentials?hl=ru) > OAuth client ID.
+   2. Посетите [страницу "Enable APIs & Services"](https://console.cloud.google.com/apis/enabled?hl=ru). Убедитесь, что в списке API для API данных YouTube v3 включен статус «ВКЛ». Для этого
+      1. Нажмите вверху "ENABLE APIS AND SERVICES"
+      2. В поиске найдите "YouTube Data API V3" и нажмите на результат
+      3. На открывшейся странице нажмите кнопку "Enable"
+- Далее нужно сконфигурировать на странице [OAuth consent screen](https://console.cloud.google.com/apis/credentials/consent?hl=ru) наше приложения
+  1. Далее нужно выбрать тип юзера "External"
+  2. Далее заполняем обязательные поля "App name", "User support email" и в конце в разделе Developer information "email addresses".
+  3. На всех следующих шагах жмём Save and continue - ничего не меняем, оставляем поля пустыми.
+  4. После того как нажмём "Back to dashboard" на странице приложения нужно нажать в разделе Testing кнопку "Publish"
+- Далее получаем **YOUTUBE_CLIENT_ID** и **YOUTUBE_SECRET**:
+  1. Для этого Откройте [страницу "Credentials"](https://console.cloud.google.com/apis/credentials?hl=ru) и нажмите [Create credentials](https://console.cloud.google.com/apis/credentials?hl=ru) > OAuth client ID.
+  2. Выбираем тип приложения "Web application"
+  3. Выбираем любое имя
+  4. Жмём "Create"
+  5. На [странице "Credentials"](https://console.cloud.google.com/apis/credentials?hl=ru) переходим с созданный oauth кред и в Additional information найдём наши
+     - **YOUTUBE_CLIENT_ID**=Client ID
+     - **YOUTUBE_SECRET**=Client secret
 - Получаем **YOUTUBE_CHANNEL_ID**
    1. Для этого заходим на канал, с которого будем тянуть видео
    2. Жмём "Ещё" в описании канала под его названием
