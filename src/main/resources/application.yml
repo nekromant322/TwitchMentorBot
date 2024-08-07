@@ -66,11 +66,11 @@ donationAlerts:
 
 youtube:
   auth:
-    clientId: ${YOUTUBE_CLIENT_ID}
-    secret: ${YOUTUBE_SECRET}
+    clientId: ${YOUTUBE_CLIENT_ID:ph_client_id_change_it}
+    secret: ${YOUTUBE_SECRET:ph_secret_id_change_it}
   channel:
-    id: ${YOUTUBE_CHANNEL_ID}
-  apiKey: ${YOUTUBE_API_KEY}
+    id: ${YOUTUBE_CHANNEL_ID:ph_channel_id_change_it}
+  apiKey: ${YOUTUBE_API_KEY:ph_api_key_change_it}
 
 schedule:
   periodEvaluationKindness: 90000
