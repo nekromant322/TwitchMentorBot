@@ -92,6 +92,12 @@
             <optional>true</optional>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.apis</groupId>
+            <artifactId>google-api-services-youtube</artifactId>
+            <version>v3-rev20240514-2.0.0</version>
+        </dependency>
+
     </dependencies>
     <dependencyManagement>
         <dependencies>

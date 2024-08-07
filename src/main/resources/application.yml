@@ -64,9 +64,18 @@ donationAlerts:
     post: /api/v1/alerts/donations?last
     indexConvertingKindness: 10
 
+youtube:
+  auth:
+    clientId: ${YOUTUBE_CLIENT_ID:ph_client_id_change_it}
+    secret: ${YOUTUBE_SECRET:ph_secret_id_change_it}
+  channel:
+    id: ${YOUTUBE_CHANNEL_ID:ph_channel_id_change_it}
+  apiKey: ${YOUTUBE_API_KEY:ph_api_key_change_it}
+
 schedule:
   periodEvaluationKindness: 90000
   periodValidateConnection: PT01H
   periodSendExecutedCommandsByTime: 380000
   periodAddKindnessForDonat: 60000
   allowedTimeIntervalInMinutes: 20
+  periodSendYoutubeShorts: 600000
