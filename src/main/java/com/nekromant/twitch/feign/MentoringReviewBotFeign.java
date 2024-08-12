@@ -10,6 +10,6 @@ import java.util.List;
 @FeignClient(name = "mentoringReviewBot", url = "${telegram.reviewBotHost}")
 public interface MentoringReviewBotFeign {
 
-    @GetMapping(value = "/incoming-review-with-period")
+    @GetMapping(value = "/incoming-reviews")
     List<BookedReviewDTO> getIncomingReview(@RequestParam(value = "mentor") String mentorTelegramUsername);
 }
