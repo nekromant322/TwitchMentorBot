@@ -28,6 +28,7 @@ public class TwitchCommandService {
     }
 
     public void saveCommand(TwitchCommand command) {
+        command.setEnabled(true);
         twitchCommandRepository.save(command);
     }
 
