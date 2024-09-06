@@ -29,12 +29,13 @@ public class TwitchCommandService {
 
     public void saveCommand(TwitchCommand command) {
         command.setEnabled(true);
+        command.setName(command.getName().replace("!", ""));
         twitchCommandRepository.save(command);
     }
 
     public void editCommand(TwitchCommand updatedCommand) {
         TwitchCommand commandToUpdate = getCommand(updatedCommand.getId());
-        commandToUpdate.setName(updatedCommand.getName());
+        commandToUpdate.setName(commandToUpdate.getName().replace("!", ""));
         commandToUpdate.setResponse(updatedCommand.getResponse());
         commandToUpdate.setPeriod(updatedCommand.getPeriod());
         commandToUpdate.setEnabled(updatedCommand.isEnabled());
