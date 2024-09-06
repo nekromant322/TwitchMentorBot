@@ -58,7 +58,8 @@
                 <div class="form-group">
                     <label>Command:</label>
                     <input type="text" class="form-control" placeholder="Command" aria-label="Command"
-                           aria-describedby="basic-addon1" id="adding-command-name">
+                           aria-describedby="adding-command-name-help" id="adding-command-name">
+                    <small id="adding-command-name-help" class="form-text text-muted">Команда не должна содержать знак !</small>
                 </div>
 
 
@@ -95,7 +96,8 @@
                 <form method="post">
                     <div class="form-group">
                         <label for="edit-command">Command: </label>
-                        <input type="text" class="form-control" id="edit-command">
+                        <input type="text" class="form-control" id="edit-command" aria-describedby="edit-command-help">
+                        <small id="edit-command-help" class="form-text text-muted">Команда не должна содержать знак !</small>
                     </div>
 
                     <div class="form-group">
