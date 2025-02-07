@@ -5,6 +5,7 @@
 - Idea-> Plugins -> Lombok -> Install
 - Idea -> Settings -> Build, Execution, Deployment -> Compiler -> Annotation Proccesor -> Enable annotation Proccesing
 
+
   
 
 ### Git Branching:
