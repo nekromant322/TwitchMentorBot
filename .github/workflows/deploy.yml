@@ -78,5 +78,5 @@ jobs:
             sudo docker rmi nekromant322/twitch-chat-bot-twitch-bot-app:latest
             sudo docker compose --env-file twitch-env.txt up -d
             sudo docker ps -a
-            sudo rm twitch-env.txt
+            # sudo rm twitch-env.txt
     
